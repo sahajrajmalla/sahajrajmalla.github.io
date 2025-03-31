@@ -1,0 +1,188 @@
+# Sahaj Raj Malla - Portfolio Website Content
+
+## Introduction
+
+Welcome to my digital portfolio. I'm Sahaj Raj Malla, a data scientist, researcher, and computational mathematician dedicated to developing production-ready machine learning products and exploring the frontiers of quantum computing. With expertise spanning from mathematical foundations to cutting-edge AI applications, I combine technical proficiency with a passion for innovation to create impactful solutions across various domains. My professional journey reflects my commitment to excellence in technology development, scientific research, and entrepreneurial ventures.
+
+### About Me
+
+I'm a 22-year-old technologist with a BSc in Computational Mathematics from Kathmandu University. My professional identity is shaped by a profound interest in the intersection of mathematics, computer science, and quantum computing. Beyond technical pursuits, I enjoy playing the violin and football, and I'm constantly seeking opportunities to expand my knowledge and contribute to scientific advancement. My philosophy is simple: science and technology are my religion, and I aim to leave a meaningful impact through research, development, and innovation in these fields[1].
+
+## Technical Expertise
+
+### Core Competencies
+
+My technical foundation rests on a solid mathematical background complemented by extensive programming knowledge and specialized expertise in emerging technologies[1].
+
+#### Mathematics & Theoretical Foundations
+- Linear Algebra, Calculus, Complex Analysis
+- Statistics & Probability
+- Computational Complexity
+- Quantum Computation Theory[1][3]
+
+#### Programming & Development
+- **Languages**: Python, C++, TypeScript
+- **Frontend**: HTML, CSS, Tailwind CSS, Next.js
+- **Backend**: Django, FastAPI, RESTful APIs, GraphQL, GreatAPI (self-authored framework)
+- **Testing & Integration**: pytest, pybind11, pre-commit hooks[1]
+
+#### Data Science & AI
+- **Libraries & Frameworks**: NumPy, Pandas, Scikit-Learn, TensorFlow, PyTorch
+- **NLP Tools**: Spacy, HuggingFace, Doccano
+- **Visualization**: Seaborn, Streamlit
+- **Workflow Management**: Airflow[1]
+
+#### Quantum Computing
+- Qiskit, Pennylane
+- Quantum algorithms implementation
+- Quantum-classical hybrid systems[1][3]
+
+#### Infrastructure & DevOps
+- **Databases**: PostgreSQL, MS-SQL, Redis, SQLAlchemy
+- **Containerization**: Docker, Traefik
+- **Cloud Platforms**: AWS, Azure
+- **CI/CD**: GitHub Actions[1]
+
+## Professional Experience
+
+### Founder, HamroNiwas
+*November 2023 - Present*
+
+Leading a tech-based rental services platform designed specifically for Kathmandu University students. HamroNiwas serves as a comprehensive community platform offering accommodation solutions and a marketplace for furniture and essentials[1].
+
+Key responsibilities include:
+- Developing and maintaining the platform architecture
+- Overseeing community engagement initiatives
+- Managing SEO, marketing, and financial operations
+- Implementing user-friendly interfaces for seamless navigation[1]
+
+### Data Scientist, Naamche Technology
+*September 2021 - January 2023*
+
+Worked with an AI-powered product lab based in Wilmington, Delaware, focusing on web and mobile software solutions[1].
+
+Major accomplishments include:
+- Implemented distributed web crawlers for short-term rental and real estate data collection
+- Developed consolidated data pipelines for Lake House Architecture
+- Created visualization reports and statistical dashboards for stakeholders analyzing real estate investment opportunities in Florida, Texas, and California
+- Designed and implemented machine learning algorithms for real estate feature prediction[1]
+
+### Data Engineer, Devfinity Nepal
+*March 2021 - September 2021*
+
+Contributed to an IT services and consulting firm based in Salt Lake City, Utah[1].
+
+Significant contributions include:
+- Developed a web application using Django, Celery, Django REST Framework, and Angular
+- Deployed solutions to Azure Docker container instances
+- Engineered a system capable of scraping 1 million observations daily
+- Worked with Azure Data Factory to process and store scraped data in MS-SQL for commercial applications[1]
+
+### Founder, vyesna.com
+*April 2020 - March 2021*
+
+Established Nepal's network connecting employers and freelancers[1].
+
+Responsibilities encompassed:
+- End-to-end design and development of the web application
+- SEO optimization, marketing strategy, and financial management
+- Data scraping for job-related datasets
+- Development of a specialized recommender system[1]
+
+## Notable Projects
+
+### GreatAPI Framework
+*June 2022 - Present*
+
+An open-source Python web framework I authored to simplify the creation of full-stack applications. The framework has been documented in a comprehensive tutorial published on AWSTip[1].
+
+### HamroNiwas Platform
+*January 2023 - Present*
+
+A tech-driven rental service platform addressing housing and essential needs for university students, featuring accommodation listings and a marketplace for furniture and home essentials[1].
+
+### Landmark-Based Addressing System
+*August 2023*
+
+A solution developed during the Infinity Codewave hackathon at Kathmandu University, providing a metric-based house address hashing system that simplifies navigation for approximately 30,000 buildings by associating them with landmarks and directions[1].
+
+### Solving Human Trafficking on a Quantum Computer
+*November 2021 - April 2022*
+
+A research project conducted in association with OneQuantum, applying Quantum Approximate Optimization Algorithm and the Max-Cut problem to identify optimal node configurations[1].
+
+### DistilBERT - Nepali News Classification
+*August 2022*
+
+Implemented a DistilBERT model with Sequence Classification for Nepali language news categorization across 9 categories, achieving 95.475% accuracy. The model is publicly available on HuggingFace as sahajrajmalla/patrakar[1].
+
+### Mission Oxygen Web Portal
+*May 2021 - June 2022*
+
+Developed in collaboration with Robotics Association of Nepal and Mission Oxygen Team to facilitate access to vaccines, ventilators, oxygen cylinders, and hospital details during the COVID-19 pandemic[1].
+
+## Publications & Research
+
+### Academic Publications
+
+- **Evaluating XGBoost Algorithm for Nepali Stock Price Prediction** (IEEE, October 2023)
+  A research paper presented at the International Conference on Technologies for Computer, Electrical, Electronics & Communication 2023, detailing a stock prediction model for the Nepali market using XGBoost algorithms[1].
+
+### Technical Writing
+
+- **Getting Started with GreatAPI: A Comprehensive Tutorial** (AWSTip, August 2023)
+  A detailed guide on setting up and utilizing the GreatAPI framework for web application development[1].
+
+- **Bird's Eye View of Airflow** (Medium, May 2022)
+  An accessible explanation of Apache Airflow using analogies to simplify complex concepts[1].
+
+- **Procedure for Scientific Paper Publication** (Medium, May 2022)
+  A guide outlining methodologies for publishing research in academic journals[1].
+
+## Awards & Recognition
+
+- **Winner - Computer Engineering Model Demonstration** (KEC LITE 2081, December 2024)
+  First place for "RingSewa," demonstrating innovative and impactful technological solutions[1].
+
+- **Winner - KU Hackfest 2023 - OSM Category** (October 2023)
+  Led the development of "Green Pulse," a tool providing visual insights into environmental impacts of development projects in Nepal[1].
+
+- **Winner - Infinity Codewave** (August 2023)
+  Led a team in a 24-hour hackathon to develop a unique solution for a metric-based house address hashing problem[1].
+
+- **Winner - AI Competition - Text Challenge, IT MEET 2022** (August 2022)
+  Recognized for developing the DistilBERT model for Nepali language news classification with exceptional accuracy[1].
+
+- **Winner - AI Competition - Data Visualization, IT MEET 2022** (August 2022)
+  Awarded for performing exploratory data analysis and preparing a one-page poster on Nepal's commodities trades[1].
+
+- **Winner - Youth Innovation Challenge 2022** (August 2022)
+  Contributed as an AI developer to Team NutriAl, developing a mobile app for nutrition tracking using AI technologies[1].
+
+## Education & Professional Development
+
+- **B.Sc. in Computational Mathematics**, Kathmandu University
+- **AI Fellowship 2023**, Fusemachines Nepal
+- **Womanium Quantum 2023**, Womanium and QWorld
+- **Data Science Fellowship**, DataCamp & Code for Nepal
+- **Annual Nepal AI School 2023 & 2024**, NepAl Applied Mathematics and Informatics Institute for Research
+- **Introduction to Quantum Computing**, The Coding School and IBM[1]
+
+## Contact & Professional Profiles
+
+- **GitHub**: [github.com/sahajrajmalla](https://github.com/sahajrajmalla)
+- **LinkedIn**: [linkedin.com/in/sahajrajmalla](https://www.linkedin.com/in/sahajrajmalla/)
+- **Portfolio**: [sahajrajmalla.streamlit.app](https://sahajrajmalla.streamlit.app/)
+- **Medium**: [@sahajrajmalla](https://medium.com/@sahajrajmalla)
+
+## Professional Philosophy
+
+As stated in my introduction: "Forget passion; science and technology are my religion." I'm committed to building production-ready machine learning products while exploring the fascinating realms of software engineering, mathematics, and quantum computing. My ultimate goal is to contribute meaningfully to these fields through research, development, and innovation, creating a legacy that reflects my unique approach and dedication to technological advancement[1][3].
+
+Citations:
+[1] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/41723053/ebf7167a-5bdd-46d2-b062-9a8086188499/Sahaj_Raj_Malla___CV.pdf
+[2] https://www.linkedin.com/in/sahajrajmalla/
+[3] https://github.com/sahajrajmalla
+
+---
+Answer from Perplexity: pplx.ai/share
