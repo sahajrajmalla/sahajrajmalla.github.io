@@ -10,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://sahajrajmalla.github.io/shreesahajrajmalla",
+  "homepage": "https://sahajrajmalla.com.np/",
   "keywords": [],
   "author": "",
   "license": "ISC",
