@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { FaGithub, FaLinkedin, FaMedium, FaGraduationCap, FaBook, FaEnvelope, FaInstagram, FaFacebook } from 'react-icons/fa';
 import React from 'react';
 
 // Define types for ProjectCard props
@@ -132,16 +131,16 @@ export default function App() {
               <p><strong>Life Goal:</strong> To solve the P vs NP problem.</p>
               <div className="social-links">
                 <a href="https://github.com/sahajrajmalla" target="_blank" rel="noopener noreferrer">
-                  <FaGithub /> GitHub
+                   <span>GitHub</span>
                 </a>
                 <a href="https://linkedin.com/in/sahajrajmalla" target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin /> LinkedIn
+                   <span>LinkedIn</span>
                 </a>
                 <a href="https://scholar.google.com/citations?user=NYVtgiYAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">
-                  <FaGraduationCap /> Google Scholar
+                   <span>Google Scholar</span>
                 </a>
                 <a href="https://www.researchgate.net/profile/Sahaj-Raj-Malla" target="_blank" rel="noopener noreferrer">
-                  <FaBook /> ResearchGate
+                 <span>ResearchGate</span>
                 </a>
               </div>
 
@@ -410,16 +409,16 @@ export default function App() {
             <p>Interested in collaboration or discussing a project? Reach out to me!</p>
             <div className="contact-info">
               <a href="mailto:mallasahajraj@gmail.com" className="contact-card">
-                <FaEnvelope /> <span>mallasahajraj@gmail.com</span>
+               <span>mallasahajraj@gmail.com</span>
               </a>
               <a href="https://www.instagram.com/sahajrajmalla/" target="_blank" rel="noopener noreferrer" className="contact-card">
-                <FaInstagram /> <span>Instagram</span>
+                 <span>Instagram</span>
               </a>
               <a href="https://www.facebook.com/sahajrajmalla" target="_blank" rel="noopener noreferrer" className="contact-card">
-                <FaFacebook /> <span>Facebook</span>
+                <span>Facebook</span>
               </a>
               <a href="https://medium.com/@mallasahajraj" target="_blank" rel="noopener noreferrer" className="contact-card">
-                <FaMedium /> Medium
+                <span>Medium</span>
               </a>
             </div>
           </div>
