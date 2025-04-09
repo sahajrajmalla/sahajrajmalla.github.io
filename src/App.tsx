@@ -126,7 +126,7 @@ export default function App() {
           <div className="hero-content">
             <div className="hero-text">
               <h1>Sahaj Raj Malla</h1>
-              <h2>Data/ Research Scientist</h2>
+              <h2>Technopreneur/ Research Scientist</h2>
               <p>"Forget passion; science and technology are my religion."</p>
               <p><strong>Life Goal:</strong> To solve the P vs NP problem.</p>
               <div className="social-links">
