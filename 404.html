@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>404 — Sahaj Raj Malla</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M7 53 L20 21 L32 40 L44 21 L57 53' stroke='%234d7fff' stroke-width='3.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='4' r='2.6' fill='%23c9a84c'/%3E%3C/svg%3E" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100svh; display: grid; place-items: center; padding: 24px;
+    background: radial-gradient(ellipse at 50% 30%, #0a1430 0%, #060c1a 60%, #04080f 100%);
+    color: #e8edf8; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: center; overflow: hidden;
+  }
+  .stars { position: fixed; inset: 0; z-index: -1;
+    background-image:
+      radial-gradient(1.2px 1.2px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 40%, #cdd9ff, transparent),
+      radial-gradient(1.4px 1.4px at 40% 70%, #fff, transparent),
+      radial-gradient(1px 1px at 85% 20%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 55% 85%, #bcd0ee, transparent),
+      radial-gradient(1px 1px at 10% 80%, #fff, transparent);
+    opacity: 0.6; }
+  .code { font-family: 'Times New Roman', Georgia, serif; font-size: clamp(80px, 22vw, 180px); line-height: 0.9; color: #4d7fff; letter-spacing: -4px; text-shadow: 0 0 40px rgba(34,85,232,0.4); }
+  .title { font-family: 'Times New Roman', Georgia, serif; font-size: clamp(22px, 4vw, 34px); margin-top: 12px; color: #eef1fa; }
+  .text { color: #9ab0cc; font-size: 16px; margin: 16px auto 32px; max-width: 30rem; line-height: 1.7; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; background: #2255e8; color: #fff;
+    text-decoration: none; padding: 13px 28px; border-radius: 8px; font-size: 15px; font-weight: 600;
+    box-shadow: 0 4px 20px rgba(34,85,232,0.4); transition: transform .2s, box-shadow .2s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,85,232,0.55); }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main>
+  <p class="code">404</p>
+  <h1 class="title">This page drifted into deep space.</h1>
+  <p class="text">The link is broken or the page moved. Let's navigate you back to mission control.</p>
+  <a class="btn" href="/">
+    Return home
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</main>
+</body>
+</html>

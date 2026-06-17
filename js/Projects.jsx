@@ -1,0 +1,215 @@
+// Projects.jsx — Project cards with expand-on-click details, no section numbers
+const { useState } = React;
+
+function TypeBadge({ type }) {
+  const map = {
+    'Open Source': { bg:'rgba(16,185,129,0.15)', border:'rgba(16,185,129,0.4)', color:'#34d399' },
+    'Research':    { bg:'rgba(139,92,246,0.15)', border:'rgba(139,92,246,0.4)', color:'#a78bfa' },
+    'Startup':     { bg:'rgba(201,168,76,0.15)', border:'rgba(201,168,76,0.4)', color:'#c9a84c' },
+  };
+  const s = map[type] || map['Research'];
+  return (
+    <span style={{
+      background:s.bg, border:`1px solid ${s.border}`, borderRadius:'10px', padding:'3px 10px',
+      fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+      fontSize:'10px', fontWeight:700, color:s.color, letterSpacing:'0.8px', textTransform:'uppercase',
+    }}>{type}</span>
+  );
+}
+
+function ProjectCard({ project }) {
+  const [open, setOpen] = useState(false);
+  const [hover, setHover] = useState(false);
+  const c = project.color;
+
+  return (
+    <div
+      onClick={() => setOpen(!open)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: hover ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.025)',
+        border:`1px solid ${hover || open ? c + '55' : '#0e1f3d'}`,
+        borderRadius:'14px',
+        padding:'26px',
+        cursor:'pointer',
+        transition:'all 0.22s ease',
+        transform: hover ? 'translateY(-4px)' : 'translateY(0)',
+        boxShadow: hover ? `0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px ${c}22` : 'none',
+        display:'flex', flexDirection:'column',
+        position:'relative', overflow:'hidden',
+      }}
+    >
+      {/* Top accent line */}
+      <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background:c, opacity: hover || open ? 0.9 : 0.4, transition:'opacity 0.2s' }} />
+
+      {/* Emoji + type row */}
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px' }}>
+        <span style={{
+          width:'44px', height:'44px', borderRadius:'10px',
+          background:`${c}22`, border:`1px solid ${c}44`,
+          display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px',
+        }}>{project.emoji}</span>
+        <TypeBadge type={project.type} />
+      </div>
+
+      {/* Name */}
+      <h3 style={{
+        fontFamily:"'Times New Roman', Georgia, serif",
+        fontSize:'clamp(16px, 1.8vw, 21px)',
+        fontWeight:700, color:'#e8edf8',
+        marginBottom:'6px', lineHeight:1.2,
+      }}>{project.name}</h3>
+
+      {/* Tagline */}
+      <p style={{
+        fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+        fontSize:'13px', color:'#8899bb', marginBottom:'16px', lineHeight:1.5,
+      }}>{project.tagline}</p>
+
+      {/* Tech tags */}
+      <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }}>
+        {project.tech.map(t => (
+          <span key={t} style={{
+            background:'rgba(255,255,255,0.07)', borderRadius:'5px', padding:'3px 8px',
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', color:'#7090aa', fontWeight:500,
+          }}>{t}</span>
+        ))}
+      </div>
+
+      {/* Expanded */}
+      {open && (
+        <div style={{ marginTop:'20px', paddingTop:'20px', borderTop:`1px solid ${c}22` }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'14px', color:'#a8b8d0', lineHeight:1.75, marginBottom:'18px',
+          }}>{project.description}</p>
+          <div style={{ display:'flex', gap:'10px', flexWrap:'wrap' }}>
+            {project.github && (
+              <a href={project.github} target="_blank" rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                style={{
+                  display:'inline-flex', alignItems:'center', gap:'6px',
+                  color:c, textDecoration:'none',
+                  fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontSize:'13px', fontWeight:600,
+                  border:`1px solid ${c}55`,
+                  borderRadius:'7px', padding:'7px 14px',
+                  background:`${c}11`,
+                }}>
+                GitHub →
+              </a>
+            )}
+            {project.paper && (
+              <a href={project.paper} target="_blank" rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                style={{
+                  display:'inline-flex', alignItems:'center', gap:'6px',
+                  color:'#a78bfa', textDecoration:'none',
+                  fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontSize:'13px', fontWeight:600,
+                  border:'1px solid rgba(139,92,246,0.4)',
+                  borderRadius:'7px', padding:'7px 14px',
+                  background:'rgba(139,92,246,0.1)',
+                }}>
+                Read Paper →
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Projects() {
+  const d = window.SahajData;
+  const mobile = window.useIsMobile(820);
+
+  return (
+    <div style={{ minHeight:'100vh', paddingTop:'64px', background:'#060c1a' }}>
+      <div style={{ maxWidth:'1200px', margin:'0 auto', padding: mobile ? '44px 20px' : '64px 48px' }}>
+
+        {/* ── Header ── */}
+        <div style={{ marginBottom:'52px' }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
+            textTransform:'uppercase', color:'#4d7fff', marginBottom:'12px',
+          }}>Projects</p>
+          <h2 style={{
+            fontFamily:"'Times New Roman', Georgia, serif",
+            fontSize:'clamp(32px, 4vw, 58px)',
+            fontWeight:700, color:'#e8edf8', lineHeight:1.1,
+            letterSpacing:'-0.5px', marginBottom:'16px',
+          }}>Built in the open.</h2>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'clamp(14px, 1.5vw, 17px)', color:'#b0c0dc',
+            lineHeight:1.7, maxWidth:'580px',
+          }}>
+            Research code, open-source tools, and a startup — each one built to solve a real problem. Click any card to explore.
+          </p>
+        </div>
+
+        {/* ── GitHub quick stats ── */}
+        <div style={{
+          display:'flex', gap:'24px', marginBottom:'52px',
+          padding:'20px 28px',
+          background:'rgba(255,255,255,0.025)', border:'1px solid #0e1f3d',
+          borderRadius:'12px', flexWrap:'wrap', alignItems:'center',
+        }}>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>
+            <strong style={{ color:'#e8edf8' }}>80+</strong> repositories
+          </span>
+          <span style={{ color:'#1a3060' }}>·</span>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>
+            <strong style={{ color:'#e8edf8' }}>130+</strong> stars
+          </span>
+          <span style={{ color:'#1a3060' }}>·</span>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>
+            Mostly Python &amp; Jupyter
+          </span>
+          <a href={d.personal.github} target="_blank" rel="noopener noreferrer"
+            style={{
+              marginLeft:'auto', color:'#4d7fff', textDecoration:'none',
+              fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",
+              fontSize:'13px', fontWeight:600,
+              display:'flex', alignItems:'center', gap:'5px',
+            }}>
+            View all on GitHub →
+          </a>
+        </div>
+
+        {/* ── Project grid ── */}
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:'repeat(auto-fill, minmax(320px, 1fr))',
+          gap:'16px',
+        }}>
+          {d.projects.map(p => <ProjectCard key={p.id} project={p} />)}
+        </div>
+
+        {/* ── Open source note ── */}
+        <div style={{
+          marginTop:'48px', padding:'24px 28px',
+          background:'rgba(34,85,232,0.07)', border:'1px solid rgba(34,85,232,0.2)',
+          borderRadius:'12px', display:'flex', alignItems:'center', gap:'16px',
+        }}>
+          <span style={{ fontSize:'24px' }}>🤝</span>
+          <div>
+            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, color:'#c8d4ee', marginBottom:'4px' }}>
+              Open to collaboration
+            </p>
+            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8', lineHeight:1.6 }}>
+              Every research project ships with code. If something's useful — fork it, open an issue, or send a PR. Reach out for research partnerships, startup ideas, or anything interesting.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+window.SahajProjects = Projects;

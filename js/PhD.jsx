@@ -1,0 +1,323 @@
+// PhD.jsx — Academic-focused page for professors & PhD supervisors
+const { useState } = React;
+
+function TrajectoryStep({ num, area, desc, year, last }) {
+  return (
+    <div style={{ display:'flex', gap:'20px', alignItems:'flex-start' }}>
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0 }}>
+        <div style={{
+          width:'36px', height:'36px', borderRadius:'50%',
+          background:'rgba(34,85,232,0.2)', border:'2px solid rgba(34,85,232,0.5)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          fontFamily:"'Times New Roman', Georgia, serif",
+          fontSize:'14px', fontWeight:700, color:'#4d7fff',
+        }}>{num}</div>
+        {!last && <div style={{ width:'2px', flex:1, minHeight:'32px', background:'rgba(34,85,232,0.2)', marginTop:'4px' }} />}
+      </div>
+      <div style={{ paddingBottom: last ? 0 : '28px' }}>
+        <h4 style={{
+          fontFamily:"'Times New Roman', Georgia, serif",
+          fontSize:'17px', fontWeight:700, color:'#e8edf8', marginBottom:'4px',
+        }}>{area}</h4>
+        <p style={{
+          fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+          fontSize:'13px', color:'#a0b8d8', lineHeight:1.6, marginBottom:'4px',
+        }}>{desc}</p>
+        <span style={{
+          fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+          fontSize:'11px', color:'#5a7090', letterSpacing:'0.5px',
+        }}>{year}</span>
+      </div>
+    </div>
+  );
+}
+
+function TierPill({ tier }) {
+  const map = {
+    'Q1':         { bg:'rgba(139,92,246,0.2)',  border:'rgba(139,92,246,0.5)', color:'#a78bfa' },
+    'Journal':    { bg:'rgba(16,185,129,0.18)', border:'rgba(16,185,129,0.5)', color:'#34d399' },
+    'Conference': { bg:'rgba(34,85,232,0.18)',  border:'rgba(34,85,232,0.5)',  color:'#60a5fa' },
+    'Preprint':   { bg:'rgba(245,158,11,0.18)', border:'rgba(245,158,11,0.5)', color:'#fbbf24' },
+  };
+  const s = map[tier] || map['Conference'];
+  return (
+    <span style={{
+      background:s.bg, border:`1px solid ${s.border}`, borderRadius:'10px', padding:'2px 9px',
+      fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",
+      fontSize:'10px', fontWeight:700, color:s.color, letterSpacing:'0.8px', textTransform:'uppercase',
+    }}>{tier}</span>
+  );
+}
+
+function PhD({ onNavigate }) {
+  const d = window.SahajData;
+  const mobile = window.useIsMobile(820);
+  const [openPaper, setOpenPaper] = useState(null);
+
+  // Combine peer-reviewed + preprints for the academic list
+  const allPapers = [...(d.peerReviewed || []), ...(d.preprints || [])];
+
+  const trajectory = [
+    { num:'1', area:'Computer Vision', desc:'Devanagari script recognition — MallaNet (Q1, Scientific Reports, Nature)', year:'2024–2025' },
+    { num:'2', area:'ML Systems & Forecasting', desc:'Ensemble methods, time-series, econometric modelling', year:'2023–2026' },
+    { num:'3', area:'Quantum ML', desc:'Hybrid variational circuits for Devanagari digit recognition (99.80% accuracy)', year:'2025' },
+    { num:'4', area:'Game-Playing Agents', desc:'Multi-agent RL in incomplete-information environments (88.3% win rate)', year:'2025' },
+    { num:'5', area:'→ PhD Focus', desc:'Reinforcement learning for multi-modal agentic systems', year:'2026+', last:true },
+  ];
+
+  return (
+    <div style={{ minHeight:'100vh', paddingTop:'64px', background:'#060c1a' }}>
+      <div style={{ maxWidth:'1040px', margin:'0 auto', padding: mobile ? '44px 20px' : '64px 48px' }}>
+
+        {/* ── Header ── */}
+        <div style={{ marginBottom:'12px' }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
+            textTransform:'uppercase', color:'#c9a84c', marginBottom:'12px',
+          }}>For Researchers &amp; Professors</p>
+          <h2 style={{
+            fontFamily:"'Times New Roman', Georgia, serif",
+            fontSize:'clamp(32px, 4vw, 58px)',
+            fontWeight:700, color:'#e8edf8', lineHeight:1.1,
+            letterSpacing:'-0.5px', marginBottom:'16px',
+          }}>Research Profile</h2>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'clamp(14px, 1.5vw, 17px)', color:'#b0c0dc',
+            lineHeight:1.7, maxWidth:'680px',
+          }}>
+            Targeting a direct PhD in artificial intelligence. This page is written for potential supervisors and research collaborators.
+          </p>
+        </div>
+
+        {/* ── Research statement ── */}
+        <div style={{
+          margin:'48px 0',
+          padding:'32px 36px',
+          background:'rgba(34,85,232,0.06)',
+          border:'1px solid rgba(34,85,232,0.25)',
+          borderLeft:'4px solid #2255e8',
+          borderRadius:'0 12px 12px 0',
+        }}>
+          <p style={{
+            fontFamily:"'Times New Roman', Georgia, serif",
+            fontSize:'clamp(15px, 1.6vw, 19px)',
+            fontStyle:'italic', color:'#c8d4ee',
+            lineHeight:1.8,
+          }}>
+            "{d.phdStatement}"
+          </p>
+        </div>
+
+        {/* ── Research interests grid ── */}
+        <div style={{ marginBottom:'64px' }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
+            textTransform:'uppercase', color:'#4d7fff', marginBottom:'24px',
+          }}>Research Interests</p>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:'12px' }}>
+            {d.researchInterests.map((r, i) => (
+              <div key={i} style={{
+                background:'rgba(255,255,255,0.03)', border:'1px solid #0e1f3d',
+                borderRadius:'12px', padding:'18px 20px',
+              }}>
+                <h4 style={{
+                  fontFamily:"'Times New Roman', Georgia, serif",
+                  fontSize:'16px', fontWeight:700, color:'#e8edf8', marginBottom:'6px',
+                }}>{r.area}</h4>
+                <p style={{
+                  fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontSize:'12px', color:'#8899bb', lineHeight:1.6,
+                }}>{r.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Research trajectory ── */}
+        <div style={{ marginBottom:'64px' }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
+            textTransform:'uppercase', color:'#4d7fff', marginBottom:'32px',
+          }}>Research Trajectory</p>
+          <div>
+            {trajectory.map((t, i) => (
+              <TrajectoryStep key={i} {...t} last={i === trajectory.length - 1} />
+            ))}
+          </div>
+        </div>
+
+        {/* ── All Publications (academic format) ── */}
+        <div style={{ marginBottom:'64px' }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
+            textTransform:'uppercase', color:'#4d7fff', marginBottom:'24px',
+          }}>Publications ({allPapers.length})</p>
+          <div style={{ display:'flex', flexDirection:'column' }}>
+            {allPapers.map((p, i) => (
+              <div
+                key={i}
+                onClick={() => setOpenPaper(openPaper === i ? null : i)}
+                style={{
+                  padding:'20px 0',
+                  borderBottom:'1px solid #0e1f3d',
+                  cursor:'pointer',
+                  display:'flex', gap:'20px', alignItems:'flex-start',
+                }}
+              >
+                {/* Year */}
+                <div style={{
+                  fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontSize:'12px', fontWeight:700, color:'#4a6080',
+                  minWidth:'40px', paddingTop:'3px', flexShrink:0,
+                }}>{p.year ? p.year.slice(-4) : ''}</div>
+
+                {/* Content */}
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ display:'flex', gap:'8px', marginBottom:'8px', flexWrap:'wrap', alignItems:'center' }}>
+                    <TierPill tier={p.tier} />
+                    <span style={{
+                      fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                      fontSize:'11px', color:'#5a7090',
+                    }}>{p.tag}</span>
+                  </div>
+                  <h4 style={{
+                    fontFamily:"'Times New Roman', Georgia, serif",
+                    fontSize:'clamp(13px, 1.4vw, 16px)',
+                    fontWeight:700, color:'#c8d4ee', lineHeight:1.4,
+                    marginBottom:'4px', textWrap:'pretty',
+                  }}>{p.title}</h4>
+                  <p style={{
+                    fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    fontSize:'12px', color:'#4a6080',
+                  }}>{p.venue} · {p.publisher}</p>
+
+                  {openPaper === i && (
+                    <div style={{ marginTop:'12px' }}>
+                      <p style={{
+                        fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                        fontSize:'13px', color:'#a0b8d8', lineHeight:1.7, marginBottom:'12px',
+                      }}>{p.abstract}</p>
+                      {p.url && p.url !== '#' && (
+                        <a href={p.url} target="_blank" rel="noopener noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          style={{
+                            color:'#4d7fff', textDecoration:'none',
+                            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+                            fontSize:'13px', fontWeight:600,
+                            borderBottom:'1px solid rgba(77,127,255,0.4)',
+                          }}>
+                          View paper →
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3a5070" strokeWidth="2" strokeLinecap="round"
+                  style={{ transform: openPaper === i ? 'rotate(180deg)' : 'rotate(0)', transition:'transform 0.2s', flexShrink:0, marginTop:'4px' }}>
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Education + Key Training ── */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:'16px', marginBottom:'48px' }}>
+          <div style={{ background:'rgba(255,255,255,0.025)', border:'1px solid #0e1f3d', borderRadius:'12px', padding:'24px' }}>
+            <p style={{
+              fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize:'10px', fontWeight:700, letterSpacing:'2px', textTransform:'uppercase',
+              color:'#4d7fff', marginBottom:'14px',
+            }}>Education</p>
+            <h4 style={{ fontFamily:"'Times New Roman', Georgia, serif", fontSize:'17px', fontWeight:700, color:'#e8edf8', marginBottom:'4px' }}>{d.education.degree}</h4>
+            <p style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'13px', color:'#a0b8d8' }}>{d.education.university}</p>
+            <p style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'12px', color:'#5a7090', marginTop:'4px' }}>{d.education.period}</p>
+          </div>
+          <div style={{ background:'rgba(255,255,255,0.025)', border:'1px solid #0e1f3d', borderRadius:'12px', padding:'24px' }}>
+            <p style={{
+              fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize:'10px', fontWeight:700, letterSpacing:'2px', textTransform:'uppercase',
+              color:'#c9a84c', marginBottom:'14px',
+            }}>Key Training</p>
+            {d.fellowships.slice(0, 4).map((f, i) => (
+              <div key={i} style={{ marginBottom:'10px' }}>
+                <div style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'13px', fontWeight:600, color:'#c8d4ee' }}>{f.name}</div>
+                <div style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'11px', color:'#5a7090' }}>{f.org} · {f.period}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Awards ── */}
+        <div style={{ marginBottom:'48px' }}>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
+            textTransform:'uppercase', color:'#c9a84c', marginBottom:'20px',
+          }}>Awards &amp; Competitions ({d.awards.length})</p>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:'10px' }}>
+            {d.awards.map((a, i) => (
+              <div key={i} style={{
+                background:'rgba(201,168,76,0.06)', border:'1px solid rgba(201,168,76,0.18)',
+                borderRadius:'10px', padding:'13px 16px',
+                display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px',
+              }}>
+                <div>
+                  <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', fontWeight:600, color:'#c8d4ee', marginBottom:'2px' }}>{a.title}</div>
+                  <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'#7090aa' }}>{a.org}</div>
+                </div>
+                <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'#a08840', fontWeight:600, flexShrink:0 }}>{a.year}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── CTA ── */}
+        <div style={{
+          padding:'32px', background:'rgba(34,85,232,0.08)', border:'1px solid rgba(34,85,232,0.25)',
+          borderRadius:'14px', textAlign:'center',
+        }}>
+          <h3 style={{ fontFamily:"'Times New Roman', Georgia, serif", fontSize:'22px', fontWeight:700, color:'#e8edf8', marginBottom:'10px' }}>
+            Open to PhD Supervision &amp; Research Collaboration
+          </h3>
+          <p style={{
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'14px', color:'#a0b8d8', lineHeight:1.7, marginBottom:'24px', maxWidth:'560px', margin:'0 auto 24px',
+          }}>
+            I bring a deliberately sequenced research trajectory, industry ML experience, and a genuine drive to work on the hardest open problems. Let's talk.
+          </p>
+          <div style={{ display:'flex', justifyContent:'center', gap:'12px', flexWrap:'wrap' }}>
+            <a href={`mailto:${d.personal.email}`} style={{
+              background:'#2255e8', color:'white', textDecoration:'none',
+              padding:'11px 26px', borderRadius:'8px',
+              fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize:'14px', fontWeight:700,
+            }}>Email Me</a>
+            <a href={d.personal.cv} download="Sahaj_Raj_Malla_CV.pdf" style={{
+              background:'rgba(255,255,255,0.06)', color:'#c8d4ee', textDecoration:'none',
+              padding:'11px 26px', borderRadius:'8px',
+              border:'1px solid rgba(255,255,255,0.15)',
+              fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize:'14px', fontWeight:500,
+            }}>Download CV</a>
+            <a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{
+              background:'rgba(255,255,255,0.06)', color:'#c8d4ee', textDecoration:'none',
+              padding:'11px 26px', borderRadius:'8px',
+              border:'1px solid rgba(255,255,255,0.15)',
+              fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize:'14px', fontWeight:500,
+            }}>Google Scholar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+window.SahajPhD = PhD;
