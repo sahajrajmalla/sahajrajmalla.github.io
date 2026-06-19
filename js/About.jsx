@@ -91,15 +91,95 @@ function SkillBadge({ name, brand }) {
   );
 }
 
+/* ── Life gallery: masonry tiles + click-to-open lightbox ── */
+function GalleryTile({ photo, onClick }) {
+  const [h, setH] = useState(false);
+  const [seen, setSeen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } }, { threshold:0.12 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <figure ref={ref} onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{ position:'relative', breakInside:'avoid', marginBottom:'14px', borderRadius:'12px', overflow:'hidden', cursor:'pointer', border:'1px solid #0e1f3d', boxShadow: h ? '0 16px 40px rgba(0,0,0,0.55)' : '0 2px 10px rgba(0,0,0,0.3)', opacity: seen?1:0, animation: seen?'galleryReveal 0.6s cubic-bezier(0.2,0,0.2,1) both':'none', transition:'box-shadow 0.25s ease' }}>
+      <img src={photo.src} alt={photo.caption} loading="lazy" draggable={false}
+        style={{ width:'100%', display:'block', transform: h ? 'scale(1.045)' : 'scale(1)', transition:'transform 0.55s cubic-bezier(0.2,0,0.2,1)' }} />
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(4,9,26,0.88) 0%, rgba(4,9,26,0.08) 46%, transparent 72%)', opacity: h ? 1 : 0.9, transition:'opacity 0.25s' }} />
+      <figcaption style={{ position:'absolute', left:'13px', right:'13px', bottom:'12px' }}>
+        <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'14px', fontStyle:'italic', color:'#eef1fa', lineHeight:1.3, textWrap:'pretty' }}>{photo.caption}</p>
+        <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'9.5px', letterSpacing:'1.4px', textTransform:'uppercase', color:'#c9a84c', marginTop:'5px' }}>{photo.sub}</p>
+      </figcaption>
+    </figure>
+  );
+}
+
+function Lightbox({ photo, index, total, onClose, onPrev, onNext }) {
+  const navBtn = {
+    position:'absolute', top:'50%', transform:'translateY(-50%)', width:'48px', height:'48px',
+    borderRadius:'50%', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.2)',
+    color:'#e8edf8', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2,
+  };
+  return ReactDOM.createPortal((
+    <div onClick={onClose}
+      style={{ position:'fixed', inset:0, zIndex:1000, background:'rgba(3,6,16,0.93)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px', animation:'fadeIn 0.22s ease' }}>
+      <button onClick={(e)=>{e.stopPropagation();onClose();}} aria-label="Close"
+        style={{ position:'absolute', top:'18px', right:'20px', width:'46px', height:'46px', borderRadius:'50%', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.2)', color:'#e8edf8', cursor:'pointer', fontSize:'24px', lineHeight:1, display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+      <button onClick={(e)=>{e.stopPropagation();onPrev();}} aria-label="Previous" style={{ ...navBtn, left:'16px' }}>
+        <span style={{ display:'flex', transform:'rotate(180deg)' }}>{window.SahajIcons.arrowRight({ size:20, color:'#e8edf8', strokeW:2 })}</span>
+      </button>
+      <button onClick={(e)=>{e.stopPropagation();onNext();}} aria-label="Next" style={{ ...navBtn, right:'16px' }}>
+        {window.SahajIcons.arrowRight({ size:20, color:'#e8edf8', strokeW:2 })}
+      </button>
+      <img src={photo.src} alt={photo.caption} onClick={(e)=>e.stopPropagation()} draggable={false}
+        style={{ maxWidth:'min(92vw,1080px)', maxHeight:'78vh', objectFit:'contain', borderRadius:'10px', boxShadow:'0 30px 80px rgba(0,0,0,0.7)' }} />
+      <div style={{ marginTop:'18px', textAlign:'center' }} onClick={(e)=>e.stopPropagation()}>
+        <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'18px', fontStyle:'italic', color:'#eef1fa' }}>{photo.caption}</p>
+        <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'1.6px', textTransform:'uppercase', color:'#7090aa', marginTop:'7px' }}>{photo.sub} · {index+1} / {total}</p>
+      </div>
+    </div>
+  ), document.body);
+}
+
+function LifeGallery({ photos, mobile }) {
+  const [open, setOpen] = useState(null);
+  useEffect(() => {
+    if (open === null) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(null);
+      else if (e.key === 'ArrowRight') setOpen(i => (i + 1) % photos.length);
+      else if (e.key === 'ArrowLeft') setOpen(i => (i - 1 + photos.length) % photos.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, photos.length]);
+
+  return (
+    <React.Fragment>
+      <div style={{ columnCount: mobile ? 2 : 4, columnGap: mobile ? '10px' : '14px' }}>
+        {photos.map((p, i) => <GalleryTile key={p.src} photo={p} onClick={()=>setOpen(i)} />)}
+      </div>
+      {open !== null && (
+        <Lightbox photo={photos[open]} index={open} total={photos.length}
+          onClose={()=>setOpen(null)}
+          onPrev={()=>setOpen(i => (i - 1 + photos.length) % photos.length)}
+          onNext={()=>setOpen(i => (i + 1) % photos.length)} />
+      )}
+    </React.Fragment>
+  );
+}
+
 function About() {
   const d = window.SahajData;
   const mobile = window.useIsMobile(820);
   const padX = mobile ? '20px' : '48px';
 
   const slides = [
-    { src:'assets/sahaj2.jpg',  alt:'Sahaj Raj Malla', pos:'center top', caption:'Curiosity is the engine.', sub:'AI Researcher' },
-    { src:'assets/sahaj1.jpg',  alt:'Sahaj Raj Malla in the mountains', pos:'center 8%', caption:'Five windows, one room — one question.', sub:'Builder · Thinker' },
-    { src:'assets/sahaj3.jpeg', alt:'Sahaj Raj Malla with Nepal flag', pos:'50% 30%', caption:'Proudly Nepali — building for the world, from here.', sub:'Nepal' },
+    { src:'assets/sahaj2.jpg',  alt:'Sahaj Raj Malla', pos:'center 18%', caption:'Where the work happens.', sub:'At my desk' },
+    { src:'assets/sahaj1.jpg',  alt:'Sahaj Raj Malla outdoors', pos:'center 10%', caption:'Out in the hills.', sub:'Off the clock' },
+    { src:'assets/sahaj3.jpeg', alt:'Sahaj Raj Malla with the Nepal flag', pos:'50% 28%', caption:'Proudly Nepali.', sub:'Nepal' },
   ];
 
   return (
@@ -117,15 +197,15 @@ function About() {
             </h2>
 
             <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'clamp(15px,1.7vw,17px)', color:'#d2dcf0', lineHeight:1.8, maxWidth:'560px', marginBottom:'20px' }}>
-              I love art, philosophy, psychology, mathematics, and code. Most people see five separate rooms; I see one room with five windows, and the view through all of them is the same question — <em style={{ color:'#fff', fontStyle:'italic' }}>what is intelligence, and can we build it?</em> That question is the reason I do AI.
+              I studied computational mathematics, but I spend about as much time on art, philosophy, and psychology. For me they keep circling the same question: <em style={{ color:'#fff', fontStyle:'italic' }}>what is intelligence, and can we build it?</em> That is what pulled me into AI.
             </p>
             <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'clamp(14px,1.5vw,16px)', color:'#aebcd6', lineHeight:1.8, maxWidth:'560px', marginBottom:'30px' }}>
-              I taught myself to build software from scratch, went deep into industry, founded a startup serving 4,000+ users, and kept following the harder question — until it pointed at artificial intelligence.
+              I taught myself to code, worked a few years in industry as a data engineer and data scientist, and started a company that now serves more than 4,000 students. Research is where I keep ending up, so it is where I have put my focus.
             </p>
 
             <div style={{ display:'flex', gap:'8px', flexWrap:'wrap' }}>
-              {['Omnivert','Curious by default','Builder','Obsessive learner','Open collaborator'].map(t=>(
-                <span key={t} style={{ background:'rgba(34,85,232,0.1)', border:'1px solid rgba(34,85,232,0.3)', borderRadius:'20px', padding:'5px 14px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#85a8f5' }}>{t}</span>
+              {['Self-taught','Omnivert','Researcher','Founder'].map(t=>(
+                <span key={t} style={{ background:'rgba(34,85,232,0.1)', border:'1px solid rgba(34,85,232,0.3)', borderRadius:'20px', padding:'5px 14px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#85a8f5', whiteSpace:'nowrap' }}>{t}</span>
               ))}
             </div>
           </div>
@@ -142,22 +222,43 @@ function About() {
 
         {/* ── Interests ── */}
         <div style={{ marginBottom:'52px' }}>
-          <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#c9a84c', marginBottom:'22px' }}>Beyond the Lab</p>
+          <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#c9a84c', marginBottom:'22px' }}>Off the clock</p>
           <div style={{ display:'flex', gap:'10px', flexWrap:'wrap' }}>
             {d.interests.map(i=>(
               <div key={i.label} style={{ display:'flex', alignItems:'center', gap:'10px', background:'rgba(255,255,255,0.035)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'12px', padding:'11px 18px' }}>
-                <span style={{ fontSize:'20px' }}>{i.icon}</span>
+                <span style={{ display:'flex', color:'#c9a84c', flexShrink:0 }}>{window.SahajIcons[i.icon] && window.SahajIcons[i.icon]({ size:17, color:'#c9a84c', strokeW:1.7 })}</span>
                 <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'14px', color:'#d2dcf0', fontWeight:500 }}>{i.label}</span>
               </div>
             ))}
           </div>
         </div>
 
+        {/* ── A few moments (life gallery) ── */}
+        <div style={{ marginBottom:'52px' }}>
+          <div style={{ display:'flex', alignItems:'baseline', gap:'12px', marginBottom:'22px', flexWrap:'wrap' }}>
+            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#c9a84c' }}>A Few Moments</p>
+            <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'#5a7090' }}>tap a photo to open</span>
+          </div>
+          <LifeGallery photos={d.gallery} mobile={mobile} />
+        </div>
+
+        {/* ── Pull quote (Bhagavad Gita 2.47) ── */}
+        <figure style={{ margin:'0 auto 56px', maxWidth:'860px', textAlign:'center', padding:'0 12px' }}>
+          <blockquote style={{ fontFamily:"'Tiro Devanagari Hindi','Noto Serif Devanagari',serif", fontSize:'clamp(20px,3vw,33px)', color:'#eef1fa', lineHeight:1.6, letterSpacing:'0.2px', textWrap:'balance' }}>
+            कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br/>
+            मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥
+          </blockquote>
+          <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(15px,1.8vw,19px)', fontStyle:'italic', color:'#b0c0dc', lineHeight:1.7, maxWidth:'620px', margin:'22px auto 0', textWrap:'pretty' }}>
+            You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions. Never consider yourself the cause of the results of your activities, and never be attached to inaction.
+          </p>
+          <figcaption style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', color:'#c9a84c', marginTop:'18px' }}>Krishna · Bhagavad Gita 2.47</figcaption>
+        </figure>
+
         {/* ── Technical Toolbox ── */}
         <div style={{ marginBottom:'60px' }}>
           <div style={{ display:'flex', alignItems:'baseline', gap:'12px', marginBottom:'26px', flexWrap:'wrap' }}>
             <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#4d7fff' }}>Technical Toolbox</p>
-            <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'#5a7090' }}>grouped by craft</span>
+            <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'#5a7090' }}>grouped by area</span>
           </div>
           <div style={{ display:'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fill,minmax(300px,1fr))', gap:'18px' }}>
             {d.skillGroups.map(grp=>(
@@ -174,7 +275,7 @@ function About() {
         {/* ── Experience ── */}
         <div style={{ marginBottom:'60px' }}>
           <div style={{ display:'flex', alignItems:'baseline', gap:'12px', marginBottom:'30px', flexWrap:'wrap' }}>
-            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#4d7fff' }}>Professional Journey</p>
+            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#4d7fff' }}>Experience</p>
             <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'#5a7090' }}>tap any role for detail</span>
           </div>
           <div style={{ display:'flex', flexDirection:'column' }}>
@@ -186,7 +287,7 @@ function About() {
         <div style={{ marginBottom:'52px' }}>
           <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', fontWeight:700, letterSpacing:'3px', textTransform:'uppercase', color:'#4d7fff', marginBottom:'20px' }}>Education</p>
           <div style={{ background:'rgba(255,255,255,0.03)', border:'1px solid #0e1f3d', borderRadius:'12px', padding:'22px 28px', display:'flex', alignItems:'center', gap:'18px' }}>
-            <div style={{ width:'44px', height:'44px', borderRadius:'10px', background:'rgba(34,85,232,0.15)', border:'1px solid rgba(34,85,232,0.3)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px', flexShrink:0 }}>🎓</div>
+            <div style={{ width:'46px', height:'46px', borderRadius:'11px', background:'rgba(34,85,232,0.15)', border:'1px solid rgba(34,85,232,0.3)', display:'flex', alignItems:'center', justifyContent:'center', color:'#85a8f5', flexShrink:0 }}>{window.SahajIcons.ku({ size:25, color:'#85a8f5', strokeW:1.7 })}</div>
             <div>
               <h4 style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'17px', fontWeight:700, color:'#e8edf8', marginBottom:'4px' }}>{d.education.degree}</h4>
               <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>{d.education.university} · {d.education.period}</p>
@@ -201,7 +302,7 @@ function About() {
             {d.fellowships.map((f,i)=>(
               <div key={i} style={{ display:'grid', gridTemplateColumns: mobile ? '1fr' : '2fr 2fr 1fr', gap: mobile?'4px':'16px', alignItems: mobile?'flex-start':'center', padding:'14px 0', borderBottom:'1px solid rgba(14,31,61,0.6)' }}>
                 <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'14px', fontWeight:600, color:'#d2dcf0', display:'flex', alignItems:'center', gap:'10px' }}>
-                  <span>{f.icon}</span>{f.name}
+                  {f.name}
                 </div>
                 <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#9ab0cc', paddingLeft: mobile?'28px':0 }}>{f.org}</div>
                 <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'#7090aa', textAlign: mobile?'left':'right', paddingLeft: mobile?'28px':0 }}>{f.period}</div>

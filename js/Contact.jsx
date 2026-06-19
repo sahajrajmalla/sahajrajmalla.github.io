@@ -25,9 +25,10 @@ function SocialLink({ label, url, icon, desc }) {
         background: h ? 'rgba(34,85,232,0.2)' : 'rgba(34,85,232,0.1)',
         border:'1px solid rgba(34,85,232,0.25)',
         display:'flex', alignItems:'center', justifyContent:'center',
-        fontSize:'18px', flexShrink:0,
+        color:'#9cc0ff',
+        flexShrink:0,
         transition:'background 0.2s',
-      }}>{icon}</span>
+      }}>{window.SahajIcons[icon] && window.SahajIcons[icon]({ size:19, color:'#9cc0ff' })}</span>
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{
           fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
@@ -50,21 +51,21 @@ function Contact() {
   const mobile = window.useIsMobile(820);
 
   const links = [
-    { label:'LinkedIn',       url: d.personal.linkedin,           icon:'💼', desc:'Connect professionally' },
-    { label:'GitHub',         url: d.personal.github,             icon:'⌨️', desc:'Explore the code' },
-    { label:'Google Scholar', url: d.personal.scholar,            icon:'🎓', desc:'Academic publications' },
-    { label:'ResearchGate',   url: d.personal.researchgate,       icon:'🔬', desc:'Research profile' },
-    { label:'X / Twitter',    url: d.personal.twitter,            icon:'𝕏', desc:'@sahaj_malla' },
-    { label:'Instagram',      url: d.personal.instagram,          icon:'📷', desc:'@sahajrajmalla' },
-    { label:'Medium',         url: d.personal.medium,             icon:'📝', desc:'Writing & tutorials' },
+    { label:'LinkedIn',       url: d.personal.linkedin,           icon:'linkedin',     desc:'Connect professionally' },
+    { label:'GitHub',         url: d.personal.github,             icon:'github',       desc:'Browse the code' },
+    { label:'Google Scholar', url: d.personal.scholar,            icon:'scholar',      desc:'Academic publications' },
+    { label:'ResearchGate',   url: d.personal.researchgate,       icon:'researchgate', desc:'Research profile' },
+    { label:'X / Twitter',    url: d.personal.twitter,            icon:'x',            desc:'@sahaj_malla' },
+    { label:'Instagram',      url: d.personal.instagram,          icon:'instagram',    desc:'@sahajrajmalla' },
+    { label:'Medium',         url: d.personal.medium,             icon:'medium',       desc:'Writing & tutorials' },
   ];
 
   const openTo = [
-    { tag:'PhD Opportunities',      icon:'🎓', color:'#8b5cf6' },
-    { tag:'Research Collaboration', icon:'🔬', color:'#4d7fff' },
-    { tag:'Open Source',            icon:'⚡', color:'#10b981' },
-    { tag:'Startup / Product Work', icon:'🚀', color:'#c9a84c' },
-    { tag:'Speaking / Teaching',    icon:'🗣', color:'#ff6b6b' },
+    { tag:'PhD Opportunities' },
+    { tag:'Research Collaboration' },
+    { tag:'Open Source' },
+    { tag:'Startup / Product Work' },
+    { tag:'Speaking / Teaching' },
   ];
 
   return (
@@ -83,13 +84,13 @@ function Contact() {
             fontSize:'clamp(32px, 4.5vw, 64px)',
             fontWeight:700, color:'#e8edf8', lineHeight:1.05,
             letterSpacing:'-0.5px', marginBottom:'16px',
-          }}>Let's build together.</h2>
+          }}>Get in touch.</h2>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontSize:'clamp(14px, 1.5vw, 17px)', color:'#b0c0dc',
             lineHeight:1.7, maxWidth:'560px',
           }}>
-            Whether you're a researcher, a startup founder, an engineer, or just curious — I'd love to hear from you. Best way is email; I usually reply within 24 hours.
+            Email is the best way to reach me, and I usually reply within a day. Researcher, founder, student, or just curious, you are welcome to write.
           </p>
         </div>
 
@@ -107,10 +108,10 @@ function Contact() {
                 background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.1)',
                 borderRadius:'20px', padding:'7px 16px',
               }}>
-                <span style={{ fontSize:'15px' }}>{o.icon}</span>
+                <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#c9a84c', flexShrink:0 }}></span>
                 <span style={{
                   fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-                  fontSize:'13px', color:'#c8d4ee', fontWeight:500,
+                  fontSize:'13px', color:'#c8d4ee', fontWeight:500, whiteSpace:'nowrap',
                 }}>{o.tag}</span>
               </div>
             ))}
@@ -150,10 +151,10 @@ function Contact() {
           display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'16px',
         }}>
           <p style={{
-            fontFamily:"'Times New Roman', Georgia, serif",
-            fontSize:'13px', fontStyle:'italic', color:'#5a7090',
+            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize:'13px', color:'#5a7090',
           }}>
-            "Curiosity is the engine. Obsession is the fuel."
+            Think like an Artist.
           </p>
           <a href={d.personal.cv} download="Sahaj_Raj_Malla_CV.pdf"
             style={{

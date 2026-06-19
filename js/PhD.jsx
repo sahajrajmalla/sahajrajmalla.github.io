@@ -35,9 +35,9 @@ function TrajectoryStep({ num, area, desc, year, last }) {
 function TierPill({ tier }) {
   const map = {
     'Q1':         { bg:'rgba(139,92,246,0.2)',  border:'rgba(139,92,246,0.5)', color:'#a78bfa' },
-    'Journal':    { bg:'rgba(16,185,129,0.18)', border:'rgba(16,185,129,0.5)', color:'#34d399' },
+    'Journal':    { bg:'rgba(201,168,76,0.16)', border:'rgba(201,168,76,0.45)', color:'#d6b55e' },
     'Conference': { bg:'rgba(34,85,232,0.18)',  border:'rgba(34,85,232,0.5)',  color:'#60a5fa' },
-    'Preprint':   { bg:'rgba(245,158,11,0.18)', border:'rgba(245,158,11,0.5)', color:'#fbbf24' },
+    'Preprint':   { bg:'rgba(127,160,200,0.14)', border:'rgba(127,160,200,0.4)', color:'#9fb6d4' },
   };
   const s = map[tier] || map['Conference'];
   return (
@@ -58,7 +58,7 @@ function PhD({ onNavigate }) {
   const allPapers = [...(d.peerReviewed || []), ...(d.preprints || [])];
 
   const trajectory = [
-    { num:'1', area:'Computer Vision', desc:'Devanagari script recognition — MallaNet (Q1, Scientific Reports, Nature)', year:'2024–2025' },
+    { num:'1', area:'Computer Vision', desc:'Devanagari script recognition with MallaNet (Q1, Scientific Reports, Nature)', year:'2024–2025' },
     { num:'2', area:'ML Systems & Forecasting', desc:'Ensemble methods, time-series, econometric modelling', year:'2023–2026' },
     { num:'3', area:'Quantum ML', desc:'Hybrid variational circuits for Devanagari digit recognition (99.80% accuracy)', year:'2025' },
     { num:'4', area:'Game-Playing Agents', desc:'Multi-agent RL in incomplete-information environments (88.3% win rate)', year:'2025' },
@@ -284,13 +284,13 @@ function PhD({ onNavigate }) {
           borderRadius:'14px', textAlign:'center',
         }}>
           <h3 style={{ fontFamily:"'Times New Roman', Georgia, serif", fontSize:'22px', fontWeight:700, color:'#e8edf8', marginBottom:'10px' }}>
-            Open to PhD Supervision &amp; Research Collaboration
+            Looking for a PhD supervisor
           </h3>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontSize:'14px', color:'#a0b8d8', lineHeight:1.7, marginBottom:'24px', maxWidth:'560px', margin:'0 auto 24px',
           }}>
-            I bring a deliberately sequenced research trajectory, industry ML experience, and a genuine drive to work on the hardest open problems. Let's talk.
+            If your group works on reinforcement learning, agentic systems, or applied ML for low-resource settings, I would like to hear from you. I have published in several of these areas and shipped ML in industry. Email is the fastest way to reach me.
           </p>
           <div style={{ display:'flex', justifyContent:'center', gap:'12px', flexWrap:'wrap' }}>
             <a href={`mailto:${d.personal.email}`} style={{

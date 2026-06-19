@@ -15,6 +15,8 @@ const PORTALS = [
 function Game({ onClose, onNavigate }) {
   const canvasRef = useRef(null);
   const stateRef  = useRef(null);
+  const onCloseRef = useRef(onClose);  onCloseRef.current = onClose;
+  const onNavRef   = useRef(onNavigate); onNavRef.current = onNavigate;
   const [nearLabel, setNearLabel] = useState(null);
   const [showHelp, setShowHelp]   = useState(false);
 
@@ -24,7 +26,7 @@ function Game({ onClose, onNavigate }) {
   };
   const tryEnter = () => {
     const st = stateRef.current;
-    if (st && st.nearPortal) { const id = st.nearPortal.id; onClose(); onNavigate(id); }
+    if (st && st.nearPortal) { const id = st.nearPortal.id; onCloseRef.current(); onNavRef.current(id); }
   };
 
   useEffect(() => {
@@ -184,16 +186,16 @@ function Game({ onClose, onNavigate }) {
       stateRef.current.keys[e.key] = true;
       if ((e.key==='e'||e.key==='E'||e.key==='Enter') && stateRef.current.nearPortal){
         e.preventDefault(); e.stopPropagation();
-        const id=stateRef.current.nearPortal.id; onClose(); onNavigate(id); return;
+        const id=stateRef.current.nearPortal.id; onCloseRef.current(); onNavRef.current(id); return;
       }
-      if (e.key==='Escape'){ e.preventDefault(); onClose(); return; }
+      if (e.key==='Escape'){ e.preventDefault(); onCloseRef.current(); return; }
       if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter','e','E'].includes(e.key)) e.preventDefault();
     };
     const onKeyUp = (e) => { delete stateRef.current.keys[e.key]; };
     const onClick = (e) => {
       const rect = canvas.getBoundingClientRect();
       const mx = (e.clientX-rect.left)*(VW/rect.width), my = (e.clientY-rect.top)*(VH/rect.height);
-      for (const p of PORTALS){ if (Math.hypot(p.x-mx,p.y-my)<28){ onClose(); onNavigate(p.id); } }
+      for (const p of PORTALS){ if (Math.hypot(p.x-mx,p.y-my)<28){ onCloseRef.current(); onNavRef.current(p.id); } }
     };
 
     window.addEventListener('keydown', onKeyDown);
@@ -202,13 +204,14 @@ function Game({ onClose, onNavigate }) {
     loop(performance.now());   // kick synchronously so a first frame paints even if rAF is throttled
 
     return () => { cancelAnimationFrame(animId); window.removeEventListener('keydown',onKeyDown); window.removeEventListener('keyup',onKeyUp); canvas.removeEventListener('click',onClick); };
-  }, [onClose, onNavigate]);
+  }, []);
 
   /* ── D-pad button ── */
   const padBtn = (label, key) => (
     <button
       onTouchStart={e=>{e.preventDefault(); setKey(key,true);}}
       onTouchEnd={e=>{e.preventDefault(); setKey(key,false);}}
+      onTouchCancel={e=>{e.preventDefault(); setKey(key,false);}}
       onMouseDown={()=>setKey(key,true)} onMouseUp={()=>setKey(key,false)} onMouseLeave={()=>setKey(key,false)}
       style={{ width:'48px', height:'48px', background:'rgba(34,85,232,0.4)', border:'1px solid rgba(77,127,255,0.6)', borderRadius:'12px', color:'#fff', fontSize:'18px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', userSelect:'none', WebkitUserSelect:'none', touchAction:'none' }}
     >{label}</button>
@@ -241,7 +244,7 @@ function Game({ onClose, onNavigate }) {
               <div style={{ maxWidth:'380px', textAlign:'center' }}>
                 <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'20px', fontWeight:700, color:'#eef1fa', marginBottom:'14px' }}>How to play 🕹</p>
                 <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'14px', color:'#c8d4ee', lineHeight:1.8 }}>
-                  Pilot your rocket with <strong style={{color:'#4d7fff'}}>WASD / arrow keys</strong> on desktop, or the <strong style={{color:'#4d7fff'}}>on-screen pad</strong> on mobile. Fly close to any glowing <strong style={{color:'#c9a84c'}}>★ star</strong> and press <strong style={{color:'#10b981'}}>ENTER</strong> (or tap the star) to open that section. Press <strong>ESC</strong> to close.
+                  Pilot your rocket with <strong style={{color:'#4d7fff'}}>WASD / arrow keys</strong> on desktop, or the <strong style={{color:'#4d7fff'}}>on-screen pad</strong> on mobile. Fly close to any glowing <strong style={{color:'#c9a84c'}}>★ star</strong> and press <strong style={{color:'#10b981'}}>E / ENTER</strong> (or tap the star) to open that section. Press <strong>ESC</strong> to close.
                 </p>
                 <button onClick={()=>setShowHelp(false)} style={{ marginTop:'18px', background:'#2255e8', color:'#fff', border:'none', borderRadius:'8px', padding:'9px 22px', cursor:'pointer', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', fontWeight:600 }}>Got it</button>
               </div>

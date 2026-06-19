@@ -3,7 +3,7 @@ const { useState } = React;
 
 function TypeBadge({ type }) {
   const map = {
-    'Open Source': { bg:'rgba(16,185,129,0.15)', border:'rgba(16,185,129,0.4)', color:'#34d399' },
+    'Open Source': { bg:'rgba(34,85,232,0.15)', border:'rgba(34,85,232,0.4)', color:'#60a5fa' },
     'Research':    { bg:'rgba(139,92,246,0.15)', border:'rgba(139,92,246,0.4)', color:'#a78bfa' },
     'Startup':     { bg:'rgba(201,168,76,0.15)', border:'rgba(201,168,76,0.4)', color:'#c9a84c' },
   };
@@ -43,13 +43,13 @@ function ProjectCard({ project }) {
       {/* Top accent line */}
       <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background:c, opacity: hover || open ? 0.9 : 0.4, transition:'opacity 0.2s' }} />
 
-      {/* Emoji + type row */}
+      {/* Icon + type row */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px' }}>
         <span style={{
-          width:'44px', height:'44px', borderRadius:'10px',
-          background:`${c}22`, border:`1px solid ${c}44`,
-          display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px',
-        }}>{project.emoji}</span>
+          width:'46px', height:'46px', borderRadius:'11px',
+          background:`${c}1c`, border:`1px solid ${c}40`,
+          display:'flex', alignItems:'center', justifyContent:'center', color:c,
+        }}>{window.SahajIcons[project.icon] && window.SahajIcons[project.icon]({ size:24, color:c, strokeW:1.7 })}</span>
         <TypeBadge type={project.type} />
       </div>
 
@@ -90,7 +90,7 @@ function ProjectCard({ project }) {
               <a href={project.github} target="_blank" rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
                 style={{
-                  display:'inline-flex', alignItems:'center', gap:'6px',
+                  display:'inline-flex', alignItems:'center', gap:'7px',
                   color:c, textDecoration:'none',
                   fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
                   fontSize:'13px', fontWeight:600,
@@ -98,7 +98,7 @@ function ProjectCard({ project }) {
                   borderRadius:'7px', padding:'7px 14px',
                   background:`${c}11`,
                 }}>
-                GitHub →
+                {window.SahajIcons.github({ size:15, color:c })} GitHub
               </a>
             )}
             {project.paper && (
@@ -143,13 +143,13 @@ function Projects() {
             fontSize:'clamp(32px, 4vw, 58px)',
             fontWeight:700, color:'#e8edf8', lineHeight:1.1,
             letterSpacing:'-0.5px', marginBottom:'16px',
-          }}>Built in the open.</h2>
+          }}>Things I've built.</h2>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontSize:'clamp(14px, 1.5vw, 17px)', color:'#b0c0dc',
             lineHeight:1.7, maxWidth:'580px',
           }}>
-            Research code, open-source tools, and a startup — each one built to solve a real problem. Click any card to explore.
+            Research code, a few open-source libraries, and one company. Tap any card for the details and the links.
           </p>
         </div>
 
@@ -176,9 +176,9 @@ function Projects() {
               marginLeft:'auto', color:'#4d7fff', textDecoration:'none',
               fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",
               fontSize:'13px', fontWeight:600,
-              display:'flex', alignItems:'center', gap:'5px',
+              display:'flex', alignItems:'center', gap:'7px',
             }}>
-            View all on GitHub →
+            {window.SahajIcons.github({ size:15, color:'#4d7fff' })} View all on GitHub
           </a>
         </div>
 
@@ -197,13 +197,12 @@ function Projects() {
           background:'rgba(34,85,232,0.07)', border:'1px solid rgba(34,85,232,0.2)',
           borderRadius:'12px', display:'flex', alignItems:'center', gap:'16px',
         }}>
-          <span style={{ fontSize:'24px' }}>🤝</span>
           <div>
             <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, color:'#c8d4ee', marginBottom:'4px' }}>
               Open to collaboration
             </p>
             <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8', lineHeight:1.6 }}>
-              Every research project ships with code. If something's useful — fork it, open an issue, or send a PR. Reach out for research partnerships, startup ideas, or anything interesting.
+              Every research project here comes with code. If a repo is useful to you, fork it or open an issue. I am glad to talk about research, startups, or whatever you are stuck on.
             </p>
           </div>
         </div>

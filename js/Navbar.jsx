@@ -214,7 +214,7 @@ function Navbar({ currentPage, onNavigate }) {
               fontSize: '15px', fontWeight: 600, textAlign: 'left',
             }}
           >
-            🕹 World
+            World
           </button>
         </div>
       )}

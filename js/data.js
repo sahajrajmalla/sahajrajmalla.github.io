@@ -16,7 +16,7 @@ window.SahajData = {
     cv: "assets/cv.pdf",
   },
 
-  stats: { papers: 9, awards: 9, users: 4000, repos: 80 },
+  stats: { papers: 10, awards: 9, users: 4000, repos: 80 },
 
   // ── PEER-REVIEWED ──────────────────────────────────────────────────────────
   peerReviewed: [
@@ -61,6 +61,18 @@ window.SahajData = {
 
   // ── PREPRINTS ──────────────────────────────────────────────────────────────
   preprints: [
+    {
+      id: 10,
+      title: "ArthaVyu: A Stacking Ensemble Framework for Multi-Source Real Estate Price Prediction in Nepal",
+      venue: "Research Square",
+      publisher: "Research Square",
+      tier: "Preprint",
+      year: "Jun 2026",
+      tag: "Finance · ML",
+      url: "https://doi.org/10.21203/rs.3.rs-10073591/v1",
+      authors: "S. R. Malla",
+      abstract: "A stacking ensemble that fuses several real estate data sources to predict property prices across Nepal. Diverse base learners feed a meta-model that gives steadier valuations than any single model on its own.",
+    },
     {
       id: 4,
       title: "Kalimati Vegetable Price Index Forecasting with a Momentum Corrected Online Stacking Ensemble",
@@ -138,52 +150,52 @@ window.SahajData = {
   // ── PROJECTS ───────────────────────────────────────────────────────────────
   projects: [
     {
-      id: 1, name: "GreatAPI", emoji: "⚡",
+      id: 1, name: "GreatAPI", abbr: "GA", icon: "greatapi",
       tagline: "Full-stack Python web framework",
-      description: "An opinionated, batteries-included Python web framework built on FastAPI. Rapid development of production-ready APIs with async task queues, database migrations, and one-command deployment.",
+      description: "A Python web framework built on FastAPI, for people who want to ship an API without assembling the same scaffolding every time. Async task queues, database migrations, and one-command deploy come set up out of the box.",
       tech: ["Python", "FastAPI", "Pydantic", "SQLAlchemy"],
       github: "https://github.com/sahajrajmalla/greatapi",
       type: "Open Source", color: "#4d7fff",
     },
     {
-      id: 2, name: "MallaNet", emoji: "🧠",
+      id: 2, name: "MallaNet", abbr: "MN", icon: "mallanet",
       tagline: "Lightweight Devanagari recognition CNN",
-      description: "The neural architecture from the Q1 Scientific Reports paper. State-of-the-art accuracy on handwritten Devanagari recognition with 56% fewer parameters than prior SOTA.",
+      description: "The neural architecture from my Scientific Reports paper. It reaches state-of-the-art accuracy on handwritten Devanagari recognition with 56% fewer parameters than the previous best model.",
       tech: ["PyTorch", "CNN", "Computer Vision"],
       github: "https://github.com/sahajrajmalla/MallaNet",
       paper: "https://www.nature.com/articles/s41598-025-30871-z",
       type: "Research", color: "#8b5cf6",
     },
     {
-      id: 3, name: "SahajMails", emoji: "✉️",
+      id: 3, name: "SahajMails", abbr: "SM", icon: "mail",
       tagline: "Personalized bulk email as a Python library",
-      description: "Free, secure, simple Python library for personalized bulk emails. Zero-config setup, template rendering, delivery tracking, and rate limiting built in.",
+      description: "A small Python library for sending personalized bulk email without the usual setup pain. Templating, delivery tracking, and rate limiting are handled for you.",
       tech: ["Python", "SMTP", "Jinja2"],
       github: "https://github.com/sahajrajmalla/sahajmails",
-      type: "Open Source", color: "#10b981",
+      type: "Open Source", color: "#4d7fff",
     },
     {
-      id: 4, name: "Hamroniwas", emoji: "🏠",
+      id: 4, name: "Hamroniwas", abbr: "HN", icon: "house",
       tagline: "Student accommodation platform · 4,000+ users",
-      description: "Tech platform connecting students with verified affordable housing near Kathmandu University. Reached 4,000+ users through hands-on grassroots outreach — 500+ landlords, one door at a time.",
+      description: "A platform that connects students with verified, affordable housing near Kathmandu University. I onboarded the first 500-plus landlords myself, going door to door, and it grew to more than 4,000 users.",
       tech: ["Django", "React", "PostgreSQL", "AWS"],
       type: "Startup", color: "#c9a84c",
     },
     {
-      id: 5, name: "Dhumbal AI", emoji: "🃏",
+      id: 5, name: "Dhumbal AI", abbr: "DA", icon: "cards",
       tagline: "Multi-agent RL for a Nepali card game",
-      description: "Autonomous agents trained via multi-agent RL to play Dhumbal. 88.3% win rate in simulations. Rich testbed for incomplete information, strategic reasoning, and emergent agent behaviour.",
+      description: "Agents trained with multi-agent RL to play Dhumbal, a Nepali card game. The most aggressive agent wins 88.3% of simulated games. It turned out to be a good place to study hidden information and strategy.",
       tech: ["Python", "PyTorch", "MARL", "RL"],
       github: "https://github.com/sahajrajmalla/dhumbal-ai",
-      type: "Research", color: "#ff6b6b",
+      type: "Research", color: "#8b5cf6",
     },
     {
-      id: 6, name: "Quantum Neural Nets", emoji: "⚛️",
+      id: 6, name: "Quantum Neural Nets", abbr: "QN", icon: "atom",
       tagline: "Variational circuits for Devanagari & classification",
-      description: "Hybrid quantum-classical architecture for Devanagari digit recognition: CNN + 10-qubit variational circuit. 99.80% accuracy — first quantum approach on this task.",
+      description: "A hybrid quantum-classical model for Devanagari digit recognition: a CNN paired with a 10-qubit variational circuit. It reached 99.80% accuracy, the first quantum approach tried on this task.",
       tech: ["Qiskit", "PennyLane", "Python"],
       github: "https://github.com/sahajrajmalla/Quantum-Neural-Networks-Binary-Classification",
-      type: "Research", color: "#7c3aed",
+      type: "Research", color: "#8b5cf6",
     },
   ],
 
@@ -230,9 +242,9 @@ window.SahajData = {
   awards: [
     { title: "Infinity Codewave 2026 Hackathon", org: "Kathmandu University", year: "May 2026" },
     { title: "Infinity Data Visualization Hackathon", org: "Kathmandu University", year: "May 2026" },
-    { title: "Best Model Demo — KEC LITE 2081", org: "Kantipur Engineering College", year: "Dec 2024" },
+    { title: "Best Model Demo, KEC LITE 2081", org: "Kantipur Engineering College", year: "Dec 2024" },
     { title: "Seeds for the Future Nepal", org: "Huawei Technologies", year: "Sep 2023" },
-    { title: "KU Hackfest — OSM Category", org: "Kathmandu University", year: "Oct 2023" },
+    { title: "KU Hackfest (OSM Category)", org: "Kathmandu University", year: "Oct 2023" },
     { title: "Infinity Codewave", org: "Dept. of Mathematics, KU", year: "Aug 2023" },
     { title: "AI Text Challenge Champion", org: "IT MEET 2022, KU", year: "Aug 2022" },
     { title: "Data Visualization Champion", org: "IT MEET 2022, KU", year: "Aug 2022" },
@@ -264,7 +276,7 @@ window.SahajData = {
       url: "https://techpana.com/2025/154683/",
     },
     {
-      title: "South Asia's 1st Quantum AI For Devanagari Digits — 99.8% Accuracy Breakthrough",
+      title: "South Asia's 1st Quantum AI For Devanagari Digits: 99.8% Accuracy Breakthrough",
       outlet: "ICT Frame",
       date: "Jun 2025",
       url: "https://ictframe.com/south-asias-1st-quantum-ai/",
@@ -276,7 +288,7 @@ window.SahajData = {
       url: "https://www.teraionline.com.np/news/39604",
     },
     {
-      title: "Seeds for the Future 2023 — A Technological Odyssey from Nepal to China",
+      title: "Seeds for the Future 2023: A Technological Odyssey",
       outlet: "ICT Frame",
       date: "Nov 2023",
       url: "https://ictframe.com/seeds-for-the-future-technological-odyssey-from-nepal-to-china/",
@@ -285,10 +297,10 @@ window.SahajData = {
 
   // ── CONFERENCE TALKS ───────────────────────────────────────────────────────
   talks: [
-    { title: "Conference Presentation — Landmark-Based Addressing", org: "Kathmandu University", date: "Oct 2024" },
-    { title: "Conference Presentation — Nepali Stock Price Prediction", org: "IEEE, Bhaktapur", date: "Oct 2024" },
-    { title: "Panelist — National Youth Scientific Conference 2024", org: "National Youth Council Nepal", date: "Jun 2024" },
-    { title: "Guest Speaker — Career in AI/ML", org: "CSIT Association of Nepal, Pokhara", date: "Dec 2023" },
+    { title: "Conference Presentation, Landmark-Based Addressing", org: "Kathmandu University", date: "Oct 2024" },
+    { title: "Conference Presentation, Nepali Stock Price Prediction", org: "IEEE, Bhaktapur", date: "Oct 2024" },
+    { title: "Panelist, National Youth Scientific Conference 2024", org: "National Youth Council Nepal", date: "Jun 2024" },
+    { title: "Guest Speaker, Career in AI/ML", org: "CSIT Association of Nepal, Pokhara", date: "Dec 2023" },
   ],
 
   // ── RESEARCH INTERESTS ─────────────────────────────────────────────────────
@@ -308,18 +320,39 @@ window.SahajData = {
   },
 
   // ── PHD STATEMENT ──────────────────────────────────────────────────────────
-  phdStatement: "I am seeking PhD opportunities with focus on reinforcement learning and multi-modal agentic systems. My research at Kathmandu University has been deliberately sequenced — computer vision, ML systems, quantum ML, game-playing agents — each step pointing toward agents that perceive, reason, and act across modalities. I bring publications across multiple subfields, industry experience shipping ML to production, and a rare perspective building AI for languages and markets the global research community often overlooks. I thrive on open collaboration, pairing novel research questions with engineering rigour and an appetite for the unknown.",
+  phdStatement: "I'm applying to PhD programs in reinforcement learning and multi-modal agentic systems. My work at Kathmandu University has moved through computer vision, machine learning systems, quantum machine learning, and game-playing agents. Each project taught me something the next one needed. Along the way I've published in several of these areas, shipped machine learning in industry, and spent a lot of that time on problems specific to Nepal, like reading Devanagari script and forecasting local markets. I do my best work in groups that take on hard questions and stay with them.",
 
   // ── INTERESTS (ordered as requested) ───────────────────────────────────────
   interests: [
-    { label: "Travel",      icon: "✈️",  color: "#4d7fff" },
-    { label: "Art",         icon: "🎨",  color: "#f59e0b" },
-    { label: "Philosophy",  icon: "🌀",  color: "#8b5cf6" },
-    { label: "Psychology",  icon: "🧠",  color: "#ec4899" },
-    { label: "Music",       icon: "♫",  color: "#c9a84c" },
-    { label: "Anime",       icon: "⛩",  color: "#ff6b6b" },
-    { label: "Football",    icon: "⚽",  color: "#10b981" },
-    { label: "Explore",     icon: "🔭",  color: "#3dd6f5" },
+    { label: "Travel",      icon: "travel"     },
+    { label: "Art",         icon: "art"        },
+    { label: "Philosophy",  icon: "philosophy" },
+    { label: "Psychology",  icon: "psychology" },
+    { label: "Music",       icon: "music"      },
+    { label: "Anime",       icon: "anime"      },
+    { label: "Football",    icon: "football"   },
+    { label: "Explore",     icon: "explore"    },
+  ],
+
+  // ── LIFE GALLERY (About page) ──────────────────────────────────────────────
+  gallery: [
+    { src: "assets/life/sahaj11.jpg", w: 2, caption: "High in the Himalaya",        sub: "Trekking" },
+    { src: "assets/life/sahaj14.jpg", w: 1, caption: "Kathmandu University",         sub: "Campus" },
+    { src: "assets/life/sahaj10.jpg", w: 1, caption: "Somewhere grand",             sub: "Travels" },
+    { src: "assets/life/sahaj5.jpg",  w: 1, caption: "On the panel",                 sub: "Speaking" },
+    { src: "assets/life/sahaj13.jpg", w: 2, caption: "Horseback in Mustang",         sub: "Mustang" },
+    { src: "assets/life/sahaj7.jpg",  w: 1, caption: "Golden hour",                  sub: "Sunset" },
+    { src: "assets/life/sahaj6.jpg",  w: 2, caption: "Bicycle kick on the pitch",    sub: "Football" },
+    { src: "assets/life/sahaj17.jpg", w: 1, caption: "Wearing the startup",          sub: "Hamroniwas" },
+    { src: "assets/life/sahaj18.jpg", w: 1, caption: "Top of the climb",             sub: "Outdoors" },
+    { src: "assets/life/sahaj20.jpg", w: 1, caption: "Stone guardians",              sub: "Heritage" },
+    { src: "assets/life/sahaj8.jpg",  w: 1, caption: "A rainy day abroad",           sub: "On the road" },
+    { src: "assets/life/sahaj9.jpg",  w: 1, caption: "Trail with a view",            sub: "Hiking" },
+    { src: "assets/life/sahaj19.jpg", w: 2, caption: "Night ride under a full moon", sub: "After hours" },
+    { src: "assets/life/sahaj15.jpg", w: 1, caption: "On the steps at KU",           sub: "Campus" },
+    { src: "assets/life/sahaj4.jpg",  w: 1, caption: "Newari woodcraft, up close",   sub: "Heritage" },
+    { src: "assets/life/sahaj16.jpg", w: 1, caption: "Out on the bike",              sub: "Riding" },
+    { src: "assets/life/sahaj12.jpg", w: 1, caption: "World's highest swing, Kushma", sub: "Travels" },
   ],
 
   // ── SKILLS (for toolbox) ───────────────────────────────────────────────────
@@ -348,7 +381,7 @@ window.SahajData = {
     },
     {
       label: "Quantum",
-      color: "#7c3aed",
+      color: "#8b5cf6",
       skills: [
         { name: "Qiskit",    brand: "#6929C4", abbr: "QK" },
         { name: "PennyLane", brand: "#2D7FF9", abbr: "PL" },
@@ -356,7 +389,7 @@ window.SahajData = {
     },
     {
       label: "Web & APIs",
-      color: "#10b981",
+      color: "#4d7fff",
       skills: [
         { name: "FastAPI", brand: "#009688", abbr: "FA" },
         { name: "Django",  brand: "#092E20", abbr: "Dj" },
@@ -366,7 +399,7 @@ window.SahajData = {
     },
     {
       label: "Data",
-      color: "#f59e0b",
+      color: "#c9a84c",
       skills: [
         { name: "NumPy",   brand: "#013243", abbr: "Np" },
         { name: "Pandas",  brand: "#150458", abbr: "Pd" },
@@ -377,7 +410,7 @@ window.SahajData = {
     },
     {
       label: "Cloud & DevOps",
-      color: "#ff6b6b",
+      color: "#7fa0c8",
       skills: [
         { name: "Docker", brand: "#2496ED", abbr: "Dk" },
         { name: "AWS",    brand: "#FF9900", abbr: "AW" },

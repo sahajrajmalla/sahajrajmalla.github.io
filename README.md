@@ -15,7 +15,7 @@ Built to deploy on **GitHub Pages**.
 |------|-------|---------|
 | **Home** | `#home` | Animated space hero, name (EN + नेपाली), live stats, social links |
 | **About** | `#about` | Bio, interests, technical toolbox, journey, fellowships, press |
-| **Research** | `#research` | 9 publications (peer-reviewed + preprints), awards, talks |
+| **Research** | `#research` | 10 publications (peer-reviewed + preprints), awards, talks |
 | **Projects** | `#projects` | Open-source tools, research code, startup |
 | **For PhD** | `#phd` | Research profile written for supervisors & collaborators |
 | **Contact** | `#contact` | Direct ways to reach me — no repeated content |
@@ -30,10 +30,11 @@ index.html         → entry point: SEO meta, JSON-LD, fonts, script loader
 js/
   data.js          → ★ ALL CONTENT lives here (papers, awards, links, skills…)
                      + shared responsive hooks
+  Icons.jsx        → global SVG icon registry (window.SahajIcons)
   Logo.jsx         → the mountain-"M" + crown logo (inline SVG)
   Navbar.jsx       → top navigation + CV download button
   Home.jsx         → hero + animated space canvas
-  About.jsx        → about page + swipeable photo carousel
+  About.jsx        → bio, photo carousel, interests, toolbox, life gallery
   Research.jsx     → publications, awards, talks
   Projects.jsx     → project cards
   PhD.jsx          → academic profile
@@ -45,6 +46,7 @@ assets/
   sahaj1.jpg       → ★ photo (mountains)
   sahaj2.jpg       → ★ photo (primary / hero)
   sahaj3.jpeg      → ★ photo (Nepal flag)
+  life/            → ★ life gallery photos (sahaj4.jpg – sahaj20.jpg)
 CNAME              → custom domain (sahajrajmalla.com.np)
 robots.txt         → crawl rules + sitemap pointer
 sitemap.xml        → sitemap

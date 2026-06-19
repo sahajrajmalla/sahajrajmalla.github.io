@@ -276,6 +276,7 @@ function Home({ onNavigate }) {
   const d = window.SahajData;
   const mobile = window.useIsMobile(820);
   const [hov, setHov] = useState(null);
+  const [expHov, setExpHov] = useState(false);
 
   const pad = mobile ? '92px 20px 64px' : '60px 48px';
 
@@ -306,7 +307,7 @@ function Home({ onNavigate }) {
         {/* Left / text */}
         <div style={{ flex:'1 1 400px', minWidth:0, order: mobile ? 2 : 1 }}>
           <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '10px' : '11px', fontWeight:700, letterSpacing:'2.5px', textTransform:'uppercase', color:'#4d7fff', marginBottom:'20px' }}>
-            ◉ Undergraduate AI Researcher · Technopreneur
+            Undergraduate AI Researcher · Technopreneur
           </p>
 
           <h1 style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(40px,8vw,82px)', fontWeight:700, color:'#eef1fa', lineHeight:1.04, letterSpacing:'-1px', marginBottom:'10px' }}>
@@ -325,7 +326,7 @@ function Home({ onNavigate }) {
 
           {/* Stats */}
           <div style={{ display:'flex', gap: mobile ? '28px' : '36px', marginBottom: mobile ? '32px' : '44px', flexWrap:'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
-            {[{val:9,suf:'',lbl:'Publications'},{val:9,suf:'',lbl:'Awards Won'},{val:4000,suf:'+',lbl:'Users Reached'}].map((s,i)=>(
+            {[{val:10,suf:'',lbl:'Publications'},{val:9,suf:'',lbl:'Awards'},{val:4000,suf:'+',lbl:'Users reached'}].map((s,i)=>(
               <div key={i}>
                 <div style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(28px,7vw,52px)', fontWeight:700, color:'#eef1fa', lineHeight:1 }}>
                   <Counter target={s.val} delay={800 + i*260} />{s.suf}
@@ -338,7 +339,7 @@ function Home({ onNavigate }) {
           {/* CTAs */}
           <div style={{ display:'flex', gap:'12px', marginBottom:'26px', flexWrap:'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
             <button onClick={()=>onNavigate('research')} onMouseEnter={()=>setHov('res')} onMouseLeave={()=>setHov(null)}
-              style={{ background: hov==='res' ? '#1d47d6' : '#2255e8', color:'white', border:'none', cursor:'pointer', padding:'13px 28px', borderRadius:'8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, display:'flex', alignItems:'center', gap:'8px', whiteSpace:'nowrap', boxShadow: hov==='res' ? '0 8px 28px rgba(34,85,232,0.55)' : '0 4px 16px rgba(34,85,232,0.3)', transform: hov==='res' ? 'translateY(-2px)' : 'none', transition:'all 0.2s ease' }}>
+              style={{ background: hov==='res' ? '#1d47d6' : '#2255e8', color:'white', border:'none', cursor:'pointer', padding:'13px 28px', borderRadius:'8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, display:'flex', alignItems:'center', gap:'8px', whiteSpace:'nowrap', boxShadow: hov==='res' ? '0 6px 20px rgba(34,85,232,0.38)' : '0 3px 12px rgba(34,85,232,0.24)', transform: hov==='res' ? 'translateY(-2px)' : 'none', transition:'all 0.2s ease' }}>
               View Research
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
@@ -359,20 +360,20 @@ function Home({ onNavigate }) {
         </div>
 
         {/* Right / photo */}
-        <div style={{ flexShrink:0, width: mobile ? 'min(330px,82vw)' : 'clamp(240px,26vw,350px)', order: mobile ? 1 : 2 }}>
-          <div style={{ position:'relative', borderRadius:'18px', overflow:'hidden', aspectRatio:'3/4', boxShadow:'0 0 0 1px rgba(77,127,255,0.3),0 24px 60px rgba(0,0,0,0.65)' }}>
-            <img src="assets/sahaj2.jpg" alt="Sahaj Raj Malla" loading="eager" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top', display:'block' }} />
+        <div style={{ flexShrink:0, width: mobile ? 'min(360px,86vw)' : 'clamp(290px,32vw,420px)', order: mobile ? 1 : 2 }}>
+          <div style={{ position:'relative', borderRadius:'18px', overflow:'hidden', aspectRatio:'4/5', boxShadow:'0 0 0 1px rgba(77,127,255,0.3),0 24px 60px rgba(0,0,0,0.65)' }}>
+            <img src="assets/sahaj2.jpg" alt="Sahaj Raj Malla" loading="eager" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 18%', display:'block' }} />
             <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(4,9,26,0.75) 0%,transparent 55%)' }} />
             <div style={{ position:'absolute', bottom:'16px', left:'16px', right:'16px' }}>
-              <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'rgba(210,222,248,0.75)', letterSpacing:'1.3px', textTransform:'uppercase' }}>Huawei · Seeds for the Future · 2023</p>
+              <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'rgba(210,222,248,0.75)', letterSpacing:'1.3px', textTransform:'uppercase' }}>Kathmandu, Nepal</p>
             </div>
           </div>
           <a href="https://www.nature.com/articles/s41598-025-30871-z" target="_blank" rel="noopener noreferrer"
             style={{ display:'flex', alignItems:'center', gap:'12px', marginTop:'14px', padding:'12px 14px', background:'rgba(139,92,246,0.12)', border:'1px solid rgba(139,92,246,0.32)', borderRadius:'10px', textDecoration:'none', transition:'all 0.2s ease' }}>
-            <span style={{ width:'34px', height:'34px', background:'rgba(139,92,246,0.22)', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'16px', flexShrink:0 }}>🧬</span>
+            <span style={{ width:'34px', height:'34px', background:'rgba(139,92,246,0.22)', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:800, letterSpacing:'0.4px', color:'#c4b5fd', flexShrink:0 }}>Q1</span>
             <div style={{ textAlign:'left' }}>
               <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'10px', fontWeight:800, color:'#a78bfa', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:'2px' }}>Q1 · Scientific Reports · 2025</div>
-              <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'#d6e0f4', fontWeight:500 }}>MallaNet — Nature Portfolio</div>
+              <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'#d6e0f4', fontWeight:500 }}>MallaNet (Nature Portfolio)</div>
             </div>
           </a>
         </div>
@@ -381,10 +382,20 @@ function Home({ onNavigate }) {
       {/* Explore → opens game */}
       {!mobile && (
         <button onClick={()=>onNavigate('game')}
-          style={{ position:'absolute', bottom:'24px', left:'50%', transform:'translateX(-50%)', background:'none', border:'none', cursor:'pointer', display:'flex', flexDirection:'column', alignItems:'center', gap:'6px', opacity:0.6, padding:'8px 16px', borderRadius:'20px', transition:'opacity 0.2s', zIndex:1 }}
-          onMouseEnter={e=>e.currentTarget.style.opacity='1'} onMouseLeave={e=>e.currentTarget.style.opacity='0.6'}>
-          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'2.5px', textTransform:'uppercase', color:'#9ab0cc' }}>Explore My World</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ab0cc" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          onMouseEnter={()=>setExpHov(true)} onMouseLeave={()=>setExpHov(false)}
+          style={{ position:'absolute', bottom:'26px', left:'50%', transform:'translateX(-50%)', cursor:'pointer', display:'flex', alignItems:'center', gap:'11px', padding:'10px 20px 10px 16px', borderRadius:'24px', zIndex:2,
+            background: expHov ? 'rgba(34,85,232,0.22)' : 'rgba(10,20,42,0.55)',
+            border:`1px solid ${expHov ? 'rgba(201,168,76,0.75)' : 'rgba(201,168,76,0.42)'}`,
+            boxShadow: expHov ? '0 8px 28px rgba(34,85,232,0.4)' : '0 4px 18px rgba(0,0,0,0.45)',
+            backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
+            animation:'heroFloat 3.4s ease-in-out infinite', transition:'background 0.25s, border-color 0.25s, box-shadow 0.25s' }}>
+          <span style={{ display:'flex', color: expHov ? '#e2c97a' : '#c9a84c', transition:'color 0.25s' }}>
+            {window.SahajIcons && window.SahajIcons.planet({ size:20, color:'currentColor', strokeW:1.7 })}
+          </span>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:700, letterSpacing:'1.6px', textTransform:'uppercase', color: expHov ? '#fff' : '#dbe6fb' }}>Explore My World</span>
+          <span style={{ display:'flex', color: expHov ? '#9fc0ff' : '#7f9bc4', transition:'color 0.25s' }}>
+            {window.SahajIcons && window.SahajIcons.arrowRight({ size:15, color:'currentColor', strokeW:2.2 })}
+          </span>
         </button>
       )}
     </div>

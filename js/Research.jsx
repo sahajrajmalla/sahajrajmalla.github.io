@@ -6,9 +6,9 @@ const TAGS_ALL = ['All','Computer Vision','Quantum ML','Reinforcement Learning',
 function TierBadge({ tier }) {
   const m = {
     'Q1':         {bg:'rgba(139,92,246,0.18)',border:'rgba(139,92,246,0.5)',color:'#a78bfa'},
-    'Journal':    {bg:'rgba(16,185,129,0.18)', border:'rgba(16,185,129,0.5)',color:'#34d399'},
+    'Journal':    {bg:'rgba(201,168,76,0.16)', border:'rgba(201,168,76,0.45)',color:'#d6b55e'},
     'Conference': {bg:'rgba(34,85,232,0.18)',  border:'rgba(34,85,232,0.5)', color:'#60a5fa'},
-    'Preprint':   {bg:'rgba(245,158,11,0.18)', border:'rgba(245,158,11,0.5)',color:'#fbbf24'},
+    'Preprint':   {bg:'rgba(127,160,200,0.14)', border:'rgba(127,160,200,0.4)',color:'#9fb6d4'},
   };
   const s = m[tier]||m['Conference'];
   return <span style={{background:s.bg,border:`1px solid ${s.border}`,borderRadius:'12px',padding:'3px 10px',fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,color:s.color,letterSpacing:'0.8px',textTransform:'uppercase'}}>{tier}</span>;
@@ -20,7 +20,7 @@ function PaperCard({ paper }) {
   return (
     <div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setOpen(!open)}
       style={{background:h?'rgba(255,255,255,0.045)':'rgba(255,255,255,0.025)',border:`1px solid ${open?'rgba(34,85,232,0.5)':h?'rgba(34,85,232,0.3)':'#0e1f3d'}`,borderRadius:'14px',padding:'26px',cursor:'pointer',transition:'all 0.2s ease',transform:h?'translateY(-3px)':'translateY(0)',boxShadow:h?'0 12px 40px rgba(0,0,0,0.4)':'none',position:'relative',overflow:'hidden'}}>
-      {paper.highlight&&<div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,#2255e8,#8b5cf6,#c9a84c)'}}/>}
+      {paper.highlight&&<div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,#2255e8,#c9a84c)'}}/>}
 
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'16px',marginBottom:'12px'}}>
         <div style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
@@ -71,17 +71,17 @@ function Research() {
           <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'3px',textTransform:'uppercase',color:'#4d7fff',marginBottom:'12px'}}>Research</p>
           <h2 style={{fontFamily:"'Times New Roman',Georgia,serif",fontSize:'clamp(32px,4vw,58px)',fontWeight:700,color:'#e8edf8',lineHeight:1.1,letterSpacing:'-0.5px',marginBottom:'14px'}}>Published work.</h2>
           <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'clamp(14px,1.5vw,17px)',color:'#a0b8d8',lineHeight:1.7,maxWidth:'620px'}}>
-            Every paper ships with its code. The work spans computer vision, ML systems, quantum circuits, and reinforcement learning — each step building toward agents that can perceive, reason, and act.
+            Ten papers so far, across computer vision, machine learning systems, quantum machine learning, and reinforcement learning. Most of them come with code you can run. They are loosely headed the same way: building agents that can act on what they see.
           </p>
         </div>
 
         {/* Stats banner */}
         <div style={{display:'grid',gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(4,1fr)',gap:'1px',marginBottom:'44px',background:'#0e1f3d',borderRadius:'12px',overflow:'hidden',border:'1px solid #0e1f3d'}}>
           {[
-            {n:'9',   l:'Total Publications'},
+            {n:'10',  l:'Total Publications'},
             {n:'3',   l:'Peer-Reviewed'},
             {n:'1',   l:'Q1 Journal (Springer Nature)'},
-            {n:'6',   l:'Preprints (arXiv)'},
+            {n:'7',   l:'Preprints'},
           ].map((s,i)=>(
             <div key={i} style={{flex:1,padding:'18px 20px',textAlign:'center',background:'rgba(255,255,255,0.025)',borderRight:i<3?'1px solid #0e1f3d':'none'}}>
               <div style={{fontFamily:"'Times New Roman',Georgia,serif",fontSize:'clamp(22px,2.8vw,36px)',fontWeight:700,color:'#e8edf8',lineHeight:1}}>{s.n}</div>
@@ -100,7 +100,7 @@ function Research() {
         {/* Peer-reviewed section */}
         {peer.length>0&&(
           <div style={{marginBottom:'40px'}}>
-            <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase',color:'#34d399',marginBottom:'16px'}}>Peer-Reviewed Publications</p>
+            <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase',color:'#d6b55e',marginBottom:'16px'}}>Peer-Reviewed Publications</p>
             <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
               {peer.map(p=><PaperCard key={p.id} paper={p}/>)}
             </div>
@@ -110,7 +110,7 @@ function Research() {
         {/* Preprints section */}
         {prep.length>0&&(
           <div style={{marginBottom:'48px'}}>
-            <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase',color:'#fbbf24',marginBottom:'16px'}}>Preprints</p>
+            <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase',color:'#9fb6d4',marginBottom:'16px'}}>Preprints</p>
             <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
               {prep.map(p=><PaperCard key={p.id} paper={p}/>)}
             </div>
@@ -119,7 +119,6 @@ function Research() {
 
         {/* Scholar link */}
         <div style={{padding:'18px 24px',background:'rgba(201,168,76,0.07)',border:'1px solid rgba(201,168,76,0.2)',borderRadius:'12px',display:'flex',alignItems:'center',gap:'14px'}}>
-          <span style={{fontSize:'18px'}}>📚</span>
           <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'14px',color:'#a08840',lineHeight:1.6}}>
             Full list on{' '}<a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{color:'#c9a84c',textDecoration:'none',borderBottom:'1px solid rgba(201,168,76,0.4)'}}>Google Scholar</a> · including conference proceedings, journal articles, and preprints.
           </p>
