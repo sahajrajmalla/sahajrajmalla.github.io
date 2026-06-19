@@ -95,7 +95,7 @@ function App() {
         title="Explore Sahaj's World"
         aria-label="Open interactive world"
         style={{
-          position:'fixed', bottom: mobile?'18px':'28px', left: mobile?'16px':'28px',
+          position:'fixed', bottom: mobile?'18px':'28px', right: mobile?'16px':'28px',
           width: fabHover?'130px':'58px',
           height:'58px',
           borderRadius:'29px',
