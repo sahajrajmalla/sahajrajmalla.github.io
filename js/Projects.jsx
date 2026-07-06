@@ -1,11 +1,11 @@
-// Projects.jsx — Project cards with expand-on-click details, no section numbers
+// Projects.jsx - Project cards with expand-on-click details, no section numbers
 const { useState } = React;
 
 function TypeBadge({ type }) {
   const map = {
     'Open Source': { bg:'rgba(34,85,232,0.15)', border:'rgba(34,85,232,0.4)', color:'#60a5fa' },
-    'Research':    { bg:'rgba(139,92,246,0.15)', border:'rgba(139,92,246,0.4)', color:'#a78bfa' },
-    'Startup':     { bg:'rgba(201,168,76,0.15)', border:'rgba(201,168,76,0.4)', color:'#c9a84c' },
+    'Research':    { bg:'rgba(139,92,246,0.15)', border:'rgba(139,92,246,0.4)', color:'var(--purple)' },
+    'Startup':     { bg:'rgba(201,168,76,0.15)', border:'rgba(201,168,76,0.4)', color:'var(--gold-ink)' },
   };
   const s = map[type] || map['Research'];
   return (
@@ -28,8 +28,8 @@ function ProjectCard({ project }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        background: hover ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.025)',
-        border:`1px solid ${hover || open ? c + '55' : '#0e1f3d'}`,
+        background: hover ? 'var(--surface-2)' : 'var(--surface)',
+        border:`1px solid ${hover || open ? c + '55' : 'var(--line)'}`,
         borderRadius:'14px',
         padding:'26px',
         cursor:'pointer',
@@ -57,23 +57,23 @@ function ProjectCard({ project }) {
       <h3 style={{
         fontFamily:"'Times New Roman', Georgia, serif",
         fontSize:'clamp(16px, 1.8vw, 21px)',
-        fontWeight:700, color:'#e8edf8',
+        fontWeight:700, color:'var(--ink)',
         marginBottom:'6px', lineHeight:1.2,
       }}>{project.name}</h3>
 
       {/* Tagline */}
       <p style={{
         fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-        fontSize:'13px', color:'#8899bb', marginBottom:'16px', lineHeight:1.5,
+        fontSize:'13px', color:'var(--ink-4)', marginBottom:'16px', lineHeight:1.5,
       }}>{project.tagline}</p>
 
       {/* Tech tags */}
       <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }}>
         {project.tech.map(t => (
           <span key={t} style={{
-            background:'rgba(255,255,255,0.07)', borderRadius:'5px', padding:'3px 8px',
+            background:'var(--surface-3)', borderRadius:'5px', padding:'3px 8px',
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'11px', color:'#7090aa', fontWeight:500,
+            fontSize:'11px', color:'var(--ink-4)', fontWeight:500,
           }}>{t}</span>
         ))}
       </div>
@@ -83,7 +83,7 @@ function ProjectCard({ project }) {
         <div style={{ marginTop:'20px', paddingTop:'20px', borderTop:`1px solid ${c}22` }}>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'14px', color:'#a8b8d0', lineHeight:1.75, marginBottom:'18px',
+            fontSize:'14px', color:'var(--ink-3)', lineHeight:1.75, marginBottom:'18px',
           }}>{project.description}</p>
           <div style={{ display:'flex', gap:'10px', flexWrap:'wrap' }}>
             {project.github && (
@@ -106,7 +106,7 @@ function ProjectCard({ project }) {
                 onClick={e => e.stopPropagation()}
                 style={{
                   display:'inline-flex', alignItems:'center', gap:'6px',
-                  color:'#a78bfa', textDecoration:'none',
+                  color:'var(--purple)', textDecoration:'none',
                   fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
                   fontSize:'13px', fontWeight:600,
                   border:'1px solid rgba(139,92,246,0.4)',
@@ -128,25 +128,25 @@ function Projects() {
   const mobile = window.useIsMobile(820);
 
   return (
-    <div style={{ minHeight:'100vh', paddingTop:'64px', background:'#060c1a' }}>
+    <div style={{ minHeight:'100vh', paddingTop:'64px', background:'var(--bg)' }}>
       <div style={{ maxWidth:'1200px', margin:'0 auto', padding: mobile ? '44px 20px' : '64px 48px' }}>
 
         {/* ── Header ── */}
         <div style={{ marginBottom:'52px' }}>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'11px', fontWeight:700, letterSpacing:'3px',
-            textTransform:'uppercase', color:'#4d7fff', marginBottom:'12px',
+            fontSize:'13px', fontWeight:800, letterSpacing:'1.6px', borderLeft:'3px solid currentColor', paddingLeft:'11px',
+            textTransform:'uppercase', color:'var(--accent-2)', marginBottom:'12px',
           }}>Projects</p>
           <h2 style={{
             fontFamily:"'Times New Roman', Georgia, serif",
             fontSize:'clamp(32px, 4vw, 58px)',
-            fontWeight:700, color:'#e8edf8', lineHeight:1.1,
+            fontWeight:700, color:'var(--ink)', lineHeight:1.1,
             letterSpacing:'-0.5px', marginBottom:'16px',
           }}>Things I've built.</h2>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'clamp(14px, 1.5vw, 17px)', color:'#b0c0dc',
+            fontSize:'clamp(14px, 1.5vw, 17px)', color:'var(--ink-3)',
             lineHeight:1.7, maxWidth:'580px',
           }}>
             Research code, a few open-source libraries, and one company. Tap any card for the details and the links.
@@ -157,28 +157,28 @@ function Projects() {
         <div style={{
           display:'flex', gap:'24px', marginBottom:'52px',
           padding:'20px 28px',
-          background:'rgba(255,255,255,0.025)', border:'1px solid #0e1f3d',
+          background:'var(--surface)', border:'1px solid var(--line)',
           borderRadius:'12px', flexWrap:'wrap', alignItems:'center',
         }}>
-          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>
-            <strong style={{ color:'#e8edf8' }}>80+</strong> repositories
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'var(--ink-3)' }}>
+            <strong style={{ color:'var(--ink)' }}>80+</strong> repositories
           </span>
-          <span style={{ color:'#1a3060' }}>·</span>
-          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>
-            <strong style={{ color:'#e8edf8' }}>130+</strong> stars
+          <span style={{ color:'var(--line-2)' }}>·</span>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'var(--ink-3)' }}>
+            <strong style={{ color:'var(--ink)' }}>130+</strong> stars
           </span>
-          <span style={{ color:'#1a3060' }}>·</span>
-          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8' }}>
+          <span style={{ color:'var(--line-2)' }}>·</span>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'var(--ink-3)' }}>
             Mostly Python &amp; Jupyter
           </span>
           <a href={d.personal.github} target="_blank" rel="noopener noreferrer"
             style={{
-              marginLeft:'auto', color:'#4d7fff', textDecoration:'none',
+              marginLeft:'auto', color:'var(--accent-2)', textDecoration:'none',
               fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",
               fontSize:'13px', fontWeight:600,
               display:'flex', alignItems:'center', gap:'7px',
             }}>
-            {window.SahajIcons.github({ size:15, color:'#4d7fff' })} View all on GitHub
+            {window.SahajIcons.github({ size:15, color:'var(--accent-2)' })} View all on GitHub
           </a>
         </div>
 
@@ -198,10 +198,10 @@ function Projects() {
           borderRadius:'12px', display:'flex', alignItems:'center', gap:'16px',
         }}>
           <div>
-            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, color:'#c8d4ee', marginBottom:'4px' }}>
+            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, color:'var(--ink-2)', marginBottom:'4px' }}>
               Open to collaboration
             </p>
-            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'#a0b8d8', lineHeight:1.6 }}>
+            <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'var(--ink-3)', lineHeight:1.6 }}>
               Every research project here comes with code. If a repo is useful to you, fork it or open an issue. I am glad to talk about research, startups, or whatever you are stuck on.
             </p>
           </div>

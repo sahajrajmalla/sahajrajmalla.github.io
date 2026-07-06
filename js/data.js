@@ -1,4 +1,4 @@
-// data.js — ground truth synced from academic CV (June 2026)
+// data.js - ground truth synced from academic CV (July 2026)
 window.SahajData = {
   personal: {
     name: "Sahaj Raj Malla",
@@ -183,9 +183,9 @@ window.SahajData = {
     },
     {
       id: 5, name: "Dhumbal AI", abbr: "DA", icon: "cards",
-      tagline: "Multi-agent RL for a Nepali card game",
-      description: "Agents trained with multi-agent RL to play Dhumbal, a Nepali card game. The most aggressive agent wins 88.3% of simulated games. It turned out to be a good place to study hidden information and strategy.",
-      tech: ["Python", "PyTorch", "MARL", "RL"],
+      tagline: "Agent strategies for a Nepali card game",
+      description: "A comparative study of agent strategies for Dhumbal, a Nepali card game with hidden information. Across 1,024 simulated games an aggressive heuristic agent wins 88.3%, a clean, controlled testbed for reasoning under uncertainty and my entry point into RL.",
+      tech: ["Python", "Simulation", "Game AI", "RL"],
       github: "https://github.com/sahajrajmalla/dhumbal-ai",
       type: "Research", color: "#8b5cf6",
     },
@@ -220,7 +220,7 @@ window.SahajData = {
       org: "Naamche Technology",
       period: "Sep 2021 – Jan 2023",
       current: false,
-      desc: "Scraped and analysed 1M+ real estate listings (Florida, Texas, California). Improved investment decision accuracy by 40%+ and reduced computation time by 200%+.",
+      desc: "Scraped and analysed 1M+ real estate listings (Florida, Texas, California). Improved investment decision accuracy by 40%+ and sped up report computation roughly threefold.",
     },
     {
       role: "Data Engineer",
@@ -298,18 +298,16 @@ window.SahajData = {
   // ── CONFERENCE TALKS ───────────────────────────────────────────────────────
   talks: [
     { title: "Conference Presentation, Landmark-Based Addressing", org: "Kathmandu University", date: "Oct 2024" },
-    { title: "Conference Presentation, Nepali Stock Price Prediction", org: "IEEE, Bhaktapur", date: "Oct 2024" },
+    { title: "Conference Presentation, Nepali Stock Price Prediction", org: "IEEE, Bhaktapur", date: "Oct 2023" },
     { title: "Panelist, National Youth Scientific Conference 2024", org: "National Youth Council Nepal", date: "Jun 2024" },
     { title: "Guest Speaker, Career in AI/ML", org: "CSIT Association of Nepal, Pokhara", date: "Dec 2023" },
   ],
 
-  // ── RESEARCH INTERESTS ─────────────────────────────────────────────────────
+  // ── RESEARCH INTERESTS (sharp PhD focus) ───────────────────────────────────
   researchInterests: [
-    { area: "Reinforcement Learning", desc: "Multi-agent, partial observability, long-horizon planning" },
-    { area: "Agentic Systems", desc: "Multi-modal perception, autonomous decision-making" },
-    { area: "Quantum ML", desc: "Variational circuits, hybrid quantum-classical models" },
-    { area: "Computer Vision", desc: "Low-resource OCR, South Asian script recognition" },
-    { area: "Time-Series Forecasting", desc: "Financial markets, ecological & sequential data" },
+    { area: "Reinforcement Learning", desc: "Multi-agent coordination, partial observability, and long-horizon planning" },
+    { area: "Agentic Systems", desc: "Autonomous decision-making, tool use, and memory in open-ended environments" },
+    { area: "Multi-Modal Learning", desc: "Grounding action in perception across vision and language" },
   ],
 
   // ── EDUCATION ──────────────────────────────────────────────────────────────
@@ -370,7 +368,7 @@ window.SahajData = {
     },
     {
       label: "ML & AI",
-      color: "#8b5cf6",
+      color: "var(--purple)",
       skills: [
         { name: "PyTorch",     brand: "#EE4C2C", abbr: "PT" },
         { name: "TensorFlow",  brand: "#FF6F00", abbr: "TF" },
@@ -381,7 +379,7 @@ window.SahajData = {
     },
     {
       label: "Quantum",
-      color: "#8b5cf6",
+      color: "var(--purple)",
       skills: [
         { name: "Qiskit",    brand: "#6929C4", abbr: "QK" },
         { name: "PennyLane", brand: "#2D7FF9", abbr: "PL" },
@@ -394,7 +392,7 @@ window.SahajData = {
         { name: "FastAPI", brand: "#009688", abbr: "FA" },
         { name: "Django",  brand: "#092E20", abbr: "Dj" },
         { name: "React",   brand: "#61DAFB", abbr: "Re" },
-        { name: "Next.js", brand: "#ffffff", abbr: "Nx" },
+        { name: "Next.js", brand: "#111111", abbr: "Nx" },
       ],
     },
     {
@@ -435,7 +433,7 @@ window.SahajData = {
    Shared React hooks (React is loaded globally before this file).
    ─────────────────────────────────────────────────────────────── */
 
-// Responsive breakpoint hook — returns true when viewport width < bp.
+// Responsive breakpoint hook - returns true when viewport width < bp.
 window.useIsMobile = function (bp) {
   bp = bp || 768;
   const [m, setM] = React.useState(
@@ -477,4 +475,51 @@ window.useViewportWidth = function () {
     };
   }, []);
   return w;
+};
+
+// Theme hook - reads current data-theme and re-renders on toggle (event from index.html).
+window.useTheme = function () {
+  const get = function () {
+    return (typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme')) || 'dark';
+  };
+  const [t, setT] = React.useState(get());
+  React.useEffect(function () {
+    const onChange = function () { setT(get()); };
+    window.addEventListener('sahajtheme', onChange);
+    // also respond if the OS preference changes while on system default
+    let mq = null;
+    if (window.matchMedia) {
+      mq = window.matchMedia('(prefers-color-scheme: light)');
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+    }
+    return function () {
+      window.removeEventListener('sahajtheme', onChange);
+      if (mq && mq.removeEventListener) mq.removeEventListener('change', onChange);
+    };
+  }, []);
+  return t;
+};
+
+// Reveal-on-scroll wrapper - fades + rises children into view once. Respects reduced-motion.
+window.Reveal = function ({ children, delay = 0, y = 16, style }) {
+  const ref = React.useRef(null);
+  const [seen, setSeen] = React.useState(false);
+  React.useEffect(function () {
+    const el = ref.current; if (!el) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setSeen(true); return; }
+    const io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { setSeen(true); io.disconnect(); }
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+    io.observe(el);
+    return function () { io.disconnect(); };
+  }, []);
+  return React.createElement('div', {
+    ref: ref,
+    style: Object.assign({
+      opacity: seen ? 1 : 0,
+      transform: seen ? 'none' : `translateY(${y}px)`,
+      transition: `opacity 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
+      willChange: 'opacity, transform',
+    }, style || {}),
+  }, children);
 };

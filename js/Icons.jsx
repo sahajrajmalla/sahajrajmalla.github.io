@@ -1,4 +1,4 @@
-// Icons.jsx — real brand logos + project marks + line glyphs.
+// Icons.jsx - real brand logos + project marks + line glyphs.
 // window.SahajIcons[name]({ size, color, strokeW }) → an <svg> element.
 // Brand glyphs are filled (official simple-icons paths); the rest are line icons.
 

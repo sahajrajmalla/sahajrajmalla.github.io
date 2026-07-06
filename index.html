@@ -6,61 +6,185 @@
 <meta name="theme-color" content="#060c1a" />
 <meta name="format-detection" content="telephone=no" />
 
+<!-- THEME: set before paint (no flash). Default = system preference. -->
+<script>
+(function () {
+  function get() {
+    try {
+      var t = localStorage.getItem('sahaj-theme');
+      if (t === 'light' || t === 'dark') return t;
+    } catch (e) {}
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+  var theme = get();
+  document.documentElement.setAttribute('data-theme', theme);
+  window.__setTheme = function (t) {
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('sahaj-theme', t); } catch (e) {}
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', t === 'light' ? '#ffe6bd' : '#060c1a');
+    try { window.dispatchEvent(new CustomEvent('sahajtheme', { detail: t })); } catch (e) {}
+  };
+  window.__toggleTheme = function () {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    window.__setTheme(cur === 'dark' ? 'light' : 'dark');
+  };
+  // keep meta theme-color correct on first load
+  var m0 = document.querySelector('meta[name="theme-color"]');
+  if (m0) m0.setAttribute('content', theme === 'light' ? '#ffe6bd' : '#060c1a');
+})();
+</script>
+
 <!-- PRIMARY SEO -->
-<title>Sahaj Raj Malla — AI Researcher, Kathmandu University</title>
-<meta name="description" content="Sahaj Raj Malla — Undergraduate AI Researcher and Technopreneur at Kathmandu University. Deep learning, quantum ML, multi-agent systems. Author of MallaNet (Scientific Reports Q1, 2025). 10 publications. Open to PhD opportunities, research collaboration, and startup ventures." />
-<meta name="keywords" content="Sahaj Raj Malla, MallaNet, Computational Mathematics, Deep Learning, Quantum Machine Learning, Multi-Agent Systems, Reinforcement Learning, Kathmandu University, Nepal AI Researcher, Devanagari Recognition, Scientific Reports, PhD, AI Researcher Nepal" />
+<title>Sahaj Raj Malla | AI Researcher at Kathmandu University</title>
+<meta name="description" content="Sahaj Raj Malla is an AI researcher at Kathmandu University working toward a PhD in reinforcement learning and multi-modal agentic systems. Author of MallaNet (Scientific Reports, Q1 2025) and ten publications across computer vision, reinforcement learning, quantum machine learning, and econometrics. Founder of a platform serving 4,000+ students. Open to PhD positions and research collaboration." />
+<meta name="keywords" content="Sahaj Raj Malla, Sahaj Malla, सहज राज मल्ल, MallaNet, AI Researcher, Kathmandu University, Reinforcement Learning, Agentic AI, Multi-Modal Machine Learning, Deep Learning, Computer Vision, Quantum Machine Learning, Computational Mathematics, Devanagari Recognition, Scientific Reports, Nature, PhD candidate, AI researcher Nepal, machine learning researcher" />
 <meta name="author" content="Sahaj Raj Malla" />
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="rating" content="general" />
 <link rel="canonical" href="https://sahajrajmalla.com.np/" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<!-- rel=me identity links (help Google connect the profiles) -->
+<link rel="me" href="https://scholar.google.com/citations?user=NYVtgiYAAAAJ&hl=en" />
+<link rel="me" href="https://github.com/sahajrajmalla" />
+<link rel="me" href="https://www.linkedin.com/in/sahajrajmalla" />
 
 <!-- OPEN GRAPH -->
 <meta property="og:type" content="profile" />
-<meta property="og:title" content="Sahaj Raj Malla — Computational Mathematician and AI Researcher" />
-<meta property="og:description" content="Undergraduate AI Researcher and Technopreneur. Author of MallaNet (Scientific Reports Q1 2025). 10 publications across computer vision, quantum ML, RL, and econometrics. Open to PhD and collaboration." />
+<meta property="og:title" content="Sahaj Raj Malla | AI Researcher at Kathmandu University" />
+<meta property="og:description" content="AI researcher working toward a PhD in reinforcement learning and multi-modal agentic systems. Author of MallaNet (Scientific Reports, Q1 2025) and ten publications. Open to PhD positions and research collaboration." />
 <meta property="og:url" content="https://sahajrajmalla.com.np/" />
-<meta property="og:image" content="https://sahajrajmalla.com.np/assets/sahaj2.jpg" />
+<meta property="og:image" content="https://sahajrajmalla.com.np/assets/og-cover.jpg" />
+<meta property="og:image:secure_url" content="https://sahajrajmalla.com.np/assets/og-cover.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="800" />
-<meta property="og:image:alt" content="Sahaj Raj Malla — Computational Mathematician" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Sahaj Raj Malla, AI Researcher at Kathmandu University" />
 <meta property="og:site_name" content="Sahaj Raj Malla" />
+<meta property="og:locale" content="en_US" />
 <meta property="profile:first_name" content="Sahaj Raj" />
 <meta property="profile:last_name" content="Malla" />
+<meta property="profile:username" content="sahajrajmalla" />
 
 <!-- TWITTER -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@sahaj_malla" />
 <meta name="twitter:creator" content="@sahaj_malla" />
-<meta name="twitter:title" content="Sahaj Raj Malla — AI Researcher and Builder" />
-<meta name="twitter:description" content="Undergraduate AI Researcher building toward a PhD. MallaNet (Q1 2025, Scientific Reports), 10 publications, 4K+ users reached. Open to research and startup collaboration." />
-<meta name="twitter:image" content="https://sahajrajmalla.com.np/assets/sahaj2.jpg" />
+<meta name="twitter:title" content="Sahaj Raj Malla | AI Researcher at Kathmandu University" />
+<meta name="twitter:description" content="AI researcher working toward a PhD in reinforcement learning and multi-modal agentic systems. MallaNet (Q1 2025, Scientific Reports) and ten publications." />
+<meta name="twitter:image" content="https://sahajrajmalla.com.np/assets/og-cover.jpg" />
+<meta name="twitter:image:alt" content="Sahaj Raj Malla, AI Researcher" />
 
 <!-- STRUCTURED DATA (JSON-LD) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Sahaj Raj Malla",
-  "alternateName": "सहज राज मल्ल",
-  "givenName": "Sahaj Raj",
-  "familyName": "Malla",
-  "jobTitle": "Undergraduate AI Researcher & Technopreneur",
-  "description": "Undergraduate AI Researcher and Technopreneur at Kathmandu University. Published in deep learning (Scientific Reports Q1), quantum ML, reinforcement learning, and econometrics. Founder of HamroNiwas (4,000+ users). Targeting PhD in agentic AI systems.",
-  "url": "https://sahajrajmalla.com.np/",
-  "image": "https://sahajrajmalla.com.np/assets/sahaj2.jpg",
-  "email": "mallasahajraj@gmail.com",
-  "alumniOf": { "@type": "CollegeOrUniversity", "name": "Kathmandu University" },
-  "knowsAbout": ["Deep Learning","Quantum Machine Learning","Multi-Agent Systems","Reinforcement Learning","Computer Vision","Computational Mathematics","Time-Series Forecasting"],
-  "sameAs": [
-    "https://github.com/sahajrajmalla",
-    "https://scholar.google.com/citations?user=NYVtgiYAAAAJ",
-    "https://www.linkedin.com/in/sahajrajmalla",
-    "https://www.researchgate.net/profile/Sahaj-Raj-Malla",
-    "https://twitter.com/sahaj_malla"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://sahajrajmalla.com.np/#website",
+      "url": "https://sahajrajmalla.com.np/",
+      "name": "Sahaj Raj Malla",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://sahajrajmalla.com.np/#person" }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://sahajrajmalla.com.np/#profilepage",
+      "url": "https://sahajrajmalla.com.np/",
+      "name": "Sahaj Raj Malla | AI Researcher at Kathmandu University",
+      "isPartOf": { "@id": "https://sahajrajmalla.com.np/#website" },
+      "about": { "@id": "https://sahajrajmalla.com.np/#person" },
+      "mainEntity": { "@id": "https://sahajrajmalla.com.np/#person" },
+      "primaryImageOfPage": "https://sahajrajmalla.com.np/assets/sahaj2.jpg",
+      "dateModified": "2026-07-03"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sahajrajmalla.com.np/#person",
+      "name": "Sahaj Raj Malla",
+      "alternateName": "सहज राज मल्ल",
+      "givenName": "Sahaj Raj",
+      "familyName": "Malla",
+      "jobTitle": "AI Researcher",
+      "description": "AI researcher at Kathmandu University working toward a PhD in reinforcement learning and multi-modal agentic systems. Author of MallaNet (Scientific Reports, Q1 2025) and ten publications across computer vision, reinforcement learning, quantum machine learning, and econometrics.",
+      "url": "https://sahajrajmalla.com.np/",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://sahajrajmalla.com.np/assets/sahaj2.jpg",
+        "caption": "Sahaj Raj Malla"
+      },
+      "email": "mailto:mallasahajraj@gmail.com",
+      "knowsLanguage": ["English", "Nepali", "Hindi"],
+      "worksFor": {
+        "@type": "CollegeOrUniversity",
+        "name": "Kathmandu University",
+        "url": "https://ku.edu.np/"
+      },
+      "affiliation": {
+        "@type": "CollegeOrUniversity",
+        "name": "Kathmandu University",
+        "url": "https://ku.edu.np/"
+      },
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Kathmandu University",
+        "url": "https://ku.edu.np/"
+      },
+      "hasOccupation": {
+        "@type": "Occupation",
+        "name": "Artificial Intelligence Researcher",
+        "occupationalCategory": "15-2051 Data Scientists"
+      },
+      "award": [
+        "Author, MallaNet, Scientific Reports (Q1), Springer Nature, 2025",
+        "Seeds for the Future Nepal, Huawei Technologies, 2023",
+        "Winner, Infinity Codewave Hackathon, Kathmandu University",
+        "AI Text Challenge Champion, IT MEET, Kathmandu University"
+      ],
+      "knowsAbout": ["Reinforcement Learning","Agentic AI Systems","Multi-Modal Machine Learning","Deep Learning","Computer Vision","Quantum Machine Learning","Time-Series Forecasting","Computational Mathematics"],
+      "sameAs": [
+        "https://github.com/sahajrajmalla",
+        "https://scholar.google.com/citations?user=NYVtgiYAAAAJ&hl=en",
+        "https://www.linkedin.com/in/sahajrajmalla",
+        "https://www.researchgate.net/profile/Sahaj-Raj-Malla",
+        "https://twitter.com/sahaj_malla",
+        "https://www.instagram.com/sahajrajmalla/",
+        "https://medium.com/@mallasahajraj"
+      ]
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "headline": "MallaNet: Residual Branch Merge Convolutional Neural Network with Homogeneous Filter Capsules for Devanagari Character Recognition",
+      "author": { "@id": "https://sahajrajmalla.com.np/#person" },
+      "datePublished": "2025-12",
+      "isPartOf": { "@type": "Periodical", "name": "Scientific Reports", "publisher": "Springer Nature" },
+      "url": "https://www.nature.com/articles/s41598-025-30871-z"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "headline": "A Landmark-Based Addressing Framework for Urban Navigation Using Geospatial Clustering and Pathfinding Algorithm",
+      "author": { "@id": "https://sahajrajmalla.com.np/#person" },
+      "datePublished": "2025-03",
+      "isPartOf": { "@type": "Periodical", "name": "Journal of Science, Engineering and Technology", "publisher": "Kathmandu University" },
+      "url": "https://journals.ku.edu.np/kuset/article/view/593"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "headline": "AI Agents for the Dhumbal Card Game: A Comparative Study",
+      "author": { "@id": "https://sahajrajmalla.com.np/#person" },
+      "datePublished": "2025-10",
+      "isPartOf": { "@type": "Periodical", "name": "arXiv" },
+      "url": "https://arxiv.org/abs/2510.11736"
+    }
   ]
 }
 </script>
 
+<!-- FAVICON -->
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="apple-touch-icon" href="assets/favicon.png" />
 <!-- FAVICON (inline SVG: two-mountain M + gold crown) -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M7 53 L20 21 L32 40 L44 21 L57 53' stroke='%234d7fff' stroke-width='3.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='32' y1='18' x2='32' y2='5' stroke='%23c9a84c' stroke-width='2'/%3E%3Ccircle cx='32' cy='4' r='2.6' fill='%23c9a84c'/%3E%3Ccircle cx='26' cy='8' r='1.8' fill='%23c9a84c'/%3E%3Ccircle cx='38' cy='8' r='1.8' fill='%23c9a84c'/%3E%3C/svg%3E" />
 
@@ -75,22 +199,74 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <style>
+/* === THEME TOKENS ===
+   dark = the original space palette (unchanged) · light = warm sunshine */
+:root, [data-theme="dark"] {
+  --bg: #060c1a;
+  --bg-solid: #060c1a;
+  --ink: #e8edf8;
+  --ink-2: #c8d4ee;
+  --ink-3: #9fb0d0;
+  --ink-4: #6b7fa5;
+  --accent: #2255e8;
+  --accent-2: #4d7fff;
+  --accent-soft: rgba(34,85,232,0.08);
+  --accent-line: rgba(34,85,232,0.35);
+  --gold: #c9a84c;
+  --gold-2: #e0c56e;
+  --gold-ink: #d8bd6e;
+  --purple: #a78bfa;
+  --surface: rgba(255,255,255,0.03);
+  --surface-2: rgba(255,255,255,0.05);
+  --surface-3: rgba(255,255,255,0.07);
+  --line: #0e1f3d;
+  --line-2: #1a3060;
+  --scrollbar: #04080f;
+  --hero-scrim: rgba(6,12,26,0.0);
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --bg: #fbf5e8;
+  --bg-solid: #fbf5e8;
+  --ink: #251d12;
+  --ink-2: #433723;
+  --ink-3: #6b5c44;
+  --ink-4: #96866c;
+  --accent: #1f5fd0;
+  --accent-2: #2a6fe0;
+  --accent-soft: rgba(31,95,208,0.08);
+  --accent-line: rgba(31,95,208,0.28);
+  --gold: #b8862a;
+  --gold-2: #a9761d;
+  --gold-ink: #875510;
+  --purple: #6d28d9;
+  --surface: #ffffff;
+  --surface-2: #fffdf7;
+  --surface-3: #fff8ea;
+  --line: #eaddc4;
+  --line-2: #e0cfa8;
+  --scrollbar: #f0e6d0;
+  --hero-scrim: rgba(255,247,230,0.0);
+  color-scheme: light;
+}
+
 /* === RESET === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  background: #060c1a;
-  color: #e8edf8;
+  background: var(--bg);
+  color: var(--ink);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 ::selection { background: rgba(34,85,232,0.45); color: #fff; }
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #04080f; }
-::-webkit-scrollbar-thumb { background: #0e1f3d; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #2255e8; }
+::-webkit-scrollbar-track { background: var(--scrollbar); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* === KEYFRAMES === */
 @keyframes fadeUp {
@@ -108,6 +284,17 @@ body {
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes fabBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 @keyframes galleryReveal { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sunGlow { 0%,100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.06); opacity: 1; } }
+@keyframes rayspin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes orbFloat { 0% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-26px) translateX(14px); } 100% { transform: translateY(0) translateX(0); } }
+@keyframes cloudDrift { from { transform: translateX(-40px); } to { transform: translateX(40px); } }
+@keyframes paperDrift1 { 0%{transform:translate(0,0) rotate(-8deg)} 50%{transform:translate(16px,-30px) rotate(7deg)} 100%{transform:translate(0,0) rotate(-8deg)} }
+@keyframes paperDrift2 { 0%{transform:translate(0,0) rotate(6deg)} 50%{transform:translate(-20px,-24px) rotate(-6deg)} 100%{transform:translate(0,0) rotate(6deg)} }
+@keyframes paperDrift3 { 0%{transform:translate(0,0) rotate(-4deg)} 50%{transform:translate(12px,-38px) rotate(9deg)} 100%{transform:translate(0,0) rotate(-4deg)} }
+@keyframes beamSway { 0%,100%{opacity:0.5; transform:translateX(-50%) rotate(var(--a)) scaleY(1)} 50%{opacity:0.85; transform:translateX(-50%) rotate(var(--a)) scaleY(1.06)} }
+@keyframes floatUpFade { 0%{opacity:0; transform:translateY(10px)} 100%{opacity:1; transform:translateY(0)} }
+@keyframes pageIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: no-preference){ main[data-page]{ animation: pageIn 0.5s cubic-bezier(0.22,1,0.36,1); } }
 
 /* === ANIMATION HELPERS === */
 .anim-1  { opacity: 0; animation: fadeUp 0.55s ease 0.15s forwards; }
@@ -133,13 +320,13 @@ body {
 /* === LOADING SPINNER === */
 #loading {
   position: fixed; inset: 0;
-  background: #060c1a;
+  background: var(--bg);
   display: flex; align-items: center; justify-content: center;
   z-index: 9999;
   transition: opacity 0.4s ease;
 }
 #loading .spin { animation: spin 1.2s linear infinite; }
-button:focus-visible { outline: 2px solid #2255e8; outline-offset: 2px; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </style>
 </head>
 
@@ -172,22 +359,34 @@ button:focus-visible { outline: 2px solid #2255e8; outline-offset: 2px; }
 <script type="text/babel" src="js/Game.jsx"></script>
 <script type="text/babel" src="js/App.jsx"></script>
 
-<!-- Fade out loading spinner once React has painted -->
+<!-- Fade out loading spinner once React has painted — clears the instant #root fills; multiple independent fallbacks so it can never trap the page -->
 <script>
 (function () {
-  var tries = 0;
-  function check() {
-    var root = document.getElementById('root');
-    var loading = document.getElementById('loading');
-    if (!loading) return;
-    if (root && root.children.length > 0) {
-      loading.style.opacity = '0';
-      setTimeout(function () { if (loading.parentNode) loading.parentNode.removeChild(loading); }, 450);
-    } else if (tries++ < 100) {
-      setTimeout(check, 120);
-    }
+  var loading = document.getElementById('loading');
+  if (!loading) return;
+  var done = false;
+  function remove() {
+    if (done) return; done = true;
+    loading.style.opacity = '0';
+    setTimeout(function () { if (loading.parentNode) loading.parentNode.removeChild(loading); }, 400);
   }
-  setTimeout(check, 400);
+  var root = document.getElementById('root');
+  function mounted() { return root && root.children.length > 0; }
+  if (mounted()) { remove(); return; }
+  // 1) observe #root for React's first paint
+  if (root && 'MutationObserver' in window) {
+    var mo = new MutationObserver(function () { if (mounted()) { mo.disconnect(); remove(); } });
+    mo.observe(root, { childList: true });
+  }
+  // 2) fast polling fallback (covers environments where the observer misses)
+  var polls = 0;
+  var iv = setInterval(function () {
+    if (mounted() || polls++ > 200) { clearInterval(iv); if (mounted()) remove(); }
+  }, 100);
+  // 3) window load nudge
+  window.addEventListener('load', function () { setTimeout(function () { if (mounted()) remove(); }, 400); });
+  // 4) absolute failsafe — never let the spinner sit forever
+  setTimeout(remove, 4500);
 })();
 </script>
 

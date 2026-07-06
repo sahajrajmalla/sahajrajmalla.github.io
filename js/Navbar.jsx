@@ -1,4 +1,4 @@
-// Navbar.jsx — Fixed top navbar with logo, nav links, game button, CV download
+// Navbar.jsx - Fixed top navbar with logo, nav links, game button, CV link (opens PDF in same tab)
 const { useState, useEffect } = React;
 
 const NAV_LINKS = [
@@ -16,6 +16,8 @@ function Navbar({ currentPage, onNavigate }) {
   const [isMobile, setIsMobile]   = useState(window.innerWidth < 900);
   const Logo = window.SahajLogo;
   const data = window.SahajData;
+  const theme = window.useTheme();
+  const isLight = theme === 'light';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -34,12 +36,31 @@ function Navbar({ currentPage, onNavigate }) {
     window.location.hash = id;
   };
 
-  const navBg = scrolled
-    ? 'rgba(6,12,26,0.96)'
-    : 'rgba(6,12,26,0.4)';
-  const borderColor = scrolled
-    ? 'rgba(26,48,96,0.9)'
-    : 'rgba(26,48,96,0.3)';
+  const navBg = isLight
+    ? (scrolled ? 'rgba(255,249,238,0.96)' : 'rgba(255,249,238,0.55)')
+    : (scrolled ? 'rgba(6,12,26,0.96)' : 'rgba(6,12,26,0.4)');
+  const borderColor = isLight
+    ? (scrolled ? 'rgba(224,207,168,0.9)' : 'rgba(224,207,168,0.4)')
+    : (scrolled ? 'rgba(26,48,96,0.9)' : 'rgba(26,48,96,0.3)');
+
+  /* ── theme toggle button ── */
+  const ThemeToggle = () => (
+    <button
+      onClick={() => window.__toggleTheme && window.__toggleTheme()}
+      aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+      title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+      style={{
+        background: 'var(--surface-2)', border: '1px solid var(--line-2)', cursor: 'pointer',
+        width: '36px', height: '36px', borderRadius: '8px',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        color: 'var(--ink-2)', flexShrink: 0, transition: 'all 0.2s ease',
+      }}
+    >
+      {isLight
+        ? <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        : <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>}
+    </button>
+  );
 
   /* ── shared link style fn ── */
   const linkStyle = (id) => ({
@@ -48,12 +69,12 @@ function Navbar({ currentPage, onNavigate }) {
     cursor: 'pointer',
     padding: '6px 13px',
     borderRadius: '6px',
-    color: currentPage === id ? '#4d7fff' : '#8899bb',
+    color: currentPage === id ? 'var(--accent-2)' : 'var(--ink-4)',
     fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
     fontSize: '14px',
     fontWeight: currentPage === id ? 600 : 400,
     letterSpacing: '0.3px',
-    borderBottom: currentPage === id ? '2px solid #2255e8' : '2px solid transparent',
+    borderBottom: currentPage === id ? '2px solid var(--accent)' : '2px solid transparent',
     transition: 'all 0.2s ease',
     whiteSpace: 'nowrap',
   });
@@ -92,7 +113,7 @@ function Navbar({ currentPage, onNavigate }) {
             fontSize: '16px',
             fontWeight: 400,
             letterSpacing: '0.4px',
-            color: '#e8edf8',
+            color: 'var(--ink)',
           }}>
             Sahaj Raj Malla
           </span>
@@ -108,12 +129,13 @@ function Navbar({ currentPage, onNavigate }) {
             </button>
           ))}
 
-          {/* CV Download */}
+          <span style={{ marginLeft: '8px' }}><ThemeToggle /></span>
+
+          {/* CV - opens the PDF in the browser's native viewer, same tab */}
           <a
             href={data.personal.cv}
-            download="Sahaj_Raj_Malla_CV.pdf"
             style={{
-              background: '#2255e8',
+              background: 'var(--accent)',
               border: 'none',
               cursor: 'pointer',
               padding: '7px 18px',
@@ -131,8 +153,8 @@ function Navbar({ currentPage, onNavigate }) {
               transition: 'background 0.2s ease',
             }}
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2v14M5 9l7 7 7-7"/><line x1="3" y1="21" x2="21" y2="21"/>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
             </svg>
             CV
           </a>
@@ -142,8 +164,9 @@ function Navbar({ currentPage, onNavigate }) {
       {/* ── Mobile hamburger ── */}
       {isMobile && (
         <>
-          <a href={data.personal.cv} download style={{
-            background: '#2255e8',
+          <ThemeToggle />
+          <a href={data.personal.cv} style={{
+            background: 'var(--accent)',
             color: 'white',
             padding: '6px 12px',
             borderRadius: '6px',
@@ -157,7 +180,7 @@ function Navbar({ currentPage, onNavigate }) {
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: '#e8edf8', padding: '4px', borderRadius: '4px',
+              color: 'var(--ink)', padding: '4px', borderRadius: '4px',
             }}
             aria-label="Menu"
           >
@@ -177,9 +200,9 @@ function Navbar({ currentPage, onNavigate }) {
           position: 'absolute',
           top: '64px',
           left: 0, right: 0,
-          background: 'rgba(8,14,30,0.98)',
+          background: isLight ? 'rgba(255,249,238,0.98)' : 'rgba(8,14,30,0.98)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(26,48,96,0.8)',
+          borderBottom: '1px solid var(--line-2)',
           padding: '12px 0',
           display: 'flex',
           flexDirection: 'column',
@@ -194,7 +217,7 @@ function Navbar({ currentPage, onNavigate }) {
                 border: 'none',
                 cursor: 'pointer',
                 padding: '13px 28px',
-                color: currentPage === id ? '#4d7fff' : '#c8d0e8',
+                color: currentPage === id ? 'var(--accent-2)' : 'var(--ink-2)',
                 fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                 fontSize: '15px',
                 fontWeight: currentPage === id ? 600 : 400,
@@ -209,7 +232,7 @@ function Navbar({ currentPage, onNavigate }) {
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
               padding: '13px 28px',
-              color: '#4d7fff',
+              color: 'var(--accent-2)',
               fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
               fontSize: '15px', fontWeight: 600, textAlign: 'left',
             }}

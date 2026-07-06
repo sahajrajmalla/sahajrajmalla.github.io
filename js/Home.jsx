@@ -1,4 +1,4 @@
-// Home.jsx — mobile-first hero with rich, performant space canvas
+// Home.jsx - mobile-first hero with rich, performant space canvas
 const { useState, useEffect, useRef } = React;
 
 /* ═══════════════════════════════════════════════════════════ SPACE CANVAS */
@@ -216,12 +216,86 @@ function SpaceCanvas({ mobile }) {
     resize();
     const ro = new ResizeObserver(() => { resize(); if (reduce) drawStatic(); });
     ro.observe(canvas);
-    drawStatic();                       // immediate first frame — never blank
+    drawStatic();                       // immediate first frame - never blank
     if (!reduce) loop(performance.now()); // kick the loop synchronously (rescheduled via rAF)
     return () => { cancelAnimationFrame(animId); ro.disconnect(); };
   }, [mobile]);
 
   return <canvas ref={ref} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
+}
+
+/* ═══ SUNSHINE BACKDROP (light mode) - centered sun, rays radiating outward, beams of knowledge */
+function SunshineBackdrop({ mobile }) {
+  const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sunSize = mobile ? 260 : 400;
+  const rays = mobile ? 1000 : 1500;
+  return (
+    <div aria-hidden="true" style={{ position:'absolute', inset:0, overflow:'hidden', pointerEvents:'none' }}>
+      {/* warm sky wash */}
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(170deg,#fff6e2 0%,#ffedcb 40%,#ffe0b6 72%,#ffd2ab 100%)' }} />
+      {/* radiating rays - centered on the sun */}
+      <div style={{ position:'absolute', top:'46%', left:'52%', width:rays, height:rays, transform:'translate(-50%,-50%)',
+        background:'repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,196,92,0.42) 0deg 3.4deg, transparent 3.4deg 12deg)',
+        borderRadius:'50%', animation: reduce?'none':'rayspin 120s linear infinite',
+        maskImage:'radial-gradient(circle,#000 6%,rgba(0,0,0,0.5) 30%,transparent 60%)', WebkitMaskImage:'radial-gradient(circle,#000 6%,rgba(0,0,0,0.5) 30%,transparent 60%)' }} />
+      {/* sun core - centered */}
+      <div style={{ position:'absolute', top:'46%', left:'52%', width:sunSize, height:sunSize, transform:'translate(-50%,-50%)', borderRadius:'50%',
+        background:'radial-gradient(circle at 50% 50%, rgba(255,253,246,0.98) 0%, rgba(255,236,158,0.85) 30%, rgba(255,216,110,0.4) 60%, rgba(255,207,94,0) 100%)',
+        filter:'blur(2px)', animation: reduce?'none':'sunGlow 8s ease-in-out infinite' }} />
+      {/* soft floating light orbs */}
+      <div style={{ position:'absolute', bottom:'14%', left:'10%', width:'120px', height:'120px', borderRadius:'50%', background:'radial-gradient(circle,rgba(255,255,255,0.5),rgba(255,255,255,0))', animation: reduce?'none':'orbFloat 12s ease-in-out infinite' }} />
+      <div style={{ position:'absolute', top:'18%', left:'22%', width:'70px', height:'70px', borderRadius:'50%', background:'radial-gradient(circle,rgba(255,240,200,0.55),rgba(255,240,200,0))', animation: reduce?'none':'orbFloat 9s ease-in-out infinite 1.5s' }} />
+      <div style={{ position:'absolute', top:'22%', right:'16%', width:'90px', height:'90px', borderRadius:'50%', background:'radial-gradient(circle,rgba(255,236,180,0.45),rgba(255,236,180,0))', animation: reduce?'none':'orbFloat 14s ease-in-out infinite 0.8s' }} />
+      {/* gentle warm ground glow */}
+      <div style={{ position:'absolute', left:0, right:0, bottom:0, height:'40%', background:'linear-gradient(180deg,transparent,rgba(255,188,116,0.24))' }} />
+    </div>
+  );
+}
+
+/* ═══ KNOWLEDGE PAPERS (light mode) - drifting, clickable; a click opens one of Sahaj's papers at random */
+function PaperGlyph() {
+  return (
+    <svg width="42" height="52" viewBox="0 0 42 52" fill="none" style={{ display:'block', filter:'drop-shadow(0 6px 12px rgba(150,100,25,0.28))' }}>
+      <path d="M3 2.5 h26 l10 10 v37 a1.5 1.5 0 0 1 -1.5 1.5 h-33 a1.5 1.5 0 0 1 -1.5 -1.5 v-45.5 a1.5 1.5 0 0 1 1.5 -1.5 z" fill="#fffdf7" stroke="var(--gold-2)" strokeWidth="1.6"/>
+      <path d="M29 2.5 v9 a1 1 0 0 0 1 1 h9" fill="rgba(255,236,190,0.9)" stroke="var(--gold-2)" strokeWidth="1.4"/>
+      <line x1="8" y1="20" x2="31" y2="20" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" opacity="0.85"/>
+      <line x1="8" y1="26" x2="33" y2="26" stroke="#bfa878" strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="8" y1="32" x2="33" y2="32" stroke="#bfa878" strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="8" y1="38" x2="25" y2="38" stroke="#bfa878" strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="8" y1="44" x2="29" y2="44" stroke="#bfa878" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function KnowledgePapers({ mobile }) {
+  const d = window.SahajData;
+  const papers = [].concat(d.peerReviewed || [], d.preprints || []).filter(p => p.url && p.url !== '#');
+  const openRandom = () => {
+    if (!papers.length) return;
+    const p = papers[Math.floor(Math.random() * papers.length)];
+    window.open(p.url, '_blank', 'noopener,noreferrer');
+  };
+  // positions kept clear of the hero copy + CTAs so papers never block a click
+  const spots = mobile
+    ? [ {l:'8%',t:'7%',a:'paperDrift1',d:16}, {l:'80%',t:'6%',a:'paperDrift2',d:19}, {l:'10%',t:'90%',a:'paperDrift3',d:22}, {l:'82%',t:'91%',a:'paperDrift1',d:18} ]
+    : [ {l:'22%',t:'6%',a:'paperDrift1',d:17}, {l:'48%',t:'5%',a:'paperDrift2',d:21}, {l:'69%',t:'8%',a:'paperDrift3',d:19},
+        {l:'95%',t:'34%',a:'paperDrift1',d:23}, {l:'2%',t:'44%',a:'paperDrift2',d:18}, {l:'7%',t:'91%',a:'paperDrift3',d:20}, {l:'86%',t:'92%',a:'paperDrift2',d:24} ];
+  const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return (
+    <div style={{ position:'absolute', inset:0, overflow:'hidden', pointerEvents:'none', zIndex:2 }}>
+      {spots.map((s,i)=>(
+        <button key={i} onClick={openRandom} tabIndex={-1} aria-label="Open one of Sahaj's papers"
+          title="✦ Open a paper"
+          onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.2) rotate(-3deg)';e.currentTarget.style.opacity='1';}}
+          onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.opacity='';}}
+          style={{ position:'absolute', left:s.l, top:s.t, background:'none', border:'none', padding:0, cursor:'pointer',
+            pointerEvents:'auto', opacity:0.9, transition:'transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s',
+            animation: reduce?'none':`${s.a} ${s.d}s ease-in-out infinite ${i*0.6}s`, willChange:'transform' }}>
+          <PaperGlyph />
+        </button>
+      ))}
+    </div>
+  );
 }
 
 /* ═══════════════════════════════════════════════════════ COUNTER */
@@ -258,14 +332,14 @@ function SocialPill({ label, url }) {
       aria-label={label}
       style={{
         display:'flex', alignItems:'center', gap:'7px',
-        color: h ? '#e8edf8' : '#bcd0ee', textDecoration:'none',
+        color: h ? 'var(--ink)' : 'var(--ink-2)', textDecoration:'none',
         fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:500,
         padding:'7px 14px', borderRadius:'20px',
         border:`1px solid ${h ? 'rgba(77,127,255,0.55)' : 'rgba(160,184,216,0.3)'}`,
-        background: h ? 'rgba(34,85,232,0.14)' : 'rgba(255,255,255,0.04)',
+        background: h ? 'rgba(34,85,232,0.14)' : 'var(--surface)',
         transition:'all 0.2s ease', letterSpacing:'0.3px',
       }}>
-      <span style={{ color: h ? '#4d7fff' : '#86a6cc', display:'flex' }}>{SOCIAL_ICONS[label]}</span>
+      <span style={{ color: h ? 'var(--accent-2)' : 'var(--ink-3)', display:'flex' }}>{SOCIAL_ICONS[label]}</span>
       {label}
     </a>
   );
@@ -275,6 +349,8 @@ function SocialPill({ label, url }) {
 function Home({ onNavigate }) {
   const d = window.SahajData;
   const mobile = window.useIsMobile(820);
+  const theme = window.useTheme();
+  const isLight = theme === 'light';
   const [hov, setHov] = useState(null);
   const [expHov, setExpHov] = useState(false);
 
@@ -283,17 +359,24 @@ function Home({ onNavigate }) {
   return (
     <div style={{
       minHeight:'100vh', paddingTop:'0', position:'relative',
-      background:'linear-gradient(160deg,#04091a 0%,#060c1e 55%,#050a18 100%)',
+      background: isLight
+        ? 'linear-gradient(165deg,#fff3d6 0%,#ffe6bd 40%,#ffcaa6 100%)'
+        : 'linear-gradient(160deg,#04091a 0%,#060c1e 55%,#050a18 100%)',
       overflow:'hidden', display:'flex', alignItems:'center',
     }}>
-      <SpaceCanvas mobile={mobile} />
+      {isLight ? <SunshineBackdrop mobile={mobile} /> : <SpaceCanvas mobile={mobile} />}
+      {isLight && <KnowledgePapers mobile={mobile} />}
 
-      {/* legibility scrim — keeps text readable over planets */}
+      {/* legibility scrim - keeps text readable over the backdrop */}
       <div style={{
         position:'absolute', inset:0, pointerEvents:'none',
-        background: mobile
-          ? 'linear-gradient(180deg,rgba(4,9,26,0.55) 0%,rgba(4,9,26,0.35) 40%,rgba(4,9,26,0.6) 100%)'
-          : 'radial-gradient(ellipse 70% 90% at 30% 50%,rgba(4,9,26,0.82) 0%,rgba(4,9,26,0.4) 55%,transparent 80%)',
+        background: isLight
+          ? (mobile
+              ? 'linear-gradient(180deg,rgba(255,247,230,0.5) 0%,rgba(255,247,230,0.15) 45%,rgba(255,240,220,0.4) 100%)'
+              : 'radial-gradient(ellipse 72% 92% at 28% 52%,rgba(255,248,232,0.82) 0%,rgba(255,244,224,0.4) 52%,transparent 78%)')
+          : (mobile
+              ? 'linear-gradient(180deg,rgba(4,9,26,0.55) 0%,rgba(4,9,26,0.35) 40%,rgba(4,9,26,0.6) 100%)'
+              : 'radial-gradient(ellipse 70% 90% at 30% 50%,rgba(4,9,26,0.82) 0%,rgba(4,9,26,0.4) 55%,transparent 80%)'),
       }} />
 
       {/* Content */}
@@ -306,21 +389,21 @@ function Home({ onNavigate }) {
 
         {/* Left / text */}
         <div style={{ flex:'1 1 400px', minWidth:0, order: mobile ? 2 : 1 }}>
-          <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '10px' : '11px', fontWeight:700, letterSpacing:'2.5px', textTransform:'uppercase', color:'#4d7fff', marginBottom:'20px' }}>
-            Undergraduate AI Researcher · Technopreneur
+          <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '10px' : '11px', fontWeight:700, letterSpacing:'2.5px', textTransform:'uppercase', color:'var(--accent-2)', marginBottom:'20px' }}>
+            AI Researcher · Kathmandu University
           </p>
 
-          <h1 style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(40px,8vw,82px)', fontWeight:700, color:'#eef1fa', lineHeight:1.04, letterSpacing:'-1px', marginBottom:'10px' }}>
+          <h1 style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(40px,8vw,82px)', fontWeight:700, color:'var(--ink)', lineHeight:1.04, letterSpacing:'-1px', marginBottom:'10px' }}>
             Sahaj Raj Malla
           </h1>
 
-          <p style={{ fontFamily:"'Tiro Devanagari Hindi','Noto Serif Devanagari',serif", fontSize:'clamp(20px,5vw,34px)', fontWeight:400, color:'#c9a84c', letterSpacing:'0.5px', marginBottom:'24px' }}>
+          <p style={{ fontFamily:"'Tiro Devanagari Hindi','Noto Serif Devanagari',serif", fontSize:'clamp(20px,5vw,34px)', fontWeight:400, color:'var(--gold-ink)', letterSpacing:'0.5px', marginBottom:'24px' }}>
             सहज राज मल्ल
           </p>
 
-          <div style={{ width:'56px', height:'2px', background:'linear-gradient(90deg,#2255e8,#c9a84c)', marginBottom:'24px', borderRadius:'2px', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }} />
+          <div style={{ width:'56px', height:'2px', background:'linear-gradient(90deg,var(--accent),var(--gold))', marginBottom:'24px', borderRadius:'2px', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }} />
 
-          <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(16px,2.2vw,20px)', fontStyle:'italic', color:'#aebdd8', lineHeight:1.6, marginBottom: mobile ? '32px' : '44px', maxWidth:'500px', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }}>
+          <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(16px,2.2vw,20px)', fontStyle:'italic', color:'var(--ink-3)', lineHeight:1.6, marginBottom: mobile ? '32px' : '44px', maxWidth:'500px', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }}>
             "Forget Passion, Science and Technology are my Religion!"
           </p>
 
@@ -328,24 +411,24 @@ function Home({ onNavigate }) {
           <div style={{ display:'flex', gap: mobile ? '28px' : '36px', marginBottom: mobile ? '32px' : '44px', flexWrap:'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
             {[{val:10,suf:'',lbl:'Publications'},{val:9,suf:'',lbl:'Awards'},{val:4000,suf:'+',lbl:'Users reached'}].map((s,i)=>(
               <div key={i}>
-                <div style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(28px,7vw,52px)', fontWeight:700, color:'#eef1fa', lineHeight:1 }}>
+                <div style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(28px,7vw,52px)', fontWeight:700, color:'var(--ink)', lineHeight:1 }}>
                   <Counter target={s.val} delay={800 + i*260} />{s.suf}
                 </div>
-                <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'#9ab0cc', marginTop:'5px', letterSpacing:'0.4px' }}>{s.lbl}</div>
+                <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'var(--ink-3)', marginTop:'5px', letterSpacing:'0.4px' }}>{s.lbl}</div>
               </div>
             ))}
           </div>
 
           {/* CTAs */}
           <div style={{ display:'flex', gap:'12px', marginBottom:'26px', flexWrap:'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
-            <button onClick={()=>onNavigate('research')} onMouseEnter={()=>setHov('res')} onMouseLeave={()=>setHov(null)}
-              style={{ background: hov==='res' ? '#1d47d6' : '#2255e8', color:'white', border:'none', cursor:'pointer', padding:'13px 28px', borderRadius:'8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, display:'flex', alignItems:'center', gap:'8px', whiteSpace:'nowrap', boxShadow: hov==='res' ? '0 6px 20px rgba(34,85,232,0.38)' : '0 3px 12px rgba(34,85,232,0.24)', transform: hov==='res' ? 'translateY(-2px)' : 'none', transition:'all 0.2s ease' }}>
-              View Research
+            <button onClick={()=>onNavigate('phd')} onMouseEnter={()=>setHov('res')} onMouseLeave={()=>setHov(null)}
+              style={{ background: hov==='res' ? '#1d47d6' : 'var(--accent)', color:'white', border:'none', cursor:'pointer', padding:'13px 28px', borderRadius:'8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, display:'flex', alignItems:'center', gap:'8px', whiteSpace:'nowrap', boxShadow: hov==='res' ? '0 6px 20px rgba(34,85,232,0.38)' : '0 3px 12px rgba(34,85,232,0.24)', transform: hov==='res' ? 'translateY(-2px)' : 'none', transition:'all 0.2s ease' }}>
+              My PhD Overview
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
-            <button onClick={()=>onNavigate('about')} onMouseEnter={()=>setHov('abt')} onMouseLeave={()=>setHov(null)}
-              style={{ background: hov==='abt' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)', color:'#d6e0f4', border:'1px solid rgba(255,255,255,0.16)', cursor:'pointer', padding:'13px 28px', borderRadius:'8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:500, whiteSpace:'nowrap', transform: hov==='abt' ? 'translateY(-2px)' : 'none', transition:'all 0.2s ease' }}>
-              About Me
+            <button onClick={()=>onNavigate('research')} onMouseEnter={()=>setHov('abt')} onMouseLeave={()=>setHov(null)}
+              style={{ background: hov==='abt' ? 'var(--surface-3)' : 'var(--surface-2)', color: hov==='abt' ? 'var(--ink)' : 'var(--ink-2)', border: hov==='abt' ? '1px solid var(--accent-line)' : '1px solid var(--line-2)', cursor:'pointer', padding:'13px 28px', borderRadius:'8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'15px', fontWeight:600, whiteSpace:'nowrap', transform: hov==='abt' ? 'translateY(-2px)' : 'none', transition:'all 0.2s ease' }}>
+              View Research
             </button>
           </div>
 
@@ -364,16 +447,13 @@ function Home({ onNavigate }) {
           <div style={{ position:'relative', borderRadius:'18px', overflow:'hidden', aspectRatio:'4/5', boxShadow:'0 0 0 1px rgba(77,127,255,0.3),0 24px 60px rgba(0,0,0,0.65)' }}>
             <img src="assets/sahaj2.jpg" alt="Sahaj Raj Malla" loading="eager" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 18%', display:'block' }} />
             <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(4,9,26,0.75) 0%,transparent 55%)' }} />
-            <div style={{ position:'absolute', bottom:'16px', left:'16px', right:'16px' }}>
-              <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', color:'rgba(210,222,248,0.75)', letterSpacing:'1.3px', textTransform:'uppercase' }}>Kathmandu, Nepal</p>
-            </div>
           </div>
           <a href="https://www.nature.com/articles/s41598-025-30871-z" target="_blank" rel="noopener noreferrer"
             style={{ display:'flex', alignItems:'center', gap:'12px', marginTop:'14px', padding:'12px 14px', background:'rgba(139,92,246,0.12)', border:'1px solid rgba(139,92,246,0.32)', borderRadius:'10px', textDecoration:'none', transition:'all 0.2s ease' }}>
-            <span style={{ width:'34px', height:'34px', background:'rgba(139,92,246,0.22)', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:800, letterSpacing:'0.4px', color:'#c4b5fd', flexShrink:0 }}>Q1</span>
+            <span style={{ width:'34px', height:'34px', background:'rgba(139,92,246,0.22)', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:800, letterSpacing:'0.4px', color:'var(--purple)', flexShrink:0 }}>Q1</span>
             <div style={{ textAlign:'left' }}>
-              <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'10px', fontWeight:800, color:'#a78bfa', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:'2px' }}>Q1 · Scientific Reports · 2025</div>
-              <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'#d6e0f4', fontWeight:500 }}>MallaNet (Nature Portfolio)</div>
+              <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'10px', fontWeight:800, color:'var(--purple)', letterSpacing:'1.2px', textTransform:'uppercase', marginBottom:'2px' }}>Q1 · Scientific Reports · 2025</div>
+              <div style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'var(--ink-2)', fontWeight:500 }}>MallaNet (Nature Portfolio)</div>
             </div>
           </a>
         </div>
@@ -384,16 +464,22 @@ function Home({ onNavigate }) {
         <button onClick={()=>onNavigate('game')}
           onMouseEnter={()=>setExpHov(true)} onMouseLeave={()=>setExpHov(false)}
           style={{ position:'absolute', bottom:'26px', left:'50%', transform:'translateX(-50%)', cursor:'pointer', display:'flex', alignItems:'center', gap:'11px', padding:'10px 20px 10px 16px', borderRadius:'24px', zIndex:2,
-            background: expHov ? 'rgba(34,85,232,0.22)' : 'rgba(10,20,42,0.55)',
-            border:`1px solid ${expHov ? 'rgba(201,168,76,0.75)' : 'rgba(201,168,76,0.42)'}`,
-            boxShadow: expHov ? '0 8px 28px rgba(34,85,232,0.4)' : '0 4px 18px rgba(0,0,0,0.45)',
+            background: isLight
+              ? (expHov ? 'rgba(255,240,205,0.92)' : 'rgba(255,249,236,0.72)')
+              : (expHov ? 'rgba(34,85,232,0.22)' : 'rgba(10,20,42,0.55)'),
+            border:`1px solid ${expHov ? 'rgba(201,168,76,0.8)' : (isLight ? 'rgba(201,150,50,0.5)' : 'rgba(201,168,76,0.42)')}`,
+            boxShadow: isLight
+              ? (expHov ? '0 10px 26px rgba(201,150,50,0.32)' : '0 5px 16px rgba(180,140,60,0.18)')
+              : (expHov ? '0 8px 28px rgba(34,85,232,0.4)' : '0 4px 18px rgba(0,0,0,0.45)'),
             backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
             animation:'heroFloat 3.4s ease-in-out infinite', transition:'background 0.25s, border-color 0.25s, box-shadow 0.25s' }}>
-          <span style={{ display:'flex', color: expHov ? '#e2c97a' : '#c9a84c', transition:'color 0.25s' }}>
-            {window.SahajIcons && window.SahajIcons.planet({ size:20, color:'currentColor', strokeW:1.7 })}
+          <span style={{ display:'flex', color: expHov ? 'var(--gold-2)' : 'var(--gold)', transition:'color 0.25s' }}>
+            {isLight
+              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5 L13.7 9 L20.3 10.3 L15.4 14.3 L16.8 21 L12 17.4 L7.2 21 L8.6 14.3 L3.7 10.3 L10.3 9 Z"/></svg>
+              : (window.SahajIcons && window.SahajIcons.planet({ size:20, color:'currentColor', strokeW:1.7 }))}
           </span>
-          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:700, letterSpacing:'1.6px', textTransform:'uppercase', color: expHov ? '#fff' : '#dbe6fb' }}>Explore My World</span>
-          <span style={{ display:'flex', color: expHov ? '#9fc0ff' : '#7f9bc4', transition:'color 0.25s' }}>
+          <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', fontWeight:700, letterSpacing:'1.6px', textTransform:'uppercase', color: (!isLight && expHov) ? '#fff' : 'var(--ink)' }}>{isLight ? 'Follow the Curiosity' : 'Explore My World'}</span>
+          <span style={{ display:'flex', color: expHov ? 'var(--ink-2)' : 'var(--ink-4)', transition:'color 0.25s' }}>
             {window.SahajIcons && window.SahajIcons.arrowRight({ size:15, color:'currentColor', strokeW:2.2 })}
           </span>
         </button>
