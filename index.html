@@ -22,7 +22,7 @@
     document.documentElement.setAttribute('data-theme', t);
     try { localStorage.setItem('sahaj-theme', t); } catch (e) {}
     var m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', t === 'light' ? '#ffe6bd' : '#060c1a');
+    if (m) m.setAttribute('content', t === 'light' ? '#fff6e2' : '#060c1a');
     try { window.dispatchEvent(new CustomEvent('sahajtheme', { detail: t })); } catch (e) {}
   };
   window.__toggleTheme = function () {
@@ -31,7 +31,7 @@
   };
   // keep meta theme-color correct on first load
   var m0 = document.querySelector('meta[name="theme-color"]');
-  if (m0) m0.setAttribute('content', theme === 'light' ? '#ffe6bd' : '#060c1a');
+  if (m0) m0.setAttribute('content', theme === 'light' ? '#fff6e2' : '#060c1a');
 })();
 </script>
 
@@ -223,18 +223,48 @@
   --line-2: #1a3060;
   --scrollbar: #04080f;
   --hero-scrim: rgba(6,12,26,0.0);
+  /* theme-aware component tokens */
+  --pill-line: rgba(160,184,216,0.3);
+  --accent-box: rgba(34,85,232,0.08);
+  --accent-line-strong: rgba(34,85,232,0.5);
+  --accent-chip: rgba(34,85,232,0.16);
+  --accent-chip-2: rgba(34,85,232,0.26);
+  --gold-box: rgba(201,168,76,0.06);
+  --gold-box-line: rgba(201,168,76,0.18);
+  --card-hover: rgba(255,255,255,0.045);
+  --shadow-card: 0 12px 40px rgba(0,0,0,0.4);
+  --shadow-card-lg: 0 16px 48px rgba(0,0,0,0.5);
+  --photo-ring: 0 0 0 1px rgba(77,127,255,0.3);
+  --photo-shadow: 0 24px 60px rgba(0,0,0,0.65);
+  --carousel-ring: 0 0 0 1px rgba(201,168,76,0.28);
+  --carousel-shadow: 0 22px 55px rgba(0,0,0,0.62);
+  --tile-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  --tile-shadow-hover: 0 16px 40px rgba(0,0,0,0.55);
+  --q1-bg: rgba(139,92,246,0.12);
+  --q1-line: rgba(139,92,246,0.32);
+  --q1-chip: rgba(139,92,246,0.22);
+  --badge-q1-bg: rgba(139,92,246,0.18);
+  --badge-q1-line: rgba(139,92,246,0.5);
+  --badge-jr-bg: rgba(201,168,76,0.16);
+  --badge-jr-line: rgba(201,168,76,0.45);
+  --badge-jr-ink: #d6b55e;
+  --badge-cf-bg: rgba(34,85,232,0.18);
+  --badge-cf-line: rgba(34,85,232,0.5);
+  --badge-cf-ink: #60a5fa;
+  --badge-pre-bg: rgba(127,160,200,0.14);
+  --badge-pre-line: rgba(127,160,200,0.4);
   color-scheme: dark;
 }
 [data-theme="light"] {
   --bg: #fbf5e8;
   --bg-solid: #fbf5e8;
-  --ink: #251d12;
-  --ink-2: #433723;
-  --ink-3: #6b5c44;
-  --ink-4: #96866c;
+  --ink: #1a1408;
+  --ink-2: #2f2517;
+  --ink-3: #4a3d27;
+  --ink-4: #6e5c40;
   --accent: #1f5fd0;
-  --accent-2: #2a6fe0;
-  --accent-soft: rgba(31,95,208,0.08);
+  --accent-2: #1a53c7;
+  --accent-soft: #e9f1fc;
   --accent-line: rgba(31,95,208,0.28);
   --gold: #b8862a;
   --gold-2: #a9761d;
@@ -247,6 +277,36 @@
   --line-2: #e0cfa8;
   --scrollbar: #f0e6d0;
   --hero-scrim: rgba(255,247,230,0.0);
+  /* theme-aware component tokens */
+  --pill-line: rgba(178,150,105,0.45);
+  --accent-box: #ffffff;
+  --accent-line-strong: rgba(31,95,208,0.5);
+  --accent-chip: #e4eefb;
+  --accent-chip-2: #d2e3f9;
+  --gold-box: #fffdf4;
+  --gold-box-line: rgba(184,134,42,0.38);
+  --card-hover: #fffdf6;
+  --shadow-card: 0 12px 30px rgba(146,104,40,0.16);
+  --shadow-card-lg: 0 16px 36px rgba(146,104,40,0.2);
+  --photo-ring: 0 0 0 1px rgba(184,134,42,0.4);
+  --photo-shadow: 0 20px 44px rgba(150,105,40,0.28);
+  --carousel-ring: 0 0 0 1px rgba(184,134,42,0.4);
+  --carousel-shadow: 0 18px 40px rgba(150,105,40,0.26);
+  --tile-shadow: 0 2px 10px rgba(160,115,45,0.15);
+  --tile-shadow-hover: 0 16px 36px rgba(150,105,40,0.3);
+  --q1-bg: #fffdf6;
+  --q1-line: rgba(109,40,217,0.26);
+  --q1-chip: rgba(109,40,217,0.09);
+  --badge-q1-bg: rgba(109,40,217,0.08);
+  --badge-q1-line: rgba(109,40,217,0.32);
+  --badge-jr-bg: rgba(184,134,42,0.1);
+  --badge-jr-line: rgba(184,134,42,0.4);
+  --badge-jr-ink: #8a6414;
+  --badge-cf-bg: rgba(31,95,208,0.08);
+  --badge-cf-line: rgba(31,95,208,0.35);
+  --badge-cf-ink: #1f5fd0;
+  --badge-pre-bg: rgba(120,100,70,0.08);
+  --badge-pre-line: rgba(140,120,90,0.35);
   color-scheme: light;
 }
 
@@ -317,29 +377,40 @@ body {
   nav { padding: 0 14px !important; }
 }
 
-/* === LOADING SPINNER === */
+/* === LOADING === */
 #loading {
   position: fixed; inset: 0;
   background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
   z-index: 9999;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.6s ease;
 }
-#loading .spin { animation: spin 1.2s linear infinite; }
+#loading .mark { position: relative; width: 64px; height: 64px; }
+#loading .mark svg { position: absolute; inset: 0; }
+#loading .ring { animation: spin 1.4s linear infinite; }
+#loading .glyph { animation: loadPulse 1.8s ease-in-out infinite; }
+#loading .cap { font-family: 'Times New Roman', Georgia, serif; font-style: italic; font-size: 14px; letter-spacing: 0.4px; color: var(--ink-4); animation: loadPulse 1.8s ease-in-out infinite 0.2s; }
+@keyframes loadPulse { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </style>
 </head>
 
 <body>
 
-<!-- Loading spinner -->
+<!-- Loading -->
 <div id="loading">
-  <svg class="spin" width="46" height="46" viewBox="0 0 64 64" fill="none">
-    <path d="M7 53 L20 21 L32 40 L44 21 L57 53" stroke="#2255e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
-    <circle cx="32" cy="4" r="2.6" fill="#c9a84c"/>
-    <circle cx="26" cy="8" r="1.8" fill="#c9a84c"/>
-    <circle cx="38" cy="8" r="1.8" fill="#c9a84c"/>
-  </svg>
+  <div class="mark">
+    <svg class="ring" width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="32" r="27" stroke="#2255e8" stroke-width="2" stroke-linecap="round" stroke-dasharray="30 130" opacity="0.7"/>
+    </svg>
+    <svg class="glyph" width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <path d="M14 46 L24 22 L32 36 L40 22 L50 46" stroke="#2255e8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="12" r="2" fill="#c9a84c"/>
+      <circle cx="27" cy="15" r="1.4" fill="#c9a84c"/>
+      <circle cx="37" cy="15" r="1.4" fill="#c9a84c"/>
+    </svg>
+  </div>
+  <div class="cap">Charting the course…</div>
 </div>
 
 <!-- React root -->
