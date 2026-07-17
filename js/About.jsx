@@ -24,7 +24,7 @@ function PhotoCarousel({ slides, radius = 18 }) {
 
   return (
     <div
-      style={{ position:'relative', borderRadius:`${radius}px`, overflow:'hidden', aspectRatio:'3/4', boxShadow:'0 0 0 1px rgba(201,168,76,0.28),0 22px 55px rgba(0,0,0,0.62)', cursor:'grab', userSelect:'none', touchAction:'pan-y' }}
+      style={{ position:'relative', borderRadius:`${radius}px`, overflow:'hidden', aspectRatio:'3/4', boxShadow:'var(--carousel-ring), var(--carousel-shadow)', cursor:'grab', userSelect:'none', touchAction:'pan-y' }}
       onTouchStart={e=>start(e.touches[0].clientX)}
       onTouchMove={e=>move(e.touches[0].clientX)}
       onTouchEnd={end}
@@ -39,8 +39,8 @@ function PhotoCarousel({ slides, radius = 18 }) {
             <img src={s.src} alt={s.alt} draggable={false} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:s.pos, display:'block', pointerEvents:'none' }} />
             <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(4,9,26,0.82) 0%,transparent 50%)' }} />
             <div style={{ position:'absolute', bottom:'42px', left:'20px', right:'20px' }}>
-              <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(15px,2vw,19px)', fontStyle:'italic', color:'var(--ink)', lineHeight:1.35, textWrap:'pretty' }}>{s.caption}</p>
-              {s.sub && <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'1.5px', textTransform:'uppercase', color:'var(--gold-ink)', marginTop:'6px' }}>{s.sub}</p>}
+              <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'clamp(15px,2vw,19px)', fontStyle:'italic', color:'#f5f0e4', lineHeight:1.35, textWrap:'pretty' }}>{s.caption}</p>
+              {s.sub && <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'1.5px', textTransform:'uppercase', color:'#e0c56e', marginTop:'6px' }}>{s.sub}</p>}
             </div>
           </div>
         ))}
@@ -67,7 +67,7 @@ function ExpCard({ role, org, period, current, desc }) {
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:'10px', flexShrink:0 }}>
           <span style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'var(--ink-4)', letterSpacing:'0.3px' }}>{period}</span>
-          {current && <span style={{ background:'rgba(34,85,232,0.15)', border:'1px solid rgba(34,85,232,0.4)', borderRadius:'12px', padding:'2px 8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'10px', fontWeight:700, color:'var(--accent-2)', letterSpacing:'1px', textTransform:'uppercase' }}>Now</span>}
+          {current && <span style={{ background:'var(--accent-chip)', border:'1px solid var(--accent-line-strong)', borderRadius:'12px', padding:'2px 8px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'10px', fontWeight:700, color:'var(--accent-2)', letterSpacing:'1px', textTransform:'uppercase' }}>Now</span>}
         </div>
       </div>
       {open
@@ -104,13 +104,13 @@ function GalleryTile({ photo, onClick }) {
   }, []);
   return (
     <figure ref={ref} onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
-      style={{ position:'relative', breakInside:'avoid', marginBottom:'14px', borderRadius:'12px', overflow:'hidden', cursor:'pointer', border:'1px solid var(--line)', boxShadow: h ? '0 16px 40px rgba(0,0,0,0.55)' : '0 2px 10px rgba(0,0,0,0.3)', opacity: seen?1:0, animation: seen?'galleryReveal 0.6s cubic-bezier(0.2,0,0.2,1) both':'none', transition:'box-shadow 0.25s ease' }}>
+      style={{ position:'relative', breakInside:'avoid', marginBottom:'14px', borderRadius:'12px', overflow:'hidden', cursor:'pointer', border:'1px solid var(--line)', boxShadow: h ? 'var(--tile-shadow-hover)' : 'var(--tile-shadow)', opacity: seen?1:0, animation: seen?'galleryReveal 0.6s cubic-bezier(0.2,0,0.2,1) both':'none', transition:'box-shadow 0.25s ease' }}>
       <img src={photo.src} alt={photo.caption} loading="lazy" draggable={false}
         style={{ width:'100%', display:'block', transform: h ? 'scale(1.045)' : 'scale(1)', transition:'transform 0.55s cubic-bezier(0.2,0,0.2,1)' }} />
       <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(4,9,26,0.88) 0%, rgba(4,9,26,0.08) 46%, transparent 72%)', opacity: h ? 1 : 0.9, transition:'opacity 0.25s' }} />
       <figcaption style={{ position:'absolute', left:'13px', right:'13px', bottom:'12px' }}>
-        <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'14px', fontStyle:'italic', color:'var(--ink)', lineHeight:1.3, textWrap:'pretty' }}>{photo.caption}</p>
-        <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'9.5px', letterSpacing:'1.4px', textTransform:'uppercase', color:'var(--gold-ink)', marginTop:'5px' }}>{photo.sub}</p>
+        <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'14px', fontStyle:'italic', color:'#f5f0e4', lineHeight:1.3, textWrap:'pretty' }}>{photo.caption}</p>
+        <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'9.5px', letterSpacing:'1.4px', textTransform:'uppercase', color:'#e0c56e', marginTop:'5px' }}>{photo.sub}</p>
       </figcaption>
     </figure>
   );
@@ -119,25 +119,25 @@ function GalleryTile({ photo, onClick }) {
 function Lightbox({ photo, index, total, onClose, onPrev, onNext }) {
   const navBtn = {
     position:'absolute', top:'50%', transform:'translateY(-50%)', width:'48px', height:'48px',
-    borderRadius:'50%', background:'var(--surface-3)', border:'1px solid rgba(255,255,255,0.2)',
-    color:'var(--ink)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2,
+    borderRadius:'50%', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.28)',
+    color:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2,
   };
   return ReactDOM.createPortal((
     <div onClick={onClose}
       style={{ position:'fixed', inset:0, zIndex:1000, background:'rgba(3,6,16,0.93)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px', animation:'fadeIn 0.22s ease' }}>
       <button onClick={(e)=>{e.stopPropagation();onClose();}} aria-label="Close"
-        style={{ position:'absolute', top:'18px', right:'20px', width:'46px', height:'46px', borderRadius:'50%', background:'var(--surface-3)', border:'1px solid rgba(255,255,255,0.2)', color:'var(--ink)', cursor:'pointer', fontSize:'24px', lineHeight:1, display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+        style={{ position:'absolute', top:'18px', right:'20px', width:'46px', height:'46px', borderRadius:'50%', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.28)', color:'#fff', cursor:'pointer', fontSize:'24px', lineHeight:1, display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
       <button onClick={(e)=>{e.stopPropagation();onPrev();}} aria-label="Previous" style={{ ...navBtn, left:'16px' }}>
-        <span style={{ display:'flex', transform:'rotate(180deg)' }}>{window.SahajIcons.arrowRight({ size:20, color:'var(--ink)', strokeW:2 })}</span>
+        <span style={{ display:'flex', transform:'rotate(180deg)' }}>{window.SahajIcons.arrowRight({ size:20, color:'#fff', strokeW:2 })}</span>
       </button>
       <button onClick={(e)=>{e.stopPropagation();onNext();}} aria-label="Next" style={{ ...navBtn, right:'16px' }}>
-        {window.SahajIcons.arrowRight({ size:20, color:'var(--ink)', strokeW:2 })}
+        {window.SahajIcons.arrowRight({ size:20, color:'#fff', strokeW:2 })}
       </button>
       <img src={photo.src} alt={photo.caption} onClick={(e)=>e.stopPropagation()} draggable={false}
         style={{ maxWidth:'min(92vw,1080px)', maxHeight:'78vh', objectFit:'contain', borderRadius:'10px', boxShadow:'0 30px 80px rgba(0,0,0,0.7)' }} />
       <div style={{ marginTop:'18px', textAlign:'center' }} onClick={(e)=>e.stopPropagation()}>
-        <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'18px', fontStyle:'italic', color:'var(--ink)' }}>{photo.caption}</p>
-        <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'1.6px', textTransform:'uppercase', color:'var(--ink-4)', marginTop:'7px' }}>{photo.sub} · {index+1} / {total}</p>
+        <p style={{ fontFamily:"'Times New Roman',Georgia,serif", fontSize:'18px', fontStyle:'italic', color:'#f2eee2' }}>{photo.caption}</p>
+        <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'11px', letterSpacing:'1.6px', textTransform:'uppercase', color:'#b9b2a2', marginTop:'7px' }}>{photo.sub} · {index+1} / {total}</p>
       </div>
     </div>
   ), document.body);
@@ -205,7 +205,7 @@ function About() {
 
             <div style={{ display:'flex', gap:'8px', flexWrap:'wrap', marginBottom:'34px' }}>
               {['Self-taught','Omnivert','Researcher','Founder'].map(t=>(
-                <span key={t} style={{ background:'rgba(34,85,232,0.1)', border:'1px solid rgba(34,85,232,0.3)', borderRadius:'20px', padding:'5px 14px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'var(--ink-3)', whiteSpace:'nowrap' }}>{t}</span>
+                <span key={t} style={{ background:'var(--accent-chip)', border:'1px solid var(--accent-line)', borderRadius:'20px', padding:'5px 14px', fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'13px', color:'var(--ink-2)', whiteSpace:'nowrap' }}>{t}</span>
               ))}
             </div>
           </div>
@@ -330,7 +330,7 @@ function About() {
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer"
                 onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.boxShadow='0 10px 26px rgba(150,110,30,0.16)';}}
                 onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.borderColor='';e.currentTarget.style.boxShadow='';}}
-                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'16px', padding:'16px 20px', background:'rgba(201,168,76,0.06)', border:'1px solid rgba(201,168,76,0.18)', borderRadius:'10px', textDecoration:'none', transition:'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease' }}>
+                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:'16px', padding:'16px 20px', background:'var(--gold-box)', border:'1px solid var(--gold-box-line)', borderRadius:'10px', textDecoration:'none', transition:'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease' }}>
                 <div style={{ flex:1, minWidth:0 }}>
                   <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'14px', fontWeight:600, color:'var(--ink-2)', marginBottom:'3px', textWrap:'pretty' }}>{p.title}</p>
                   <p style={{ fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize:'12px', color:'var(--ink-3)' }}>{p.outlet}</p>

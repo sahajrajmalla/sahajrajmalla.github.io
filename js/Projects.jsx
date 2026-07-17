@@ -3,9 +3,9 @@ const { useState } = React;
 
 function TypeBadge({ type }) {
   const map = {
-    'Open Source': { bg:'rgba(34,85,232,0.15)', border:'rgba(34,85,232,0.4)', color:'#60a5fa' },
-    'Research':    { bg:'rgba(139,92,246,0.15)', border:'rgba(139,92,246,0.4)', color:'var(--purple)' },
-    'Startup':     { bg:'rgba(201,168,76,0.15)', border:'rgba(201,168,76,0.4)', color:'var(--gold-ink)' },
+    'Open Source': { bg:'var(--badge-cf-bg)', border:'var(--badge-cf-line)', color:'var(--badge-cf-ink)' },
+    'Research':    { bg:'var(--badge-q1-bg)', border:'var(--badge-q1-line)', color:'var(--purple)' },
+    'Startup':     { bg:'var(--badge-jr-bg)', border:'var(--badge-jr-line)', color:'var(--gold-ink)' },
   };
   const s = map[type] || map['Research'];
   return (
@@ -35,7 +35,7 @@ function ProjectCard({ project }) {
         cursor:'pointer',
         transition:'all 0.22s ease',
         transform: hover ? 'translateY(-4px)' : 'translateY(0)',
-        boxShadow: hover ? `0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px ${c}22` : 'none',
+        boxShadow: hover ? `var(--shadow-card-lg), 0 0 0 1px ${c}22` : 'none',
         display:'flex', flexDirection:'column',
         position:'relative', overflow:'hidden',
       }}
@@ -109,9 +109,9 @@ function ProjectCard({ project }) {
                   color:'var(--purple)', textDecoration:'none',
                   fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
                   fontSize:'13px', fontWeight:600,
-                  border:'1px solid rgba(139,92,246,0.4)',
+                  border:'1px solid var(--badge-q1-line)',
                   borderRadius:'7px', padding:'7px 14px',
-                  background:'rgba(139,92,246,0.1)',
+                  background:'var(--badge-q1-bg)',
                 }}>
                 Read Paper →
               </a>
@@ -194,7 +194,7 @@ function Projects() {
         {/* ── Open source note ── */}
         <div style={{
           marginTop:'48px', padding:'24px 28px',
-          background:'rgba(34,85,232,0.07)', border:'1px solid rgba(34,85,232,0.2)',
+          background:'var(--accent-box)', border:'1px solid var(--accent-line)',
           borderRadius:'12px', display:'flex', alignItems:'center', gap:'16px',
         }}>
           <div>

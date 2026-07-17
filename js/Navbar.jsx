@@ -213,7 +213,7 @@ function Navbar({ currentPage, onNavigate }) {
               key={id}
               onClick={() => go(id)}
               style={{
-                background: currentPage === id ? 'rgba(34,85,232,0.15)' : 'none',
+                background: currentPage === id ? 'var(--accent-chip)' : 'none',
                 border: 'none',
                 cursor: 'pointer',
                 padding: '13px 28px',

@@ -94,7 +94,7 @@ function App() {
         onClick={()=>{setGameOpen(true);setTimeout(()=>{if(document.activeElement&&document.activeElement!==document.body)document.activeElement.blur();},0);}}
         onMouseEnter={()=>setFabHover(true)}
         onMouseLeave={()=>setFabHover(false)}
-        title={isLight ? 'Follow the beam of curiosity' : "Explore Sahaj's World"}
+        title={isLight ? 'Chart the voyage' : "Explore Sahaj's World"}
         aria-label="Open interactive world"
         style={{
           position:'fixed', bottom: mobile?'18px':'28px', right: mobile?'16px':'28px',

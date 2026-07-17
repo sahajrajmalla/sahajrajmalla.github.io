@@ -7,12 +7,12 @@ function TrajectoryStep({ num, area, desc, year, last }) {
       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0 }}>
         <div style={{
           width:'36px', height:'36px', borderRadius:'50%',
-          background:'rgba(34,85,232,0.2)', border:'2px solid rgba(34,85,232,0.5)',
+          background:'var(--accent-chip)', border:'2px solid var(--accent-line-strong)',
           display:'flex', alignItems:'center', justifyContent:'center',
           fontFamily:"'Times New Roman', Georgia, serif",
           fontSize:'14px', fontWeight:700, color:'var(--accent-2)',
         }}>{num}</div>
-        {!last && <div style={{ width:'2px', flex:1, minHeight:'32px', background:'rgba(34,85,232,0.2)', marginTop:'4px' }} />}
+        {!last && <div style={{ width:'2px', flex:1, minHeight:'32px', background:'var(--accent-line)', marginTop:'4px' }} />}
       </div>
       <div style={{ paddingBottom: last ? 0 : '28px' }}>
         <h4 style={{
@@ -34,10 +34,10 @@ function TrajectoryStep({ num, area, desc, year, last }) {
 
 function TierPill({ tier }) {
   const map = {
-    'Q1':         { bg:'rgba(139,92,246,0.2)',  border:'rgba(139,92,246,0.5)', color:'var(--purple)' },
-    'Journal':    { bg:'rgba(201,168,76,0.16)', border:'rgba(201,168,76,0.45)', color:'#d6b55e' },
-    'Conference': { bg:'rgba(34,85,232,0.18)',  border:'rgba(34,85,232,0.5)',  color:'#60a5fa' },
-    'Preprint':   { bg:'rgba(127,160,200,0.14)', border:'rgba(127,160,200,0.4)', color:'var(--ink-3)' },
+    'Q1':         { bg:'var(--badge-q1-bg)', border:'var(--badge-q1-line)', color:'var(--purple)' },
+    'Journal':    { bg:'var(--badge-jr-bg)', border:'var(--badge-jr-line)', color:'var(--badge-jr-ink)' },
+    'Conference': { bg:'var(--badge-cf-bg)', border:'var(--badge-cf-line)', color:'var(--badge-cf-ink)' },
+    'Preprint':   { bg:'var(--badge-pre-bg)', border:'var(--badge-pre-line)', color:'var(--ink-3)' },
   };
   const s = map[tier] || map['Conference'];
   return (
@@ -95,8 +95,8 @@ function PhD({ onNavigate }) {
         <div style={{
           margin:'48px 0',
           padding:'32px 36px',
-          background:'rgba(34,85,232,0.06)',
-          border:'1px solid rgba(34,85,232,0.25)',
+          background:'var(--accent-box)',
+          border:'1px solid var(--accent-line)',
           borderLeft:'4px solid var(--accent)',
           borderRadius:'0 12px 12px 0',
         }}>
@@ -267,7 +267,7 @@ function PhD({ onNavigate }) {
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:'10px' }}>
             {d.awards.map((a, i) => (
               <div key={i} style={{
-                background:'rgba(201,168,76,0.06)', border:'1px solid rgba(201,168,76,0.18)',
+                background:'var(--gold-box)', border:'1px solid var(--gold-box-line)',
                 borderRadius:'10px', padding:'13px 16px',
                 display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px',
               }}>
@@ -283,7 +283,7 @@ function PhD({ onNavigate }) {
 
         {/* ── CTA ── */}
         <div style={{
-          padding:'32px', background:'rgba(34,85,232,0.08)', border:'1px solid rgba(34,85,232,0.25)',
+          padding:'32px', background:'var(--accent-box)', border:'1px solid var(--accent-line)',
           borderRadius:'14px', textAlign:'center',
         }}>
           <h3 style={{ fontFamily:"'Times New Roman', Georgia, serif", fontSize:'22px', fontWeight:700, color:'var(--ink)', marginBottom:'10px' }}>

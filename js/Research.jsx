@@ -5,10 +5,10 @@ const TAGS_ALL = ['All','Computer Vision','Quantum ML','Reinforcement Learning',
 
 function TierBadge({ tier }) {
   const m = {
-    'Q1':         {bg:'rgba(139,92,246,0.18)',border:'rgba(139,92,246,0.5)',color:'var(--purple)'},
-    'Journal':    {bg:'rgba(201,168,76,0.16)', border:'rgba(201,168,76,0.45)',color:'#d6b55e'},
-    'Conference': {bg:'rgba(34,85,232,0.18)',  border:'rgba(34,85,232,0.5)', color:'#60a5fa'},
-    'Preprint':   {bg:'rgba(127,160,200,0.14)', border:'rgba(127,160,200,0.4)',color:'var(--ink-3)'},
+    'Q1':         {bg:'var(--badge-q1-bg)', border:'var(--badge-q1-line)', color:'var(--purple)'},
+    'Journal':    {bg:'var(--badge-jr-bg)', border:'var(--badge-jr-line)', color:'var(--badge-jr-ink)'},
+    'Conference': {bg:'var(--badge-cf-bg)', border:'var(--badge-cf-line)', color:'var(--badge-cf-ink)'},
+    'Preprint':   {bg:'var(--badge-pre-bg)', border:'var(--badge-pre-line)', color:'var(--ink-3)'},
   };
   const s = m[tier]||m['Conference'];
   return <span style={{background:s.bg,border:`1px solid ${s.border}`,borderRadius:'12px',padding:'3px 10px',fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,color:s.color,letterSpacing:'0.8px',textTransform:'uppercase'}}>{tier}</span>;
@@ -19,7 +19,7 @@ function PaperCard({ paper }) {
   const [h,setH]=useState(false);
   return (
     <div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setOpen(!open)}
-      style={{background:h?'rgba(255,255,255,0.045)':'var(--surface)',border:`1px solid ${open?'rgba(34,85,232,0.5)':h?'rgba(34,85,232,0.3)':'var(--line)'}`,borderRadius:'14px',padding:'26px',cursor:'pointer',transition:'all 0.2s ease',transform:h?'translateY(-3px)':'translateY(0)',boxShadow:h?'0 12px 40px rgba(0,0,0,0.4)':'none',position:'relative',overflow:'hidden'}}>
+      style={{background:h?'var(--card-hover)':'var(--surface)',border:`1px solid ${open?'rgba(34,85,232,0.5)':h?'rgba(34,85,232,0.3)':'var(--line)'}`,borderRadius:'14px',padding:'26px',cursor:'pointer',transition:'all 0.2s ease',transform:h?'translateY(-3px)':'translateY(0)',boxShadow:h?'var(--shadow-card)':'none',position:'relative',overflow:'hidden'}}>
       {paper.highlight&&<div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,var(--accent),var(--gold))'}}/>}
 
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'16px',marginBottom:'12px'}}>
@@ -100,7 +100,7 @@ function Research() {
         {/* Peer-reviewed section */}
         {peer.length>0&&(
           <div style={{marginBottom:'40px'}}>
-            <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase',color:'#d6b55e',marginBottom:'16px'}}>Peer-Reviewed Publications</p>
+            <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',fontWeight:700,letterSpacing:'2px',textTransform:'uppercase',color:'var(--badge-jr-ink)',marginBottom:'16px'}}>Peer-Reviewed Publications</p>
             <div style={{display:'flex',flexDirection:'column',gap:'14px'}}>
               {peer.map(p=><PaperCard key={p.id} paper={p}/>)}
             </div>
@@ -118,9 +118,9 @@ function Research() {
         )}
 
         {/* Scholar link */}
-        <div style={{padding:'18px 24px',background:'rgba(201,168,76,0.07)',border:'1px solid rgba(201,168,76,0.2)',borderRadius:'12px',display:'flex',alignItems:'center',gap:'14px'}}>
+        <div style={{padding:'18px 24px',background:'var(--gold-box)',border:'1px solid var(--gold-box-line)',borderRadius:'12px',display:'flex',alignItems:'center',gap:'14px'}}>
           <p style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'14px',color:'var(--gold-ink)',lineHeight:1.6}}>
-            Full list on{' '}<a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{color:'var(--gold-ink)',textDecoration:'none',borderBottom:'1px solid rgba(201,168,76,0.4)'}}>Google Scholar</a> · including conference proceedings, journal articles, and preprints.
+            Full list on{' '}<a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{color:'var(--accent)',textDecoration:'none',fontWeight:600,borderBottom:'1px solid var(--accent)'}}>Google Scholar</a> · including conference proceedings, journal articles, and preprints.
           </p>
         </div>
 
@@ -132,7 +132,7 @@ function Research() {
               <div key={i}
                 onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.boxShadow='0 10px 26px rgba(150,110,30,0.18)';}}
                 onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.borderColor='';e.currentTarget.style.boxShadow='';}}
-                style={{background:'rgba(201,168,76,0.06)',border:'1px solid rgba(201,168,76,0.18)',borderRadius:'10px',padding:'14px 18px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'12px',transition:'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease'}}>
+                style={{background:'var(--gold-box)',border:'1px solid var(--gold-box-line)',borderRadius:'10px',padding:'14px 18px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'12px',transition:'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease'}}>
                 <div>
                   <div style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'13px',fontWeight:600,color:'var(--ink-2)',marginBottom:'3px'}}>{a.title}</div>
                   <div style={{fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif",fontSize:'11px',color:'var(--ink-4)'}}>{a.org}</div>

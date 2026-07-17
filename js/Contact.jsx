@@ -14,7 +14,7 @@ function SocialLink({ label, url, icon, desc }) {
         display:'flex', alignItems:'center', gap:'16px',
         padding:'18px 22px',
         background: h ? 'var(--surface-2)' : 'var(--surface)',
-        border:`1px solid ${h ? 'rgba(34,85,232,0.45)' : 'var(--line)'}`,
+        border:`1px solid ${h ? 'var(--accent-line-strong)' : 'var(--line)'}`,
         borderRadius:'12px', textDecoration:'none',
         transition:'all 0.2s ease',
         transform: h ? 'translateX(4px)' : 'translateX(0)',
@@ -22,8 +22,8 @@ function SocialLink({ label, url, icon, desc }) {
     >
       <span style={{
         width:'40px', height:'40px', borderRadius:'10px',
-        background: h ? 'rgba(34,85,232,0.2)' : 'rgba(34,85,232,0.1)',
-        border:'1px solid rgba(34,85,232,0.25)',
+        background: h ? 'var(--accent-chip-2)' : 'var(--accent-chip)',
+        border:'1px solid var(--accent-line)',
         display:'flex', alignItems:'center', justifyContent:'center',
         color:'var(--ink-2)',
         flexShrink:0,
@@ -126,16 +126,16 @@ function Contact() {
             display:'block', marginBottom:'32px',
             padding:'28px 32px',
             background: isLight
-              ? 'linear-gradient(135deg, rgba(31,95,208,0.07) 0%, rgba(109,40,217,0.06) 100%)'
+              ? 'linear-gradient(135deg, #fffef8 0%, #fff4dc 100%)'
               : 'linear-gradient(135deg, rgba(34,85,232,0.15) 0%, rgba(139,92,246,0.1) 100%)',
-            border:'1px solid var(--accent-line)',
+            border: isLight ? '1px solid rgba(184,134,42,0.4)' : '1px solid var(--accent-line)',
             borderRadius:'16px', textDecoration:'none',
             transition:'transform 0.2s ease, box-shadow 0.2s ease',
           }}>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontSize:'11px', fontWeight:700, letterSpacing:'2px',
-            textTransform:'uppercase', color:'var(--accent-2)', marginBottom:'8px',
+            textTransform:'uppercase', color: isLight ? 'var(--gold-ink)' : 'var(--accent-2)', marginBottom:'8px',
           }}>Best way to reach me</p>
           <p style={{
             fontFamily:"'Times New Roman', Georgia, serif",
@@ -167,9 +167,9 @@ function Contact() {
               color:'var(--accent-2)', textDecoration:'none',
               fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
               fontSize:'13px', fontWeight:600,
-              border:'1px solid rgba(77,127,255,0.35)',
+              border:'1px solid var(--accent-line)',
               borderRadius:'7px', padding:'8px 16px',
-              background:'rgba(34,85,232,0.08)',
+              background:'var(--accent-chip)',
             }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M14 3v5h5M9 13h6M9 17h6M8 3h7l5 5v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
