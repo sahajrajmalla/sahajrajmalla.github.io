@@ -335,7 +335,7 @@ window.SahajData = {
   // ── LIFE GALLERY (About page) ──────────────────────────────────────────────
   gallery: [
     { src: "assets/life/sahaj11.jpg", w: 2, caption: "High in the Himalaya",        sub: "Trekking" },
-    { src: "assets/life/sahaj14.jpg", w: 1, caption: "Kathmandu University",         sub: "Campus" },
+    { src: "assets/life/sahaj21.jpeg", w: 1, caption: "Beneath the pagoda",          sub: "Bhaktapur" },
     { src: "assets/life/sahaj10.jpg", w: 1, caption: "Somewhere grand",             sub: "Travels" },
     { src: "assets/life/sahaj5.jpg",  w: 1, caption: "On the panel",                 sub: "Speaking" },
     { src: "assets/life/sahaj13.jpg", w: 2, caption: "Horseback in Mustang",         sub: "Mustang" },

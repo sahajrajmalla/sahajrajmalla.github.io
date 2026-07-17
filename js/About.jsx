@@ -179,7 +179,7 @@ function About() {
   const slides = [
     { src:'assets/sahaj2.jpg',  alt:'Sahaj Raj Malla', pos:'center 18%', caption:'Where the work happens.', sub:'At my desk' },
     { src:'assets/sahaj1.jpg',  alt:'Sahaj Raj Malla outdoors', pos:'center 10%', caption:'Out in the hills.', sub:'Off the clock' },
-    { src:'assets/sahaj3.jpeg', alt:'Sahaj Raj Malla with the Nepal flag', pos:'50% 28%', caption:'Proudly Nepali.', sub:'Nepal' },
+    { src:'assets/life/sahaj14.jpg', alt:'Kathmandu University campus', pos:'center 50%', caption:'Where it all began.', sub:'Kathmandu University' },
   ];
 
   return (
