@@ -79,8 +79,8 @@ function Research() {
         <div style={{display:'grid',gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(4,1fr)',gap:'1px',marginBottom:'44px',background:'var(--line)',borderRadius:'12px',overflow:'hidden',border:'1px solid var(--line)'}}>
           {[
             {n:'10',  l:'Total Publications'},
-            {n:'3',   l:'Peer-Reviewed'},
-            {n:'1',   l:'Q1 Journal (Springer Nature)'},
+            {n:'4',   l:'Peer-Reviewed'},
+            {n:'2',   l:'Q1 Journal (Springer Nature)'},
             {n:'7',   l:'Preprints'},
           ].map((s,i)=>(
             <div key={i} style={{flex:1,padding:'18px 20px',textAlign:'center',background:'var(--surface)',borderRight:i<3?'1px solid var(--line)':'none'}}>

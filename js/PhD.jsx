@@ -62,7 +62,7 @@ function PhD({ onNavigate }) {
     { num:'2', area:'ML Systems & Forecasting', desc:'Ensemble methods, time-series, econometric modelling', year:'2023–2026' },
     { num:'3', area:'Quantum ML', desc:'Hybrid variational circuits for Devanagari digit recognition (99.80% accuracy)', year:'2025' },
     { num:'4', area:'Game-Playing Agents', desc:'Agent strategy comparison in incomplete-information environments (88.3% win rate)', year:'2025' },
-    { num:'5', area:'→ PhD Focus', desc:'Reinforcement learning for multi-modal agentic systems', year:'2026+', last:true },
+    { num:'5', area:'→ PhD Focus', desc:'Effective learning, orchestration, and sequential decision-making for multimodal agentic systems', year:'2026+', last:true },
   ];
 
   return (
@@ -293,7 +293,7 @@ function PhD({ onNavigate }) {
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontSize:'14px', color:'var(--ink-3)', lineHeight:1.7, marginBottom:'24px', maxWidth:'560px', margin:'0 auto 24px',
           }}>
-            If your group works on reinforcement learning, agentic systems, or applied ML for low-resource settings, I would like to hear from you. I have published in several of these areas and shipped ML in industry. Email is the fastest way to reach me.
+            If your group works on agentic orchestration, sequential decision-making, parameter-efficient learning, or multimodal systems, I would like to hear from you. I have published in several of these areas and shipped ML in industry. Email is the fastest way to reach me.
           </p>
           <div style={{ display:'flex', justifyContent:'center', gap:'12px', flexWrap:'wrap' }}>
             <a href={`mailto:${d.personal.email}`} style={{

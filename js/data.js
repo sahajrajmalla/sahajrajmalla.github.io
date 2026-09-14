@@ -10,13 +10,13 @@ window.SahajData = {
     scholar: "https://scholar.google.com/citations?user=NYVtgiYAAAAJ&hl=en",
     researchgate: "https://www.researchgate.net/profile/Sahaj-Raj-Malla",
     linkedin: "https://linkedin.com/in/sahajrajmalla",
-    twitter: "https://twitter.com/sahaj_malla",
+    twitter: "https://twitter.com/sahajrajmalla",
     instagram: "https://www.instagram.com/sahajrajmalla/",
     medium: "https://medium.com/@mallasahajraj",
     cv: "assets/cv.pdf",
   },
 
-  stats: { papers: 10, awards: 9, users: 4000, repos: 80 },
+  stats: { papers: 10, awards: 9, users: 5000, repos: 80 },
 
   // ── PEER-REVIEWED ──────────────────────────────────────────────────────────
   peerReviewed: [
@@ -32,6 +32,19 @@ window.SahajData = {
       highlight: true,
       authors: "S. R. Malla",
       abstract: "99.71% test accuracy on the Devanagari Handwritten Character Dataset, 56.41% fewer parameters than prior SOTA. Introduces optimised residual blocks and Homogeneous Filter Capsule layers for multiscale feature extraction.",
+    },
+    {
+      id: 99,
+      title: "Heuristic optimization of AI agents for Dhumbal",
+      venue: "Scientific Reports",
+      publisher: "Springer Nature",
+      tier: "Q1",
+      year: "Aug 2026",
+      tag: "Reinforcement Learning",
+      url: "https://www.nature.com/articles/s41598-026-68206-1",
+      highlight: true,
+      authors: "S. R. Malla",
+      abstract: "Heuristic, MCTS, ISMCTS, DQN and PPO agents compared on an imperfect-information card game across 1,024 rounds; an aggressive heuristic reached an 88.9% win rate, outperforming the learned agents. Open-source environment released.",
     },
     {
       id: 2,
@@ -121,18 +134,7 @@ window.SahajData = {
       authors: "P. Panth, S. R. Malla",
       abstract: "Consensus-driven privacy-preserving framework for secure, verifiable multi-client data sharing.",
     },
-    {
-      id: 8,
-      title: "AI Agents for the Dhumbal Card Game: A Comparative Study",
-      venue: "arXiv:2510.11736",
-      publisher: "arXiv",
-      tier: "Preprint",
-      year: "Oct 2025",
-      tag: "Reinforcement Learning",
-      url: "https://arxiv.org/abs/2510.11736",
-      authors: "S. R. Malla",
-      abstract: "Compared AI strategies for the Dhumbal card game; an aggressive heuristic agent reached an 88.3% win rate across 1,024 simulations.",
-    },
+
     {
       id: 9,
       title: "Devanagari Digit Recognition using Quantum Machine Learning: A Hybrid Quantum-Classical Approach",
@@ -264,6 +266,12 @@ window.SahajData = {
   // ── PRESS & MEDIA ──────────────────────────────────────────────────────────
   press: [
     {
+      title: "AI Agent for the Dhumbal Card Game",
+      outlet: "Techpana (in Nepali)",
+      date: "Sep 2026",
+      url: "https://techpana.com/2026/158879",
+    },
+    {
       title: "Making Devanagari Handwriting Accessible: The Story of MallaNet",
       outlet: "Business 360°",
       date: "Feb 2026",
@@ -305,9 +313,9 @@ window.SahajData = {
 
   // ── RESEARCH INTERESTS (sharp PhD focus) ───────────────────────────────────
   researchInterests: [
-    { area: "Reinforcement Learning", desc: "Multi-agent coordination, partial observability, and long-horizon planning" },
-    { area: "Agentic Systems", desc: "Autonomous decision-making, tool use, and memory in open-ended environments" },
-    { area: "Multi-Modal Learning", desc: "Grounding action in perception across vision and language" },
+    { area: "Agentic Orchestration", desc: "Sequential decision-making under uncertainty to autonomously route, compose, and evaluate specialized models." },
+    { area: "Parameter-Efficient Intelligence", desc: "Designing resource-constrained architectures and representation learning methods that extract rich signals from limited data." },
+    { area: "Multimodal Systems", desc: "Equipping agents to reason across diverse evidence, from vision and text to geospatial and economic data." },
   ],
 
   // ── EDUCATION ──────────────────────────────────────────────────────────────
@@ -318,38 +326,38 @@ window.SahajData = {
   },
 
   // ── PHD STATEMENT ──────────────────────────────────────────────────────────
-  phdStatement: "I'm applying to PhD programs in reinforcement learning and multi-modal agentic systems. My work at Kathmandu University has moved through computer vision, machine learning systems, quantum machine learning, and game-playing agents. Each project taught me something the next one needed. Along the way I've published in several of these areas, shipped machine learning in industry, and spent a lot of that time on problems specific to Nepal, like reading Devanagari script and forecasting local markets. I do my best work in groups that take on hard questions and stay with them.",
+  phdStatement: "I'm applying to PhD programs in artificial intelligence to study effective learning and decision-making for multimodal agentic systems. My work at Kathmandu University, spanning computer vision, parameter-efficient architectures, forecasting, and game-playing agents, taught me that capability depends on latent organization and orchestration, not just scale. My doctoral aim is to make orchestration principled: building systems that can autonomously select, compose, and adapt specialized models to solve unfamiliar problems under uncertainty.",
 
   // ── INTERESTS (ordered as requested) ───────────────────────────────────────
   interests: [
-    { label: "Travel",      icon: "travel"     },
-    { label: "Art",         icon: "art"        },
-    { label: "Philosophy",  icon: "philosophy" },
-    { label: "Psychology",  icon: "psychology" },
-    { label: "Music",       icon: "music"      },
-    { label: "Anime",       icon: "anime"      },
-    { label: "Football",    icon: "football"   },
-    { label: "Explore",     icon: "explore"    },
+    { label: "Travel", icon: "travel" },
+    { label: "Art", icon: "art" },
+    { label: "Philosophy", icon: "philosophy" },
+    { label: "Psychology", icon: "psychology" },
+    { label: "Music", icon: "music" },
+    { label: "Anime", icon: "anime" },
+    { label: "Football", icon: "football" },
+    { label: "Explore", icon: "explore" },
   ],
 
   // ── LIFE GALLERY (About page) ──────────────────────────────────────────────
   gallery: [
-    { src: "assets/life/sahaj11.jpg", w: 2, caption: "High in the Himalaya",        sub: "Trekking" },
-    { src: "assets/life/sahaj21.jpeg", w: 1, caption: "Beneath the pagoda",          sub: "Bhaktapur" },
-    { src: "assets/life/sahaj10.jpg", w: 1, caption: "Somewhere grand",             sub: "Travels" },
-    { src: "assets/life/sahaj5.jpg",  w: 1, caption: "On the panel",                 sub: "Speaking" },
-    { src: "assets/life/sahaj13.jpg", w: 2, caption: "Horseback in Mustang",         sub: "Mustang" },
-    { src: "assets/life/sahaj7.jpg",  w: 1, caption: "Golden hour",                  sub: "Sunset" },
-    { src: "assets/life/sahaj6.jpg",  w: 2, caption: "Bicycle kick on the pitch",    sub: "Football" },
-    { src: "assets/life/sahaj17.jpg", w: 1, caption: "Wearing the startup",          sub: "Hamroniwas" },
-    { src: "assets/life/sahaj18.jpg", w: 1, caption: "Top of the climb",             sub: "Outdoors" },
-    { src: "assets/life/sahaj20.jpg", w: 1, caption: "Stone guardians",              sub: "Heritage" },
-    { src: "assets/life/sahaj8.jpg",  w: 1, caption: "A rainy day abroad",           sub: "On the road" },
-    { src: "assets/life/sahaj9.jpg",  w: 1, caption: "Trail with a view",            sub: "Hiking" },
+    { src: "assets/life/sahaj11.jpg", w: 2, caption: "High in the Himalaya", sub: "Trekking" },
+    { src: "assets/life/sahaj21.jpeg", w: 1, caption: "Beneath the pagoda", sub: "Bhaktapur" },
+    { src: "assets/life/sahaj10.jpg", w: 1, caption: "Somewhere grand", sub: "Travels" },
+    { src: "assets/life/sahaj5.jpg", w: 1, caption: "On the panel", sub: "Speaking" },
+    { src: "assets/life/sahaj13.jpg", w: 2, caption: "Horseback in Mustang", sub: "Mustang" },
+    { src: "assets/life/sahaj7.jpg", w: 1, caption: "Golden hour", sub: "Sunset" },
+    { src: "assets/life/sahaj6.jpg", w: 2, caption: "Bicycle kick on the pitch", sub: "Football" },
+    { src: "assets/life/sahaj17.jpg", w: 1, caption: "Wearing the startup", sub: "Hamroniwas" },
+    { src: "assets/life/sahaj18.jpg", w: 1, caption: "Top of the climb", sub: "Outdoors" },
+    { src: "assets/life/sahaj20.jpg", w: 1, caption: "Stone guardians", sub: "Heritage" },
+    { src: "assets/life/sahaj8.jpg", w: 1, caption: "A rainy day abroad", sub: "On the road" },
+    { src: "assets/life/sahaj9.jpg", w: 1, caption: "Trail with a view", sub: "Hiking" },
     { src: "assets/life/sahaj19.jpg", w: 2, caption: "Night ride under a full moon", sub: "After hours" },
-    { src: "assets/life/sahaj15.jpg", w: 1, caption: "On the steps at KU",           sub: "Campus" },
-    { src: "assets/life/sahaj4.jpg",  w: 1, caption: "Newari woodcraft, up close",   sub: "Heritage" },
-    { src: "assets/life/sahaj16.jpg", w: 1, caption: "Out on the bike",              sub: "Riding" },
+    { src: "assets/life/sahaj15.jpg", w: 1, caption: "On the steps at KU", sub: "Campus" },
+    { src: "assets/life/sahaj4.jpg", w: 1, caption: "Newari woodcraft, up close", sub: "Heritage" },
+    { src: "assets/life/sahaj16.jpg", w: 1, caption: "Out on the bike", sub: "Riding" },
     { src: "assets/life/sahaj12.jpg", w: 1, caption: "World's highest swing, Kushma", sub: "Travels" },
   ],
 
@@ -359,9 +367,9 @@ window.SahajData = {
       label: "Languages",
       color: "#4d7fff",
       skills: [
-        { name: "Python",     brand: "#3776AB", abbr: "Py" },
-        { name: "C++",        brand: "#00599C", abbr: "C++" },
-        { name: "R",          brand: "#276DC3", abbr: "R" },
+        { name: "Python", brand: "#3776AB", abbr: "Py" },
+        { name: "C++", brand: "#00599C", abbr: "C++" },
+        { name: "R", brand: "#276DC3", abbr: "R" },
         { name: "TypeScript", brand: "#3178C6", abbr: "TS" },
         { name: "JavaScript", brand: "#F7DF1E", abbr: "JS" },
       ],
@@ -370,18 +378,18 @@ window.SahajData = {
       label: "ML & AI",
       color: "var(--purple)",
       skills: [
-        { name: "PyTorch",     brand: "#EE4C2C", abbr: "PT" },
-        { name: "TensorFlow",  brand: "#FF6F00", abbr: "TF" },
-        { name: "Scikit-learn",brand: "#F7931E", abbr: "SK" },
+        { name: "PyTorch", brand: "#EE4C2C", abbr: "PT" },
+        { name: "TensorFlow", brand: "#FF6F00", abbr: "TF" },
+        { name: "Scikit-learn", brand: "#F7931E", abbr: "SK" },
         { name: "HuggingFace", brand: "#FFD21E", abbr: "HF" },
-        { name: "LangGraph",   brand: "#1C3C3C", abbr: "LG" },
+        { name: "LangGraph", brand: "#1C3C3C", abbr: "LG" },
       ],
     },
     {
       label: "Quantum",
       color: "var(--purple)",
       skills: [
-        { name: "Qiskit",    brand: "#6929C4", abbr: "QK" },
+        { name: "Qiskit", brand: "#6929C4", abbr: "QK" },
         { name: "PennyLane", brand: "#2D7FF9", abbr: "PL" },
       ],
     },
@@ -390,8 +398,8 @@ window.SahajData = {
       color: "#4d7fff",
       skills: [
         { name: "FastAPI", brand: "#009688", abbr: "FA" },
-        { name: "Django",  brand: "#092E20", abbr: "Dj" },
-        { name: "React",   brand: "#61DAFB", abbr: "Re" },
+        { name: "Django", brand: "#092E20", abbr: "Dj" },
+        { name: "React", brand: "#61DAFB", abbr: "Re" },
         { name: "Next.js", brand: "#111111", abbr: "Nx" },
       ],
     },
@@ -399,9 +407,9 @@ window.SahajData = {
       label: "Data",
       color: "#c9a84c",
       skills: [
-        { name: "NumPy",   brand: "#013243", abbr: "Np" },
-        { name: "Pandas",  brand: "#150458", abbr: "Pd" },
-        { name: "Spark",   brand: "#E25A1C", abbr: "Sp" },
+        { name: "NumPy", brand: "#013243", abbr: "Np" },
+        { name: "Pandas", brand: "#150458", abbr: "Pd" },
+        { name: "Spark", brand: "#E25A1C", abbr: "Sp" },
         { name: "Airflow", brand: "#017CEE", abbr: "Af" },
         { name: "Jupyter", brand: "#F37626", abbr: "Jp" },
       ],
@@ -411,10 +419,10 @@ window.SahajData = {
       color: "#7fa0c8",
       skills: [
         { name: "Docker", brand: "#2496ED", abbr: "Dk" },
-        { name: "AWS",    brand: "#FF9900", abbr: "AW" },
-        { name: "Azure",  brand: "#0078D4", abbr: "Az" },
-        { name: "Linux",  brand: "#FCC624", abbr: "Lx" },
-        { name: "Git",    brand: "#F05032", abbr: "Gt" },
+        { name: "AWS", brand: "#FF9900", abbr: "AW" },
+        { name: "Azure", brand: "#0078D4", abbr: "Az" },
+        { name: "Linux", brand: "#FCC624", abbr: "Lx" },
+        { name: "Git", brand: "#F05032", abbr: "Gt" },
       ],
     },
     {
@@ -422,8 +430,8 @@ window.SahajData = {
       color: "#c9a84c",
       skills: [
         { name: "PostgreSQL", brand: "#4169E1", abbr: "Pg" },
-        { name: "MongoDB",    brand: "#47A248", abbr: "Mg" },
-        { name: "Redis",      brand: "#DC382D", abbr: "Rd" },
+        { name: "MongoDB", brand: "#47A248", abbr: "Mg" },
+        { name: "Redis", brand: "#DC382D", abbr: "Rd" },
       ],
     },
   ],

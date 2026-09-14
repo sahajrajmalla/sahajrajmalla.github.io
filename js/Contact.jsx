@@ -56,7 +56,7 @@ function Contact() {
     { label:'GitHub',         url: d.personal.github,             icon:'github',       desc:'Browse the code' },
     { label:'Google Scholar', url: d.personal.scholar,            icon:'scholar',      desc:'Academic publications' },
     { label:'ResearchGate',   url: d.personal.researchgate,       icon:'researchgate', desc:'Research profile' },
-    { label:'X / Twitter',    url: d.personal.twitter,            icon:'x',            desc:'@sahaj_malla' },
+    { label:'X / Twitter',    url: d.personal.twitter,            icon:'x',            desc:'@sahajrajmalla' },
     { label:'Instagram',      url: d.personal.instagram,          icon:'instagram',    desc:'@sahajrajmalla' },
     { label:'Medium',         url: d.personal.medium,             icon:'medium',       desc:'Writing & tutorials' },
   ];
