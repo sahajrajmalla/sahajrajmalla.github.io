@@ -30,11 +30,19 @@ function Navbar({ currentPage, onNavigate }) {
     };
   }, []);
 
+  // App owns the URL hash (it sets it after the page transition), so the navbar only asks to navigate.
   const go = (id) => {
     onNavigate(id);
     setMenuOpen(false);
-    window.location.hash = id;
   };
+
+  // Escape closes the mobile menu
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
 
   const navBg = isLight
     ? (scrolled ? 'rgba(255,249,238,0.96)' : 'rgba(255,249,238,0.55)')
@@ -77,10 +85,12 @@ function Navbar({ currentPage, onNavigate }) {
     borderBottom: currentPage === id ? '2px solid var(--accent)' : '2px solid transparent',
     transition: 'all 0.2s ease',
     whiteSpace: 'nowrap',
+    textDecoration: 'none',
+    display: 'inline-block',
   });
 
   return (
-    <nav style={{
+    <nav aria-label="Main" style={{
       position: 'fixed',
       top: 0, left: 0, right: 0,
       zIndex: 1000,
@@ -124,9 +134,10 @@ function Navbar({ currentPage, onNavigate }) {
       {!isMobile && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
           {NAV_LINKS.map(({ id, label }) => (
-            <button key={id} onClick={() => go(id)} style={linkStyle(id)}>
+            <a key={id} href={'#' + id} onClick={(e) => { e.preventDefault(); go(id); }}
+               aria-current={currentPage === id ? 'page' : undefined} style={linkStyle(id)}>
               {label}
-            </button>
+            </a>
           ))}
 
           <span style={{ marginLeft: '8px' }}><ThemeToggle /></span>
@@ -180,9 +191,11 @@ function Navbar({ currentPage, onNavigate }) {
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: 'var(--ink)', padding: '4px', borderRadius: '4px',
+              color: 'var(--ink)', padding: '10px', borderRadius: '6px',
             }}
             aria-label="Menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               {menuOpen
@@ -196,7 +209,7 @@ function Navbar({ currentPage, onNavigate }) {
 
       {/* ── Mobile dropdown ── */}
       {isMobile && menuOpen && (
-        <div style={{
+        <div id="mobile-menu" style={{
           position: 'absolute',
           top: '64px',
           left: 0, right: 0,
@@ -212,6 +225,7 @@ function Navbar({ currentPage, onNavigate }) {
             <button
               key={id}
               onClick={() => go(id)}
+              aria-current={currentPage === id ? 'page' : undefined}
               style={{
                 background: currentPage === id ? 'var(--accent-chip)' : 'none',
                 border: 'none',
