@@ -165,7 +165,7 @@ window.SahajData = {
       authors: "S. R. Malla",
       role: "Sole author",
       short: "Hybrid quantum-classical architecture for Devanagari digit recognition (CNN + simulated 10-qubit variational circuit); 99.80% test accuracy, 0.9980 average per-class F1.",
-      thumb: { base: "assets/papers/quantum", w: 480, h: 678, alt: "First page of the arXiv preprint Devanagari Digit Recognition using Quantum Machine Learning", credit: "First page of the arXiv preprint (arXiv:2506.09069v1)." },
+      thumb: { base: "assets/papers/quantum", w: 480, h: 678, alt: "First page of the arXiv preprint Devanagari Digit Recognition using Quantum Machine Learning", credit: "First page of the arXiv preprint (arXiv:2506.09069v1). Sole author; arXiv non-exclusive licence." },
       summary: "A small CNN extracts features from handwritten Devanagari digits, then a 10-qubit variational quantum circuit classifies them. The circuit is simulated on a classical computer with PennyLane.",
       question: "Can a variational quantum circuit do the classification step on top of a CNN for Devanagari digits?",
       found: "99.80% test accuracy and 0.9980 average per-class F1 on the digit subset of DHCD, against 99.03% for an equivalent classical CNN. Of 2,339,092 parameters, 100 are in the quantum circuit.",
@@ -211,7 +211,7 @@ window.SahajData = {
       authors: "S. R. Malla, S. Kayastha, R. Suwal, H. C. Bhandari, R. Adhikari",
       role: "First author of five",
       short: "Walk-forward validation framework for time-series forecasting of NEPSE index log returns with XGBoost.",
-      thumb: { base: "assets/papers/nepse", w: 480, h: 640, alt: "First page of the arXiv preprint XGBoost Forecasting of NEPSE Index Log Returns with Walk Forward Validation", credit: "First page of the arXiv preprint (arXiv:2601.08896v1). Co-authored; co-author consent not checked." },
+      thumb: { base: "assets/papers/nepse", w: 480, h: 640, alt: "First page of the arXiv preprint XGBoost Forecasting of NEPSE Index Log Returns with Walk Forward Validation", credit: "First page of the arXiv preprint (arXiv:2601.08896v1). CC BY 4.0." },
       summary: "One-step-ahead forecasts of the NEPSE index's daily log returns with XGBoost, tested the way a forecast would be used: train on the past, predict the next day, move forward, repeat.",
       question: "Does XGBoost beat standard baselines for next-day NEPSE index returns when the test avoids look-ahead?",
       found: "The best setup, an expanding window with 20 lags, reached log-return RMSE 0.013450, MAE 0.009814 and directional accuracy of 65.15%, ahead of tuned ARIMA and Ridge baselines. R² stays modest.",
@@ -234,7 +234,7 @@ window.SahajData = {
       authors: "P. Panth, S. R. Malla",
       role: "Second author",
       short: "Consensus-driven privacy-preserving framework for secure, verifiable multi-client data sharing.",
-      thumb: { base: "assets/papers/panth", w: 480, h: 678, alt: "First page of the arXiv preprint Secure, Verifiable, and Scalable Multi-Client Data Sharing", credit: "First page of the arXiv preprint (arXiv:2601.00418v2). Co-authored; co-author consent not checked." },
+      thumb: { base: "assets/papers/panth", w: 480, h: 678, alt: "First page of the arXiv preprint Secure, Verifiable, and Scalable Multi-Client Data Sharing", credit: "First page of the arXiv preprint (arXiv:2601.00418v2). CC BY 4.0." },
       summary: "Prajwal Panth led this work and I am the second author. It proposes a protocol (CPPDD) for several parties to share data securely: each party masks its data, and the masks only come off if everyone takes part. Checksums let the group detect a party that deviates and abort.",
       question: "Can a group release shared data only when all of its members take part, without a coordinator running the whole time?",
       found: "The paper gives formal proofs of correctness, integrity and semantic security under standard assumptions, and tests scalability on MNIST-derived vectors.",
@@ -257,7 +257,7 @@ window.SahajData = {
       authors: "S. R. Malla",
       role: "Sole author",
       short: "ARDL-ECM model of remittances as a share of Nepal's GDP (1993–2024) using PCA-derived monetary indices.",
-      thumb: { base: "assets/papers/remit", w: 480, h: 678, alt: "First page of the arXiv preprint External Demand, Domestic Monetary Conditions, and Remittance Dynamics in Nepal", credit: "First page of the arXiv preprint (arXiv:2605.19401v1)." },
+      thumb: { base: "assets/papers/remit", w: 480, h: 678, alt: "First page of the arXiv preprint External Demand, Domestic Monetary Conditions, and Remittance Dynamics in Nepal", credit: "First page of the arXiv preprint (arXiv:2605.19401v1). CC BY 4.0." },
       summary: "I look at what moves remittances as a share of Nepal's GDP, using annual data from 1993 to 2024. Principal component analysis builds one index for demand in destination countries and one for domestic monetary conditions, which go into an ARDL error-correction model.",
       question: "What drives remittances in Nepal: demand abroad or monetary conditions at home?",
       found: "A strong positive long-run effect of external demand and a significant negative effect of tighter domestic monetary conditions. The error-correction term closes about 26% of a gap each year. A baseline scenario reaches about 28.3% of GDP by 2030, with high sensitivity to demand shocks.",
@@ -396,7 +396,7 @@ window.SahajData = {
       paper: "https://www.nature.com/articles/s41598-025-30871-z",
       media: { base: "assets/projects/mallanet", sm: [640, 464], lg: [1200, 870], alt: "Diagram of the MallaNet architecture: three residual blocks with pooling feed three Homogeneous Filter Capsule layers whose logits are merged by a weighted sum and passed to a softmax", caption: "MallaNet architecture (Fig. 1 of the paper, cropped).", credit: "Fig. 1 from Malla (2026), Scientific Reports 16, 1175, CC BY 4.0, cropped." },
       problem: "Handwritten Devanagari has 46 character classes with many look-alikes, and the strongest earlier model I compared with is large, about 39 million parameters by the paper's estimate.",
-      built: "MallaNet: three residual blocks with pooling, three Homogeneous Filter Capsule layers that read the image at three scales, and a learned weighted merge of their predictions. It has 17,320,579 parameters and was trained from scratch on a free Colab T4 GPU.",
+      built: "MallaNet: three residual blocks with pooling, three Homogeneous Filter Capsule layers that read the image at three scales, and a learned weighted merge of their predictions. It has 17,320,579 parameters and was trained from scratch on a Google Colab T4 GPU.",
       checked: "99.71% test accuracy and 99.71% macro F1 on DHCD (92,000 images, 46 classes). Swapping the capsule layers for the original vector capsules gave 99.64%, and accuracy held at 99.42% under Gaussian noise (sigma 0.05). The best reported accuracy I compared with is 99.72%, so MallaNet sits a hair below it with 56.41% fewer parameters. Only DHCD and MNIST were tested.",
     },
     {
@@ -501,7 +501,7 @@ window.SahajData = {
   researchInterests: [
     { area: "Multimodal agent orchestration", desc: "Which specialist to call, what feedback to read, and when to stop. Touchstone is a working router and critic; my thesis studies the budgeted version of the question." },
     { area: "Reinforcement learning", desc: "Decisions under hidden information. In Dhumbal my learned agents lost to a hand-written strategy and to a random player, and I want to understand why." },
-    { area: "Compute-efficient decision-making", desc: "Compact models and honest evaluation under a budget. MallaNet has 17.3 million parameters and trained on a free Colab GPU." },
+    { area: "Compute-efficient decision-making", desc: "Compact models and honest evaluation under a budget. MallaNet has 17.3 million parameters and was trained on a Google Colab T4 GPU." },
   ],
 
   // ── EDUCATION (CV) ─────────────────────────────────────────────────────────
