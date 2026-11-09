@@ -1,5 +1,6 @@
 // Home.jsx - mobile-first hero; backdrops (night space / day voyage) live in Backdrops.jsx
 const { useState, useEffect, useRef } = React;
+const UI = window.SahajUI;
 
 /* ═══════════════════════════════════════════════════════ COUNTER */
 function Counter({ target, delay = 0 }) {
@@ -15,7 +16,7 @@ function Counter({ target, delay = 0 }) {
     const safety = setTimeout(() => setN(target), delay + 2200);
     return () => { clearTimeout(t); clearTimeout(safety); };
   }, [target, delay]);
-  return n;
+  return n.toLocaleString('en-US');
 }
 
 /* ═══════════════════════════════════════════════════════ SOCIAL ICONS */
@@ -30,7 +31,7 @@ const SOCIAL_ICONS = {
 function SocialPill({ label, url }) {
   const [h, setH] = useState(false);
   return (
-    <a href={url} target={url.startsWith('mailto') ? '_self' : '_blank'} rel="noopener noreferrer"
+    <a href={url} target="_blank" rel="noopener noreferrer"
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       aria-label={label}
       style={{
@@ -48,12 +49,45 @@ function SocialPill({ label, url }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════ Q1 PAPER CARDS (from data) */
+function Q1Cards({ papers, mobile }) {
+  const allSole = papers.every(p => p.role === 'Sole author');
+  return (
+    <section aria-labelledby="q1-h" style={{ marginTop: mobile ? '40px' : '16px', textAlign: 'left', maxWidth: mobile ? '440px' : 'none', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }}>
+      <h2 id="q1-h" className="q1-heading">Scientific Reports, Q1{allSole ? ', sole author' : ''}</h2>
+      <ul className="q1-list">
+        {papers.map(p => (
+          <li key={p.id}>
+            <a href={p.url} target="_blank" rel="noopener noreferrer" className="q1-card">
+              <UI.PaperThumb paper={p} width={56} />
+              <span className="q1-body">
+                <span className="q1-meta">{p.venue.replace(/ \(early access\)/, '')} · {p.year}</span>
+                <span className="q1-title">{p.title}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════ HOME */
 function Home({ onNavigate }) {
   const d = window.SahajData;
   const mobile = window.useIsMobile(820);
   const theme = window.useTheme();
   const isLight = theme === 'light';
+  const gh = UI.useGithubStats();
+  const q1 = d.peerReviewed.filter(p => p.tier === 'Q1');
+  const stats = [
+    { val: d.peerReviewed.length + d.preprints.length, lbl: 'Publications' },
+    { val: q1.length, lbl: 'Q1 journal papers' },
+    { val: d.awards.length, lbl: 'Awards' },
+    { val: d.stats.users, suf: '+', lbl: 'HamroNiwas users' },
+    { val: d.projects.filter(p => p.kind === 'library').length, lbl: 'Open-source libraries' },
+    { gh: 'repos', lbl: 'Public GitHub repositories' },
+  ];
   const [hov, setHov] = useState(null);
   const [expHov, setExpHov] = useState(false);
   // defer the heavy backdrop simulation until after the hero content has painted,
@@ -79,7 +113,7 @@ function Home({ onNavigate }) {
         : 'linear-gradient(160deg,#04091a 0%,#060c1e 55%,#050a18 100%)',
       overflow: 'hidden', display: 'flex', alignItems: 'center',
     }}>
-      {bgReady && (isLight ? <Sunshine mobile={mobile} /> : <SpaceCanvas mobile={mobile} />)}
+      {bgReady && <UI.ErrorBoundary fallback={null}>{isLight ? <Sunshine mobile={mobile} /> : <SpaceCanvas mobile={mobile} />}</UI.ErrorBoundary>}
 
       {/* legibility scrim - keeps text readable over the backdrop */}
       <div style={{
@@ -123,10 +157,10 @@ function Home({ onNavigate }) {
 
           {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? '28px' : '36px', marginBottom: mobile ? '32px' : '44px', textAlign: mobile ? 'center' : 'left' }}>
-            {[{ val: 10, suf: '', lbl: 'Publications' }, { val: 9, suf: '', lbl: 'Awards' }, { val: 4500, suf: '+', lbl: 'Customers served' }, { val: 6, suf: '+', lbl: 'Years Experience' }, { val: 2, suf: '', lbl: 'Open Source Library' }, { val: 52, suf: '', lbl: 'Certifications' }].map((s, i) => (
+            {stats.map((s, i) => (
               <div key={i}>
                 <div style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(28px,7vw,52px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>
-                  <Counter target={s.val} delay={800 + i * 260} />{s.suf}
+                  {s.gh ? (gh ? gh[s.gh].toLocaleString('en-US') : '\u2013') : <React.Fragment><Counter target={s.val} delay={800 + i * 260} />{s.suf}</React.Fragment>}
                 </div>
                 <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', color: 'var(--ink-3)', marginTop: '5px', letterSpacing: '0.4px' }}>{s.lbl}</div>
               </div>
@@ -152,40 +186,22 @@ function Home({ onNavigate }) {
             <SocialPill label="Scholar" url={d.personal.scholar} />
             <SocialPill label="LinkedIn" url={d.personal.linkedin} />
             <SocialPill label="ResearchGate" url={d.personal.researchgate} />
-            <SocialPill label="Email" url={`mailto:${d.personal.email}`} />
+            <SocialPill label="Email" url={d.personal.gmail} />
           </div>
+          {mobile && <Q1Cards papers={q1} mobile />}
         </div>
 
         {/* Right / photo */}
         <div style={{ flexShrink: 0, width: mobile ? 'min(360px,86vw)' : 'clamp(290px,32vw,420px)', order: mobile ? 1 : 2 }}>
           <div style={{ position: 'relative', borderRadius: '18px', overflow: 'hidden', aspectRatio: '4/5', boxShadow: 'var(--photo-ring), var(--photo-shadow)' }}>
-            <img src="assets/sahaj3.jpeg" alt="Sahaj Raj Malla" loading="eager" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 16%', display: 'block' }} />
+            <img src="assets/sahaj3-640.webp" srcSet="assets/sahaj3-640.webp 640w, assets/sahaj3-1600.webp 1200w" sizes="(max-width: 820px) 86vw, 420px" width="1200" height="1200" alt="Sahaj Raj Malla" loading="eager" decoding="async" fetchpriority="high" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 16%', display: 'block' }} />
             <div style={{
               position: 'absolute', inset: 0, background: isLight
                 ? 'linear-gradient(to top,rgba(80,52,20,0.38) 0%,transparent 50%)'
                 : 'linear-gradient(to top,rgba(4,9,26,0.75) 0%,transparent 55%)'
             }} />
           </div>
-          <a href="https://www.nature.com/articles/s41598-025-30871-z" target="_blank" rel="noopener noreferrer"
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-card)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '14px', padding: '12px 14px', background: 'var(--q1-bg)', border: '1px solid var(--q1-line)', borderRadius: '10px', textDecoration: 'none', transition: 'all 0.2s ease' }}>
-            <span style={{ width: '34px', height: '34px', background: 'var(--q1-chip)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', fontWeight: 800, letterSpacing: '0.4px', color: 'var(--purple)', flexShrink: 0 }}>Q1</span>
-            <div style={{ textAlign: 'left' }}>
-              <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '10px', fontWeight: 800, color: 'var(--purple)', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '2px' }}>Q1 · Scientific Reports · 2025</div>
-              <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', color: 'var(--ink-2)', fontWeight: 500 }}>MallaNet (Nature Portfolio)</div>
-            </div>
-          </a>
-          <a href="https://www.nature.com/articles/s41598-026-68206-1" target="_blank" rel="noopener noreferrer"
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-card)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '14px', padding: '12px 14px', background: 'var(--q1-bg)', border: '1px solid var(--q1-line)', borderRadius: '10px', textDecoration: 'none', transition: 'all 0.2s ease' }}>
-            <span style={{ width: '34px', height: '34px', background: 'var(--q1-chip)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', fontWeight: 800, letterSpacing: '0.4px', color: 'var(--purple)', flexShrink: 0 }}>Q1</span>
-            <div style={{ textAlign: 'left' }}>
-              <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '10px', fontWeight: 800, color: 'var(--purple)', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '2px' }}>Q1 · Scientific Reports · 2026</div>
-              <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', color: 'var(--ink-2)', fontWeight: 500 }}>Dhumbal AI (Nature Portfolio)</div>
-            </div>
-          </a>
+          {!mobile && <Q1Cards papers={q1} />}
         </div>
       </div>
 

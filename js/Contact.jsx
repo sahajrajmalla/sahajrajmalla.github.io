@@ -1,5 +1,6 @@
 // Contact.jsx - Clean contact page, no section numbers, bright text
-const { useState } = React;
+const { useState, useEffect, useRef } = React;
+const UI = window.SahajUI;
 
 function SocialLink({ label, url, icon, desc }) {
   const [h, setH] = useState(false);
@@ -46,6 +47,20 @@ function SocialLink({ label, url, icon, desc }) {
   );
 }
 
+function CopyEmail({ email }) {
+  const [msg, setMsg] = useState('');
+  const t = useRef(null);
+  useEffect(() => () => clearTimeout(t.current), []);
+  return (
+    <React.Fragment>
+      <button type="button" className="mini-btn" onClick={() => UI.copyText(email).then(ok => { setMsg(ok ? 'Address copied' : 'Copy failed. Select the address above instead.'); clearTimeout(t.current); t.current = setTimeout(() => setMsg(''), 2600); })}>
+        {window.SahajIcons.copy({ size:14 })}Copy address
+      </button>
+      <span role="status" aria-live="polite" className="cite-msg">{msg}</span>
+    </React.Fragment>
+  );
+}
+
 function Contact() {
   const d = window.SahajData;
   const mobile = window.useIsMobile(820);
@@ -79,12 +94,12 @@ function Contact() {
             fontSize:'13px', fontWeight:800, letterSpacing:'1.6px', borderLeft:'3px solid currentColor', paddingLeft:'11px',
             textTransform:'uppercase', color:'var(--accent-2)', marginBottom:'12px',
           }}>Contact</p>
-          <h2 style={{
+          <h1 style={{
             fontFamily:"'Times New Roman', Georgia, serif",
             fontSize:'clamp(32px, 4.5vw, 64px)',
             fontWeight:700, color:'var(--ink)', lineHeight:1.05,
             letterSpacing:'-0.5px', marginBottom:'16px',
-          }}>Get in touch.</h2>
+          }}>Get in touch.</h1>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontSize:'clamp(14px, 1.5vw, 17px)', color:'var(--ink-3)',
@@ -96,11 +111,7 @@ function Contact() {
 
         {/* ── Open to ── */}
         <div style={{ marginBottom:'48px' }}>
-          <p style={{
-            fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'13px', fontWeight:800, letterSpacing:'1.6px', borderLeft:'3px solid currentColor', paddingLeft:'11px',
-            textTransform:'uppercase', color:'var(--gold-ink)', marginBottom:'16px',
-          }}>Currently Open To</p>
+          <h2 className="eyebrow" style={{ color:'var(--gold-ink)', marginBottom:'16px' }}>Currently open to</h2>
           <div style={{ display:'flex', gap:'10px', flexWrap:'wrap' }}>
             {openTo.map(o => (
               <div key={o.tag} style={{
@@ -119,7 +130,7 @@ function Contact() {
         </div>
 
         {/* ── Email hero ── */}
-        <a href={`mailto:${d.personal.email}`}
+        <a href={d.personal.gmail} target="_blank" rel="noopener noreferrer"
           onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow=isLight?'0 12px 30px rgba(31,95,208,0.16)':'0 12px 30px rgba(34,85,232,0.28)';}}
           onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='none';}}
           style={{
@@ -142,7 +153,12 @@ function Contact() {
             fontSize:'clamp(18px, 2.4vw, 28px)',
             fontWeight:700, color:'var(--ink)', letterSpacing:'-0.3px',
           }}>{d.personal.email}</p>
+          <p style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'12.5px', color:'var(--ink-3)', marginTop:'8px' }}>Opens Gmail in a new tab.</p>
         </a>
+        <div style={{ display:'flex', gap:'10px', flexWrap:'wrap', alignItems:'center', margin:'-12px 0 32px' }}>
+          <CopyEmail email={d.personal.email} />
+          <a href={`mailto:${d.personal.email}`} className="mini-btn" style={{ textDecoration:'none' }}>Open in your mail app</a>
+        </div>
 
         {/* ── Social links grid ── */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:'10px' }}>
