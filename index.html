@@ -587,21 +587,21 @@ h2[tabindex="-1"]:focus { outline: none; }
   </main>
 </noscript>
 
-<!-- Scripts - order is critical; App.jsx must be last -->
-<script src="js/data.js"></script>
-<script type="text/babel" src="js/Icons.jsx"></script>
-<script type="text/babel" src="js/Logo.jsx"></script>
-<script type="text/babel" src="js/Common.jsx"></script>
-<script type="text/babel" src="js/Navbar.jsx"></script>
-<script type="text/babel" src="js/Backdrops.jsx"></script>
-<script type="text/babel" src="js/Home.jsx"></script>
-<script type="text/babel" src="js/About.jsx"></script>
-<script type="text/babel" src="js/Research.jsx"></script>
-<script type="text/babel" src="js/Projects.jsx"></script>
-<script type="text/babel" src="js/PhD.jsx"></script>
-<script type="text/babel" src="js/Contact.jsx"></script>
-<script type="text/babel" src="js/Game.jsx"></script>
-<script type="text/babel" src="js/App.jsx"></script>
+<!-- Scripts - order is critical; App.jsx must be last. The ?v= value is bumped on each deploy so a returning visitor never mixes cached old scripts with a new page. -->
+<script src="js/data.js?v=20261109"></script>
+<script type="text/babel" src="js/Icons.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Logo.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Common.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Navbar.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Backdrops.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Home.jsx?v=20261109"></script>
+<script type="text/babel" src="js/About.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Research.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Projects.jsx?v=20261109"></script>
+<script type="text/babel" src="js/PhD.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Contact.jsx?v=20261109"></script>
+<script type="text/babel" src="js/Game.jsx?v=20261109"></script>
+<script type="text/babel" src="js/App.jsx?v=20261109"></script>
 
 <!-- Fade out loading spinner once React has painted - clears the instant #root fills; multiple independent fallbacks so it can never trap the page -->
 <script>

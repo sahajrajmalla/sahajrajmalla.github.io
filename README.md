@@ -103,6 +103,9 @@ python3 -m http.server 4599
 - **React 18.3.1 production builds** and Babel standalone 7.29.0, pinned, with SRI
   hashes. Babel compiles the `.jsx` files in the browser, so it prints a console
   notice about precompiling; this is the cost of having no build step.
+- **Script versions:** `index.html` loads each script with `?v=YYYYMMDD`. Change that value when you deploy, so
+  returning visitors (GitHub Pages caches files for 10 minutes) never run old scripts with a new page. While
+  testing locally, hard-reload (Cmd+Shift+R) if the browser still shows an older version.
 - **Backdrops** pause when the tab is hidden, cap the device pixel ratio, and never
   throw into React: a canvas that has no size yet simply waits for one.
 - **Accessibility:** one `h1` per page, skip link, real buttons for every expandable
