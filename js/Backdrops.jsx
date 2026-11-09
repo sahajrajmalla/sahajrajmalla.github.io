@@ -29,15 +29,18 @@ function drawMallaMark(g, cx, cy, size, ink) {
   g.restore();
 }
 
+// Runs drawFn at ~32fps while visible. A draw error never escapes: after 5 in a row the loop stops.
 function makeRunner(canvas, drawFn) {
-  let animId = 0, last = 0, visible = true;
+  let animId = 0, last = 0, visible = true, fails = 0;
   const io = new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 });
   io.observe(canvas);
   function loop(ts) {
     animId = requestAnimationFrame(loop);
     if (document.hidden || !visible) { last = ts; return; }
     if (ts - last < FRAME_MS) return;
-    last = ts; drawFn(ts * 0.001);
+    last = ts;
+    try { drawFn(ts * 0.001); fails = 0; }
+    catch (e) { if (++fails >= 5) { cancelAnimationFrame(animId); try { console.warn('[sahaj] backdrop paused after repeated errors', e); } catch (_) {} } }
   }
   return { start() { animId = requestAnimationFrame(loop); }, stop() { cancelAnimationFrame(animId); io.disconnect(); } };
 }
@@ -47,9 +50,10 @@ function SpaceCanvas({ mobile }) {
   const ref = useRef(null);
   useEffect(() => {
     const canvas = ref.current; if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let w = 0, h = 0;
+    let ready = false;   // true only after a real size has been measured and the scene built
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
     const TWK_N = mobile ? 70 : 130;         // live twinkling stars (most stars are pre-rendered)
 
@@ -151,6 +155,7 @@ function SpaceCanvas({ mobile }) {
       };
       ufo.y = h * 0.24; rocket.x = w * 0.72; rocket.y = h + 80; sat.y = h * 0.07;
       makeBodies(); renderDeepSky();
+      ready = true;
     }
 
     function drawTwinkle() {
@@ -288,7 +293,7 @@ function SpaceCanvas({ mobile }) {
     }
 
     function drawScene(t) {
-      if (!bgc.width) return;
+      if (!ready) return;
       ctx.clearRect(0, 0, w, h); ctx.drawImage(bgc, 0, 0, w, h);
       drawTwinkle(); drawAsteroids();
       drawEarth(t); drawSaturn(); drawMars();
@@ -297,19 +302,22 @@ function SpaceCanvas({ mobile }) {
       drawRocket(t); drawComet(t); drawShoot();
     }
     function drawStatic() {
-      if (!bgc.width) return; ctx.clearRect(0, 0, w, h); ctx.drawImage(bgc, 0, 0, w, h);
+      if (!ready) return; ctx.clearRect(0, 0, w, h); ctx.drawImage(bgc, 0, 0, w, h);
       for (const s of twinkle) { ctx.globalAlpha = 0.7; ctx.fillStyle = s.warm ? '#fff2df' : '#fff'; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, BK_TAU); ctx.fill(); }
       ctx.globalAlpha = 1; drawEarth(0); drawSaturn(); drawMars(); drawBlackHoles(0); drawWormhole(0); drawPulsar(0);
     }
 
-    resize();
-    const ro = new ResizeObserver(() => { resize(); if (reduce) drawStatic(); }); ro.observe(canvas);
-    drawStatic();
+    // A zero-size canvas at mount (a hidden or just-opened pane) must never throw inside this effect:
+    // React would unmount the whole app. `ready` stays false until a real size has been measured.
+    const safe = (fn) => { try { fn(); } catch (e) { try { console.warn('[sahaj] backdrop skipped', e); } catch (_) {} } };
+    safe(resize);
+    const ro = new ResizeObserver(() => safe(() => { resize(); if (reduce) drawStatic(); })); ro.observe(canvas);
+    safe(drawStatic);
     const runner = makeRunner(canvas, drawScene); if (!reduce) runner.start();
     return () => { runner.stop(); ro.disconnect(); };
   }, [mobile]);
 
-  return <canvas ref={ref} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
+  return <canvas ref={ref} aria-hidden="true" style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
 }
 
 /* ═══════════════════════════════════════════════ DAY: OPEN-SEA CANVAS */
@@ -317,9 +325,10 @@ function DayCanvas({ mobile }) {
   const ref = useRef(null);
   useEffect(() => {
     const canvas = ref.current; if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let w = 0, h = 0;
+    let ready = false;   // true only after a real size has been measured and the scene built
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
     const HOR = 0.60;
 
@@ -376,6 +385,7 @@ function DayCanvas({ mobile }) {
       const nw = canvas.offsetWidth, nh = canvas.offsetHeight; if (nw <= 0 || nh <= 0) return;
       w = nw; h = nh; canvas.width = Math.floor(w * DPR); canvas.height = Math.floor(h * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
       makeScene();
+      ready = true;
     }
 
     function drawOcean(t) {
@@ -579,6 +589,7 @@ function DayCanvas({ mobile }) {
     }
 
     function drawScene(t) {
+      if (!ready) return;
       ctx.clearRect(0, 0, w, h);
       for (const c of clouds) drawCloud(c, t);
       drawOcean(t); drawSunGlitter(t);
@@ -590,15 +601,16 @@ function DayCanvas({ mobile }) {
       for (const b of gulls) drawGull(b, t);
     }
 
-    resize();
-    const relayout = setTimeout(resize, 350);   // recompute island vs. buttons once the DOM settles
-    const ro = new ResizeObserver(() => { resize(); if (reduce) drawScene(0); }); ro.observe(canvas);
-    drawScene(0);
+    const safe = (fn) => { try { fn(); } catch (e) { try { console.warn('[sahaj] backdrop skipped', e); } catch (_) {} } };
+    safe(resize);
+    const relayout = setTimeout(() => safe(resize), 350);   // recompute island vs. buttons once the DOM settles
+    const ro = new ResizeObserver(() => safe(() => { resize(); if (reduce) drawScene(0); })); ro.observe(canvas);
+    safe(() => drawScene(0));
     const runner = makeRunner(canvas, drawScene); if (!reduce) runner.start();
     return () => { runner.stop(); ro.disconnect(); clearTimeout(relayout); };
   }, [mobile]);
 
-  return <canvas ref={ref} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
+  return <canvas ref={ref} aria-hidden="true" style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
 }
 
 /* ═══ SUNSHINE BACKDROP (light) — soft blue sky, a gentle sun (no beams), the sea below */
