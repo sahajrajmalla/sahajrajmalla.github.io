@@ -7,6 +7,7 @@ function Counter({ target, delay = 0 }) {
   const [n, setN] = useState(0); const started = useRef(false);
   useEffect(() => {
     if (started.current) return; started.current = true;
+    if (UI.prefersReducedMotion()) { setN(target); return; }   // no count-up for visitors who prefer less motion
     const t = setTimeout(() => {
       const s = performance.now(), dur = 1500; let fr;
       const step = (now) => { const p = Math.min((now - s) / dur, 1); setN(Math.floor((1 - Math.pow(1 - p, 3)) * target)); if (p < 1) fr = requestAnimationFrame(step); };
@@ -137,7 +138,7 @@ function Home({ onNavigate }) {
 
         {/* Left / text */}
         <div style={{ flex: '1 1 400px', minWidth: 0, order: mobile ? 2 : 1 }}>
-          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '10px' : '11px', fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--accent-2)', marginBottom: '20px' }}>
+          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '10px' : '11px', fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: '20px' }}>
             Undergrad AI Researcher · Kathmandu University
           </p>
 
@@ -152,7 +153,7 @@ function Home({ onNavigate }) {
           <div style={{ width: '56px', height: '2px', background: 'linear-gradient(90deg,var(--accent),var(--gold))', marginBottom: '24px', borderRadius: '2px', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }} />
 
           <p style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(16px,2.2vw,20px)', fontStyle: 'italic', color: 'var(--ink-3)', lineHeight: 1.6, marginBottom: mobile ? '32px' : '44px', maxWidth: '500px', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }}>
-            "Forget Passion, Science and Technology are my Religion!"
+            "{d.personal.quote}"
           </p>
 
           {/* Stats */}

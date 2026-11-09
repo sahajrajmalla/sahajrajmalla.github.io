@@ -31,22 +31,16 @@ const prefersReducedMotion = () => !!(window.matchMedia && window.matchMedia('(p
 // The Gmail compose link the CV uses. Plain text address is always shown next to it.
 const mailHref = () => window.SahajData.personal.gmail;
 
-function jumpTo(y) {
-  const de = document.documentElement, prev = de.style.scrollBehavior;
-  de.style.scrollBehavior = 'auto';
-  window.scrollTo(0, y || 0);
-  de.style.scrollBehavior = prev;
-}
+// Instant jump (page switches). There is no global CSS scroll-behavior, so scrollTo is instant by default.
+function jumpTo(y) { window.scrollTo(0, y || 0); }
 
 // Scroll a section into view (the CSS scroll-margin-top clears the fixed navbar and the chip bar).
+// Smooth unless the visitor prefers reduced motion or the caller asks for an instant jump.
 function scrollToSection(id, opts) {
   const el = id ? document.getElementById(id) : null;
   if (!el) return false;
   const instant = (opts && opts.instant) || prefersReducedMotion();
-  const de = document.documentElement, prev = de.style.scrollBehavior;
-  if (instant) de.style.scrollBehavior = 'auto';
   el.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', block: 'start' });
-  if (instant) de.style.scrollBehavior = prev;
   const h = document.getElementById(id + '-h');
   if (h && h.focus) { try { h.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   return true;
@@ -306,7 +300,7 @@ function BarChart({ chart }) {
           <li key={r.label} className="chart-row">
             <span className="chart-label">{r.label}</span>
             <span className="chart-track" aria-hidden="true"><span className="chart-fill" style={{ width: Math.max(0.8, (r.value / chart.max) * 100) + '%' }} /></span>
-            <span className="chart-value">{fmtNum(r.value, dp)}{chart.unit}</span>
+            <span className="chart-value">{fmtNum(r.value, r.dp !== undefined ? r.dp : dp)}{chart.unit}</span>
             {r.extra && <span className="chart-extra">{r.extra}</span>}
           </li>
         ))}

@@ -69,11 +69,11 @@ function Projects({ onNavigate }) {
             <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>
               <strong style={{ color: 'var(--ink)' }}>{gh.repos}</strong> public repositories{gh.forkRepos ? ` (${gh.forkRepos} are forks)` : ''}
             </span>
-            <span aria-hidden="true" style={{ color: 'var(--line-2)' }}>·</span>
+            <span aria-hidden="true" style={{ color: 'var(--ink-4)' }}>·</span>
             <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>
               <strong style={{ color: 'var(--ink)' }}>{gh.stars}</strong> stars in total
             </span>
-            {langs && <React.Fragment><span aria-hidden="true" style={{ color: 'var(--line-2)' }}>·</span><span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>{langs}</span></React.Fragment>}
+            {langs && <React.Fragment><span aria-hidden="true" style={{ color: 'var(--ink-4)' }}>·</span><span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>{langs}</span></React.Fragment>}
           </React.Fragment>
         ) : <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>GitHub numbers are loading.</span>}
         <a href={d.personal.github} target="_blank" rel="noopener noreferrer" className="link-pill" style={{ marginLeft: mobile ? 0 : 'auto' }}>

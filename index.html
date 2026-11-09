@@ -69,8 +69,8 @@
 
 <!-- TWITTER -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@sahaj_malla" />
-<meta name="twitter:creator" content="@sahaj_malla" />
+<meta name="twitter:site" content="@sahajrajmalla" />
+<meta name="twitter:creator" content="@sahajrajmalla" />
 <meta name="twitter:title" content="Sahaj Raj Malla | Undergraduate AI Researcher, Kathmandu University" />
 <meta name="twitter:description" content="Undergraduate researcher at Kathmandu University. Three single-author Q1 papers in Scientific Reports, ten publications in all." />
 <meta name="twitter:image" content="https://sahajrajmalla.com.np/assets/og-cover.jpg" />
@@ -134,7 +134,7 @@
         "https://scholar.google.com/citations?user=NYVtgiYAAAAJ&hl=en",
         "https://www.linkedin.com/in/sahajrajmalla",
         "https://www.researchgate.net/profile/Sahaj-Raj-Malla",
-        "https://twitter.com/sahaj_malla",
+        "https://twitter.com/sahajrajmalla",
         "https://www.instagram.com/sahajrajmalla/",
         "https://medium.com/@mallasahajraj"
       ]
@@ -297,7 +297,7 @@
   --badge-q1-line: rgba(109,40,217,0.32);
   --badge-jr-bg: rgba(184,134,42,0.1);
   --badge-jr-line: rgba(184,134,42,0.4);
-  --badge-jr-ink: #8a6414;
+  --badge-jr-ink: #7a5710;
   --badge-cf-bg: rgba(31,95,208,0.08);
   --badge-cf-line: rgba(31,95,208,0.35);
   --badge-cf-ink: #1f5fd0;
@@ -308,7 +308,7 @@
 
 /* === RESET === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* No global scroll-behavior: smooth. Smoothness is requested per call (table of contents jumps); page switches are instant. */
 body {
   background: var(--bg);
   color: var(--ink);
@@ -422,7 +422,7 @@ h2[tabindex="-1"]:focus { outline: none; }
 .badge-jr { background: var(--badge-jr-bg); border-color: var(--badge-jr-line); color: var(--badge-jr-ink); }
 .badge-cf { background: var(--badge-cf-bg); border-color: var(--badge-cf-line); color: var(--badge-cf-ink); }
 .badge-pre { background: var(--badge-pre-bg); border-color: var(--badge-pre-line); color: var(--ink-3); }
-.tag { display: inline-block; background: var(--surface-3); border-radius: 10px; padding: 3px 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 500; color: var(--ink-4); }
+.tag { display: inline-block; background: var(--surface-3); border-radius: 10px; padding: 3px 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 500; color: var(--ink-3); }
 .btn-primary, .btn-secondary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 11px 24px; border-radius: 8px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; border: 1px solid transparent; }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: #1d47d6; }
@@ -502,6 +502,7 @@ h2[tabindex="-1"]:focus { outline: none; }
 .toc-bar::-webkit-scrollbar { display: none; }
 .toc-chip { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink-3); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; text-decoration: none; white-space: nowrap; }
 .toc-chip[aria-current="location"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.toc-chip[aria-current="location"] .toc-count { color: rgba(255,255,255,0.85); }
 
 /* home: Q1 paper cards */
 .q1-heading { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--purple); margin: 0 0 10px; }
@@ -586,7 +587,7 @@ h2[tabindex="-1"]:focus { outline: none; }
   </main>
 </noscript>
 
-<!-- Scripts — order is critical; App.jsx must be last -->
+<!-- Scripts - order is critical; App.jsx must be last -->
 <script src="js/data.js"></script>
 <script type="text/babel" src="js/Icons.jsx"></script>
 <script type="text/babel" src="js/Logo.jsx"></script>
@@ -602,7 +603,7 @@ h2[tabindex="-1"]:focus { outline: none; }
 <script type="text/babel" src="js/Game.jsx"></script>
 <script type="text/babel" src="js/App.jsx"></script>
 
-<!-- Fade out loading spinner once React has painted — clears the instant #root fills; multiple independent fallbacks so it can never trap the page -->
+<!-- Fade out loading spinner once React has painted - clears the instant #root fills; multiple independent fallbacks so it can never trap the page -->
 <script>
 (function () {
   var loading = document.getElementById('loading');
@@ -628,7 +629,7 @@ h2[tabindex="-1"]:focus { outline: none; }
   }, 100);
   // 3) window load nudge
   window.addEventListener('load', function () { setTimeout(function () { if (mounted()) remove(); }, 400); });
-  // 4) absolute failsafe — never let the spinner sit forever
+  // 4) absolute failsafe - never let the spinner sit forever
   setTimeout(remove, 4500);
 })();
 </script>

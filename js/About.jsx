@@ -92,13 +92,19 @@ function ExpCard({ role, org, place, period, current, desc, index }) {
   );
 }
 
-const LIGHT_BRANDS = ['#F7DF1E', '#FCC624', '#FFD21E', '#FF9900', '#F7931E', '#F37626', '#61DAFB'];
+// Black or white letters, whichever reads better on the brand colour.
+function readableOn(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const L = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+  return (1.05 / (L + 0.05)) > ((L + 0.05) / 0.0555) ? '#fff' : '#111';
+}
 function SkillChip({ item }) {
   const it = typeof item === 'string' ? { name: item } : item;
   if (!it.brand) return <li className="skill-chip">{it.name}</li>;
   return (
     <li className="skill-chip">
-      <span className="skill-mark" aria-hidden="true" style={{ background: it.brand, color: LIGHT_BRANDS.includes(it.brand) ? '#111' : '#fff' }}>{it.abbr || it.name.slice(0, 2).toUpperCase()}</span>
+      <span className="skill-mark" aria-hidden="true" style={{ background: it.brand, color: readableOn(it.brand) }}>{it.abbr || it.name.slice(0, 2).toUpperCase()}</span>
       {it.name}
     </li>
   );

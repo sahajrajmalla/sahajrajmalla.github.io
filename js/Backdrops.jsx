@@ -353,10 +353,10 @@ function DayCanvas({ mobile }) {
       for (let i = 0; i < BN; i++) gulls.push({ x: Math.random() * w, y: h * rand(0.08, 0.42), v: rand(0.28, 0.5) * (Math.random() < 0.3 ? -1 : 1), s: rand(0.7, 1.3), ph: rand(0, BK_TAU) });
       foam = [];
       for (let i = 0; i < (mobile ? 14 : 24); i++) foam.push({ x: Math.random() * w, y: h * rand(HOR + 0.05, 0.99), r: rand(0.8, 1.8), ph: rand(0, BK_TAU) });
-      // distant sailboats on the horizon — depth & majesty
+      // distant sailboats on the horizon - depth & majesty
       farBoats = [{ x: w * 0.66, s: mobile ? 0.7 : 1 }, { x: w * 0.5, s: mobile ? 0.5 : 0.7 }];
 
-      // SIDE-VIEW sea life — full bodies that breach & dive; staggered jump phases
+      // SIDE-VIEW sea life - full bodies that breach & dive; staggered jump phases
       const sc = mobile ? 0.74 : 1; const C = [];
       function add(kind, x, by, v, dir, s, opt) { C.push(Object.assign({ kind, x, baseY: h * by, v, dir, s: s * sc, ph: rand(0, 9), jph: rand(0, 9) }, opt)); }
       add('whale', w * 0.60, HOR + 0.18, 0.10, 1, 1.12, { jr: 0.14, period: 999, airTime: 0, jumpH: 0 });
@@ -365,7 +365,7 @@ function DayCanvas({ mobile }) {
       add('shark', w * 0.22, HOR + 0.22, 0.24, 1, 0.82, { jr: 1, period: 14, airTime: 1.0, jumpH: 16, maxAng: 0.5 });   // lone great white (they hunt solo)
       creatures = C;
 
-      // island CENTERED — the ship sails an equal distance from whichever side it enters
+      // island CENTERED - the ship sails an equal distance from whichever side it enters
       islandX = w * 0.5;
       islandY = h * (HOR + 0.30);
       if (mobile) {
@@ -542,7 +542,7 @@ function DayCanvas({ mobile }) {
       const roll = Math.sin(t * 0.7 + 1) * 0.03, wob = Math.sin(t * 2.4) * 2;
       ctx.save(); ctx.translate(x, y); ctx.rotate(roll); ctx.scale(ship.face * k, k);
       if (!ship.anchored) { ctx.strokeStyle = 'rgba(255,253,245,0.5)'; ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-46, 6); ctx.quadraticCurveTo(-70, 10, -92, 6); ctx.moveTo(-44, 10); ctx.quadraticCurveTo(-62, 15, -80, 13); ctx.stroke(); }
-      // hull — a smooth sunny sailing-boat hull with a boot stripe & portholes
+      // hull - a smooth sunny sailing-boat hull with a boot stripe & portholes
       const hg = ctx.createLinearGradient(0, -10, 0, 15); hg.addColorStop(0, '#efb043'); hg.addColorStop(0.5, '#d6902a'); hg.addColorStop(1, '#a9691a');
       ctx.beginPath(); ctx.moveTo(-50, -9); ctx.quadraticCurveTo(-58, 6, -38, 12); ctx.quadraticCurveTo(2, 16, 36, 13); ctx.quadraticCurveTo(56, 11, 68, -8); ctx.lineTo(48, -11); ctx.quadraticCurveTo(0, -14, -50, -9); ctx.closePath();
       ctx.fillStyle = hg; ctx.strokeStyle = '#6f4310'; ctx.lineWidth = 1.8; ctx.fill(); ctx.stroke();
@@ -613,7 +613,7 @@ function DayCanvas({ mobile }) {
   return <canvas ref={ref} aria-hidden="true" style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
 }
 
-/* ═══ SUNSHINE BACKDROP (light) — soft blue sky, a gentle sun (no beams), the sea below */
+/* ═══ SUNSHINE BACKDROP (light) - soft blue sky, a gentle sun (no beams), the sea below */
 function SunshineBackdrop({ mobile }) {
   const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sunSize = mobile ? 170 : 260;

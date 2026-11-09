@@ -76,7 +76,7 @@ function Game({ onClose, onNavigate }) {
         const vg = ctx.createRadialGradient(VW*0.5,VH*0.5,VH*0.32,VW*0.5,VH*0.5,VW*0.62);
         vg.addColorStop(0,'rgba(12,50,80,0)'); vg.addColorStop(1,'rgba(12,50,80,0.34)');
         ctx.fillStyle=vg; ctx.fillRect(0,0,VW,VH);
-        // corner compass rose — fixed (does NOT rotate), N marked
+        // corner compass rose - fixed (does NOT rotate), N marked
         ctx.save(); ctx.translate(VW-52,VH-48); ctx.globalAlpha=0.8;
         ctx.strokeStyle='rgba(255,248,232,0.9)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(0,0,20,0,6.283); ctx.stroke();
         ctx.fillStyle='rgba(255,248,232,0.9)';
@@ -138,7 +138,7 @@ function Game({ onClose, onNavigate }) {
         ctx.stroke();
         // section pennant tucked at the palm crown (no bare pole)
         ctx.fillStyle=p.color; ctx.beginPath(); ctx.moveTo(tx-1,ty-2); ctx.lineTo(tx-11,ty-4.5); ctx.lineTo(tx-1,ty-7); ctx.closePath(); ctx.fill();
-        // label — cream with a dark halo so it reads on the blue sea
+        // label - cream with a dark halo so it reads on the blue sea
         ctx.save(); ctx.textAlign='center';
         ctx.font = `bold ${near?13:12}px 'Helvetica Neue',Arial,sans-serif`;
         ctx.lineWidth=3.4; ctx.strokeStyle='rgba(10,44,72,0.92)'; ctx.lineJoin='round';
