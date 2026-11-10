@@ -1,5 +1,6 @@
-// PhD.jsx - for supervisors and labs. A short answer first (the question, the facts), then a map that links
-// each research interest to the thesis, system and papers behind it, then the path, the full list and training.
+// PhD.jsx - for supervisors and labs. A short answer first (the question, the facts), then a map that ties each
+// research interest to the work behind it, then the path, the full list and training. The only links on the page
+// are the three at the bottom (email, CV, Scholar), so a visitor never has to leave and find the way back.
 const { useState } = React;
 const UI = window.SahajUI;
 
@@ -9,7 +10,7 @@ const PHD_TONE = {
   eff: { color: 'var(--gold-ink)', tint: 'var(--gold-box)', name: 'Efficiency' },
 };
 
-function Step({ num, area, desc, year, go, onGo, last }) {
+function Step({ num, area, desc, year, last }) {
   return (
     <li style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, alignSelf: 'stretch' }}>
@@ -19,17 +20,14 @@ function Step({ num, area, desc, year, go, onGo, last }) {
       <div style={{ paddingBottom: last ? 0 : '28px', minWidth: 0 }}>
         <h3 style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>{area}</h3>
         <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.65, marginBottom: '6px', maxWidth: '660px' }}>{desc}</p>
-        <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-4)', letterSpacing: '0.3px', display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span>{year}</span>
-          {go && <a href={'#' + go.to} onClick={(e) => { e.preventDefault(); onGo(go.to); }} style={{ color: 'var(--accent-2)', fontWeight: 600 }}>{go.label}</a>}
-        </p>
+        <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-4)', letterSpacing: '0.3px' }}>{year}</p>
       </div>
     </li>
   );
 }
 
 // One piece of work behind an interest. When an interest is selected, the cards that speak to it get its colour.
-function EvidenceCard({ e, state, focusKey, gh, goTo }) {
+function EvidenceCard({ e, state, focusKey }) {
   const tone = focusKey && state === 'yes' ? PHD_TONE[focusKey] : null;
   const kindCls = e.kind === 'Q1 paper' ? 'badge-q1' : e.kind === 'Preprint' ? 'badge-pre' : 'badge-cf';
   return (
@@ -40,10 +38,6 @@ function EvidenceCard({ e, state, focusKey, gh, goTo }) {
       <ul className="ev-supports" aria-label="Speaks to">
         {e.interests.map(k => <li key={k} style={{ '--c': PHD_TONE[k].color }}><span className="ev-dot" aria-hidden="true" />{PHD_TONE[k].name}</li>)}
       </ul>
-      <div className="ev-links">
-        {e.go.map(g => <a key={g.to} className="link-pill" href={'#' + g.to} onClick={(ev) => { ev.preventDefault(); goTo(g.to); }}>{g.label}</a>)}
-        {e.repo && <UI.RepoLink gh={gh} repo={e.repo.name} url={e.repo.url}>Code</UI.RepoLink>}
-      </div>
     </article>
   );
 }
@@ -51,7 +45,6 @@ function EvidenceCard({ e, state, focusKey, gh, goTo }) {
 function PhD({ onNavigate }) {
   const d = window.SahajData;
   const mobile = window.useIsMobile(820);
-  const gh = UI.useGithubStats();
   const [focus, setFocus] = useState(null);
   const all = d.peerReviewed.concat(d.preprints);
   const q1 = d.peerReviewed.filter(p => p.tier === 'Q1').length;
@@ -67,27 +60,24 @@ function PhD({ onNavigate }) {
   evidence.forEach(e => { if (e.paper) paperEv[e.paper] = e; });
   const focusArea = focus ? interests.filter(i => i.key === focus)[0].area : '';
   const ielts = ((d.languages[0].note || '').match(/[\d.]+$/) || [''])[0];
-  const goTo = (to) => onNavigate(to);
 
   const trajectory = [
-    { num: '1', area: 'Computer vision', desc: 'MallaNet: a compact Devanagari character recognizer (Scientific Reports, Q1).', year: 'Dec 2025', go: { label: 'MallaNet summary', to: 'research/paper-mallanet' } },
-    { num: '2', area: 'Forecasting and applied ML', desc: 'The Kalimati price index (Scientific Reports, Q1), NEPSE returns, real estate prices and remittances.', year: 'Oct 2023 – Nov 2026', go: { label: 'Kalimati summary', to: 'research/paper-kalimati' } },
-    { num: '3', area: 'Quantum ML', desc: 'A CNN with a simulated 10-qubit circuit for Devanagari digits (preprint).', year: 'Jun 2025', go: { label: 'Quantum summary', to: 'research/paper-quantum' } },
-    { num: '4', area: 'Game-playing agents', desc: 'Dhumbal: hand-written, search and learned agents compared (Scientific Reports, Q1). The best hand-written strategy won 88.9% of rounds, and the learned agents did not beat a random player.', year: 'Aug 2026', go: { label: 'Dhumbal summary', to: 'research/paper-dhumbal' } },
-    { num: '5', area: 'Orchestration', desc: 'Touchstone, a router with a critic, and a thesis on when reviewing a failed attempt is worth its cost under a budget.', year: 'Nov 2024 – present', go: { label: 'Touchstone project', to: 'projects/touchstone' } },
+    { num: '1', area: 'Computer vision', desc: 'MallaNet: a compact Devanagari character recognizer (Scientific Reports, Q1).', year: 'Dec 2025' },
+    { num: '2', area: 'Forecasting and applied ML', desc: 'The Agricultural Commodity Price Index (Scientific Reports, Q1), NEPSE returns, real estate prices and remittances.', year: 'Oct 2023 – Nov 2026' },
+    { num: '3', area: 'Quantum ML', desc: 'A CNN with a simulated 10-qubit circuit for Devanagari digits (preprint).', year: 'Jun 2025' },
+    { num: '4', area: 'Game-playing agents', desc: 'Dhumbal: hand-written, search and learned agents compared (Scientific Reports, Q1). The best hand-written strategy won 88.9% of rounds, and the learned agents did not beat a random player.', year: 'Aug 2026' },
+    { num: '5', area: 'Orchestration', desc: 'Touchstone, a router with a critic, and my undergraduate thesis on when reviewing a failed attempt is worth its cost under a budget.', year: 'Nov 2024 – present' },
   ];
 
   const glance = [
     { v: edu.degree.replace('B.Sc. in ', 'B.Sc. '), l: edu.university + ', degree expected ' + edu.conferral.replace('Expected degree conferral: ', '') },
     { v: all.length + ' publications', l: q1 + ' Q1 papers in Scientific Reports, ' + d.preprints.length + ' preprints' },
-    { v: th.title.split(':')[0], l: 'Undergraduate thesis, ' + th.status.toLowerCase() },
     { v: 'IELTS ' + ielts, l: 'Academic, overall band' },
   ];
 
   const toc = [
     { id: 'statement', label: 'Statement' },
     { id: 'interests', label: 'How my work connects' },
-    { id: 'thesis', label: 'Thesis' },
     { id: 'path', label: 'Research path' },
     { id: 'publications', label: 'Publications', count: all.length },
     { id: 'training', label: 'Education and training' },
@@ -99,19 +89,14 @@ function PhD({ onNavigate }) {
       <UI.PageHeader
         eyebrow="For researchers and professors"
         title="Research profile"
-        lead="I am applying to PhD programs in artificial intelligence. This page is for the supervisors and labs I would like to work with: the questions I want to spend the next few years on, my thesis, and the path that brought me here."
+        lead="I am applying to PhD programs in artificial intelligence. This page is for the supervisors and labs I would like to work with."
         color="var(--gold-ink)"
         maxLead="700px"
       />
       <p className="phd-tagline">{d.researchInterestsLine}</p>
-      <ul className="glance" aria-label="At a glance">
+      <ul className="glance" aria-label="At a glance" style={{ marginBottom: '8px' }}>
         {glance.map(g => <li key={g.v}><span className="glance-v">{g.v}</span><span className="glance-l">{g.l}</span></li>)}
       </ul>
-      <div className="phd-cta">
-        <a href={d.personal.gmail} target="_blank" rel="noopener noreferrer" className="btn-primary">Email me</a>
-        <a href={d.personal.cv} className="btn-secondary">View CV</a>
-        <a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" className="btn-secondary">Google Scholar</a>
-      </div>
     </React.Fragment>
   );
 
@@ -143,25 +128,13 @@ function PhD({ onNavigate }) {
             {focus ? 'The work behind "' + focusArea + '" is listed first. Select it again to clear.' : 'Select an interest to put the work behind it first.'}
           </p>
           <div className="ev-grid">
-            {ordered.map(e => <EvidenceCard key={e.id} e={e} state={focus ? (isMatch(e) ? 'yes' : 'no') : 'all'} focusKey={focus} gh={gh} goTo={goTo} />)}
-          </div>
-        </UI.Section>
-
-        <UI.Section id="thesis" title="Undergraduate thesis" aside={th.status.toLowerCase()} mb="56px">
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '12px', padding: mobile ? '22px' : '26px 30px' }}>
-            <p style={{ fontFamily: serif, fontSize: 'clamp(19px,2vw,22px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.4, marginBottom: '10px' }}>{th.title}</p>
-            <p style={{ fontFamily: sans, fontSize: '16px', color: 'var(--ink-2)', lineHeight: 1.7 }}>{th.question}</p>
-            <p style={{ fontFamily: sans, fontSize: '14.5px', color: 'var(--ink-3)', marginTop: '10px' }}>Supervisors: {th.supervisors}.</p>
-            <div className="ev-links" style={{ marginTop: '16px' }}>
-              <a className="link-pill" href="#projects/touchstone" onClick={(e) => { e.preventDefault(); goTo('projects/touchstone'); }}>Touchstone, the system it builds on</a>
-              <a className="link-pill" href="#research/thread" onClick={(e) => { e.preventDefault(); goTo('research/thread'); }}>How my papers lead to it</a>
-            </div>
+            {ordered.map(e => <EvidenceCard key={e.id} e={e} state={focus ? (isMatch(e) ? 'yes' : 'no') : 'all'} focusKey={focus} />)}
           </div>
         </UI.Section>
 
         <UI.Section id="path" title="Research path" mb="56px">
           <ol style={{ listStyle: 'none' }}>
-            {trajectory.map((t, i) => <Step key={i} {...t} onGo={goTo} last={i === trajectory.length - 1} />)}
+            {trajectory.map((t, i) => <Step key={i} {...t} last={i === trajectory.length - 1} />)}
           </ol>
         </UI.Section>
 
@@ -181,10 +154,6 @@ function PhD({ onNavigate }) {
                     </div>
                     <h3 style={{ fontFamily: serif, fontSize: 'clamp(16px,1.6vw,18px)', fontWeight: 700, color: 'var(--ink-2)', lineHeight: 1.4, marginBottom: '4px', textWrap: 'pretty' }}>{p.title}</h3>
                     <p style={{ fontFamily: sans, fontSize: '14px', color: 'var(--ink-3)', lineHeight: 1.5 }}>{p.venue} · {p.authors}{p.role ? ' · ' + p.role : ''}</p>
-                    <p style={{ fontFamily: sans, fontSize: '14.5px', marginTop: '8px', display: 'flex', gap: '18px', flexWrap: 'wrap' }}>
-                      <a href={'#research/paper-' + p.id} onClick={(e) => { e.preventDefault(); goTo('research/paper-' + p.id); }} style={{ color: 'var(--accent-2)', fontWeight: 600 }}>Plain-language summary</a>
-                      <a href={p.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-2)', fontWeight: 600 }}>Read paper<span className="sr-only"> (opens in a new tab)</span> {'↗'}</a>
-                    </p>
                   </div>
                 </li>
               );
@@ -217,8 +186,7 @@ function PhD({ onNavigate }) {
                 ))}
               </ul>
               <p style={{ fontFamily: sans, fontSize: '14.5px', color: 'var(--ink-3)', marginTop: '14px', lineHeight: 1.6 }}>
-                {d.awards.length} competition wins, the latest in {d.awards[0].year}.{' '}
-                <a href="#about/awards" onClick={(e) => { e.preventDefault(); goTo('about/awards'); }} style={{ color: 'var(--accent-2)', fontWeight: 600 }}>See awards</a>
+                {d.awards.length} competition wins, the latest in {d.awards[0].year}.
               </p>
             </div>
           </div>

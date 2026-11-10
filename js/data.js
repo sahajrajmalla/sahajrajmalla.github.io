@@ -506,27 +506,27 @@ window.SahajData = {
   ],
 
   // ── FOR PhD: the work behind the three interests ───────────────────────────
-  // Each item points at something that exists on this site. `interests` says which questions it speaks to,
-  // using the keys above. Takeaways repeat what the papers and repositories themselves report.
+  // `interests` says which questions an item speaks to, using the keys above. `paper` ties it to a paper id so the
+  // publication list can mark it. Takeaways repeat what the paper, report or repository itself reports.
   phdEvidence: [
-    { id: "thesis", kind: "Thesis", when: "In progress", title: "When to Call Whom: the value of diagnostic feedback in budgeted AI orchestration",
+    { id: "thesis", kind: "Thesis", when: "Completed", title: "When to Call Whom: the value of diagnostic feedback in budgeted AI orchestration",
       takeaway: "With a fixed budget, when should an agent review a failed attempt before trying another method? This is the narrow, measurable form of my main question.",
-      interests: ["orch", "eff"], go: [{ label: "Thesis details", to: "phd/thesis" }] },
+      interests: ["orch", "eff"] },
     { id: "touchstone", kind: "System", when: "Nov 2024 to now", title: "Touchstone: routing and critic review for question answering",
-      takeaway: "A classifier routes each question to a specialist agent, and a critique agent approves the answer or sends it back. I have not yet measured when the router and the critic earn their cost.",
-      interests: ["orch"], go: [{ label: "Project", to: "projects/touchstone" }], repo: { name: "touchstone", url: "https://github.com/sahajrajmalla/touchstone" } },
+      takeaway: "A classifier routes each question to a specialist agent, and a critique agent approves the answer or sends it back. My thesis asks when that kind of review is worth its cost under a budget.",
+      interests: ["orch"] },
     { id: "dhumbal", kind: "Q1 paper", when: "Aug 2026", title: "Heuristic optimization of AI agents for Dhumbal",
       takeaway: "A hand-written strategy won 88.9% of rounds and my learned agents did not beat a random player. The paper says their setup was too weak, so I read it as a question: when is a cheap specialist enough?",
-      interests: ["rl", "eff"], paper: "dhumbal", go: [{ label: "Summary", to: "research/paper-dhumbal" }, { label: "Project", to: "projects/dhumbal" }], repo: { name: "dhumbal-ai", url: "https://github.com/sahajrajmalla/dhumbal-ai" } },
+      interests: ["rl", "eff"], paper: "dhumbal" },
     { id: "mallanet", kind: "Q1 paper", when: "Dec 2025", title: "MallaNet: a compact Devanagari character recognizer",
       takeaway: "17.3 million parameters against about 39 million for the best earlier result I compared with, at 99.71% accuracy against 99.72%, trained on a Google Colab T4 GPU.",
-      interests: ["eff"], paper: "mallanet", go: [{ label: "Summary", to: "research/paper-mallanet" }, { label: "Project", to: "projects/mallanet" }], repo: { name: "MallaNet", url: "https://github.com/sahajrajmalla/MallaNet" } },
-    { id: "kalimati", kind: "Q1 paper", when: "Nov 2026", title: "Combining rather than selecting multi-horizon forecasts",
+      interests: ["eff"], paper: "mallanet" },
+    { id: "kalimati", kind: "Q1 paper", when: "Nov 2026", title: "Agricultural Commodity Price Index: combining rather than selecting forecasts",
       takeaway: "The models that won on the test window ranked third to seventh on validation, so none could have been chosen in advance. Combining models beat choosing one.",
-      interests: ["orch", "eff"], paper: "kalimati", go: [{ label: "Summary", to: "research/paper-kalimati" }] },
+      interests: ["orch", "eff"], paper: "kalimati" },
     { id: "nepse", kind: "Preprint", when: "Jan 2026", title: "XGBoost forecasting of NEPSE index returns with walk-forward validation",
       takeaway: "Forecasts tested the way they would be used: train on the past, predict the next day, move forward, repeat. A lesson in evaluating honestly under a budget.",
-      interests: ["eff"], paper: "nepse", go: [{ label: "Summary", to: "research/paper-nepse" }], repo: { name: "nepse-xgboost-forecasting", url: "https://github.com/sahajrajmalla/nepse-xgboost-forecasting" } },
+      interests: ["eff"], paper: "nepse" },
   ],
 
   // ── EDUCATION (CV) ─────────────────────────────────────────────────────────
