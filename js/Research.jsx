@@ -117,7 +117,7 @@ function Research({ onNavigate }) {
             <p>My thesis asks a version of that question for an agent with a budget. Touchstone, a router with a critic, is a related system I built earlier.</p>
           </div>
           <aside style={{ marginTop: '24px', padding: '22px 26px', background: 'var(--accent-box)', border: '1px solid var(--accent-line)', borderLeft: '4px solid var(--accent)', borderRadius: '0 12px 12px 0', maxWidth: '760px' }} aria-label="Undergraduate thesis">
-            <p className="eyebrow" style={{ color: 'var(--accent-2)', fontSize: '12.5px', borderLeft: 'none', paddingLeft: 0, marginBottom: '8px' }}>{th.label} ({th.status.toLowerCase()})</p>
+            <p className="eyebrow" style={{ color: 'var(--accent-2)', fontSize: '12.5px', borderLeft: 'none', paddingLeft: 0, marginBottom: '8px' }}>{th.label} · {th.status}</p>
             <p style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: '19px', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.35, marginBottom: '8px' }}>{th.title}</p>
             <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7 }}>{th.question}</p>
             <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '8px' }}>Supervisors: {th.supervisors}</p>

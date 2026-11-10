@@ -3,6 +3,10 @@
 // Anything a visitor reads here should trace to one of them. Numbers that come from
 // GitHub are not stored here; they are read from the GitHub API (see Common.jsx).
 window.SahajData = {
+  // A mail to me with the subject and a short body filled in. Reports and letters are sent on request, never hosted for download.
+  requestMail: function (subject, body) {
+    return "mailto:mallasahajraj@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  },
   personal: {
     name: "Sahaj Raj Malla",
     nameNepali: "सहज राज मल्ल",
@@ -13,6 +17,7 @@ window.SahajData = {
     gmail: "https://mail.google.com/mail/?view=cm&fs=1&to=mallasahajraj@gmail.com",
     github: "https://github.com/sahajrajmalla",
     githubUser: "sahajrajmalla",
+    orcid: "https://orcid.org/0000-0001-5980-6066",
     scholar: "https://scholar.google.com/citations?user=NYVtgiYAAAAJ&hl=en",
     researchgate: "https://www.researchgate.net/profile/Sahaj-Raj-Malla",
     linkedin: "https://www.linkedin.com/in/sahajrajmalla",
@@ -428,7 +433,7 @@ window.SahajData = {
       period: "Nov 2023 – Present",
       context: "Founder",
       tech: ["Next.js", "React", "Django", "Django REST Framework"],
-      media: { src: "assets/projects/hamroniwas-logo.svg", w: 1234, h: 294, kind: "logo", alt: "HamroNiwas logo", caption: "HamroNiwas logo." },
+      media: { src: "assets/projects/hamroniwas-logo.svg", w: 1234, h: 294, kind: "logo", alt: "HamroNiwas logo" },
       problem: "Searching for a room or for goods takes students too long.",
       built: "A web platform with a Next.js and React front end, a Django REST backend with token authentication, and a separate Django service for chat and notifications.",
       checked: "The outcomes are as on my CV: 4,500+ users and a 90% reduction in search time.",
@@ -501,7 +506,7 @@ window.SahajData = {
         "Built the web platform: a Next.js and React front end and a Django REST backend with token authentication.",
         "Added a separate Django service for chat and notifications.",
       ] },
-    { role: "Data Engineer Consultant", org: "YoungInnovations Pvt. Ltd.", place: "Lalitpur, Nepal", period: "May 2025 – Jun 2025",
+    { letter: true, role: "Data Engineer Consultant", org: "YoungInnovations Pvt. Ltd.", place: "Lalitpur, Nepal", period: "May 2025 – Jun 2025",
       desc: "Built ELT pipelines with Apache Spark for large-scale dataset processing; automated workflows with Apache Airflow.",
       points: [
         "Worked on a large-scale healthcare data ingestion project that takes in high-volume records from several different sources.",
@@ -509,7 +514,7 @@ window.SahajData = {
         "Automated the workflows with Apache Airflow.",
         "Integrated the data sources and checked data quality, on a tight timeline.",
       ] },
-    { role: "Data Scientist", org: "Naamche, Inc. (now reAlpha Nepal)", place: "Lalitpur, Nepal", period: "Sep 2021 – Jan 2023",
+    { letter: true, role: "Data Scientist", org: "Naamche, Inc. (now reAlpha Nepal)", place: "Lalitpur, Nepal", period: "Sep 2021 – Jan 2023",
       desc: "Scraped and analyzed 1M+ real estate listings (Florida, Texas, California); produced investment-decision reports, speeding report computation roughly threefold.",
       points: [
         "Promoted from Junior Data Scientist to Level 1.",
@@ -519,14 +524,14 @@ window.SahajData = {
         "Ran sentiment analysis and named entity recognition on customer reviews to find the themes and issues that kept coming up.",
         "Worked on an image similarity project that flags similar photos.",
       ] },
-    { role: "Data Engineer Trainee", org: "Devfinity Nepal", place: "Kathmandu, Nepal", period: "Mar 2021 – Sep 2021",
+    { letter: true, role: "Data Engineer Trainee", org: "Devfinity Nepal", place: "Kathmandu, Nepal", period: "Mar 2021 – Sep 2021",
       desc: "Built a Django-based data factory processing 1M+ job records daily, deployed on Azure.",
       points: [] },
   ],
 
   // ── TEACHING & VOLUNTEERING (CV, with detail) ──────────────────────────────
   service: [
-    { role: "Teaching Assistant, Annual Nepal AI School", org: "NAAMII, Lalitpur, Nepal", period: "Dec 2024 – Jan 2025",
+    { letter: true, role: "Teaching Assistant, Annual Nepal AI School", org: "NAAMII, Lalitpur, Nepal", period: "Dec 2024 – Jan 2025",
       desc: "Teaching assistant for the lab sessions of the 10-day Fifth Annual Nepal AI School (ANAIS 2024), organized by NAAMII.",
       points: [
         "Held at Premier International IB Continuum School in Lalitpur, from 27 December 2024 to 6 January 2025.",
@@ -536,7 +541,7 @@ window.SahajData = {
         "Lab 4: mixture-of-experts transformers (text generation on the TinyStories dataset).",
       ] },
     { role: "Website Manager and Executive Member", org: "Kathmandu University Robotics Club, Dhulikhel, Nepal", period: "May 2023 – May 2024" },
-    { role: "Lead Quantum Computing Researcher", org: "OneQuantum, Munich, Germany", period: "Mar 2021 – Mar 2023", note: "Remote, volunteer role.",
+    { letter: true, role: "Lead Quantum Computing Researcher", org: "OneQuantum, Munich, Germany", period: "Mar 2021 – Mar 2023", note: "Remote, volunteer role.",
       desc: "Research lead for quantum computing projects at One Quantum Nepal, a not-for-profit initiative that works to make quantum technologies open to everyone.",
       points: [
         "Led the research on a project applying quantum computing to human trafficking: wrote the quantum algorithms in Python, documented progress in a structured report, and presented the results at weekly meetups.",
@@ -544,7 +549,7 @@ window.SahajData = {
         "Later became technical lead on a project that applies quantum optimization algorithms, such as QAOA, to human trafficking in Nepal.",
         "Gave two talks on quantum computing and coding to an audience of about 20 members, and helped other members with the basics of quantum physics and programming.",
       ] },
-    { role: "Data Scientist and Software Developer", org: "Robotics Association of Nepal, Kathmandu, Nepal", period: "Mar 2021 – Mar 2022",
+    { letter: true, role: "Data Scientist and Software Developer", org: "Robotics Association of Nepal, Kathmandu, Nepal", period: "Mar 2021 – Mar 2022",
       desc: "Worked as a data scientist and full-stack developer for the association.",
       points: [
         "Built machine learning models for object detection, and data pipelines to support robotics prototypes.",
@@ -613,10 +618,10 @@ window.SahajData = {
   // `interests` says which questions an item speaks to, using the keys above. `paper` ties it to a paper id so the
   // publication list can mark it. Takeaways repeat what the paper, report or repository itself reports.
   phdEvidence: [
-    { id: "thesis", kind: "Thesis", when: "Completed", title: "When to Call Whom: the value of diagnostic feedback in budgeted AI orchestration",
+    { id: "thesis", kind: "Thesis", when: "Oct 2026 – Present", title: "When to Call Whom: the value of diagnostic feedback in budgeted AI orchestration",
       takeaway: "With a fixed budget, when should an agent review a failed attempt before trying another method? This is the narrow, measurable form of my main question.",
       interests: ["orch", "eff"] },
-    { id: "touchstone", kind: "System", when: "Nov 2024 to now", title: "Touchstone: routing and critic review for question answering",
+    { id: "touchstone", kind: "System", when: "Nov 2024 – Present", title: "Touchstone: routing and critic review for question answering",
       takeaway: "A classifier routes each question to a specialist agent, and a critique agent approves the answer or sends it back. My thesis asks when that kind of review is worth its cost under a budget.",
       interests: ["orch"] },
     { id: "dhumbal", kind: "Q1 paper", when: "Aug 2026", title: "Heuristic optimization of AI agents for Dhumbal",
@@ -645,7 +650,7 @@ window.SahajData = {
       title: "When to Call Whom: The Value of Diagnostic Feedback in Budgeted AI Orchestration",
       question: "With a fixed budget, when should an agent review a failed attempt before trying another method?",
       supervisors: "Dr. Samir Shrestha and Dr. Saraswati Acharya",
-      status: "Completed",
+      status: "Oct 2026 – Present",
     },
   },
 

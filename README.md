@@ -52,7 +52,7 @@ assets/js/          BUILD OUTPUT (do not edit): app.<hash>.js and vendor.<hash>.
 vendor/             React 18.3.1 production builds, pinned (their SHA-384 matches the unpkg files the site used before)
 assets/
   cv.pdf            the CV (the navbar button). Keep the file name.
-  docs/             PDFs of the coursework reports (public copies: ID numbers, roll numbers, phones and e-mails hidden)
+  on-request/       NOT in git, NOT served (git-ignored): reports/ (redacted copies) and letters/ (originals), kept only so they are easy to attach when someone asks by mail
   fonts/            Tiro Devanagari Hindi (woff2) and its SIL Open Font License
   papers/           first page of each paper (-240.webp and -480.webp for cards, -1600.webp for the viewer)
   projects/         figures for the project case studies; projects/docs/ has the report covers
@@ -75,7 +75,7 @@ the quotes. Facts come from the CV first, then the papers themselves.
 - **A project:** copy a block in `projects`. Use `repo` only for public repositories.
 - **The CV:** replace `assets/cv.pdf` (same name). Then check the changed items in
   `data.js` against it.
-- **A coursework report:** add the PDF to `assets/docs/` under its own name, copy a block in `coursework`
+- **A coursework report:** add the PDF to `assets/on-request/reports/` (git-ignored; the page only shows a mail-request button), copy a block in `coursework`
   (`file` holds the name, page count and size), and render the cover as `assets/projects/docs/<id>-240.webp`,
   `-480.webp` and `-1200.webp`. Before it goes in, hide ID numbers, roll numbers, phone numbers and e-mails.
 - **An experience entry:** `desc` is the CV line, `points` is what the role involved. Experience letters are not

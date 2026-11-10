@@ -131,3 +131,6 @@ dist
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Reports and experience letters: kept here only so they are easy to send on request. Never committed, never served.
+assets/on-request/

@@ -71,10 +71,10 @@ function PhotoCarousel({ slides, radius = 18 }) {
 }
 
 /* ── Experience row: a real button opens the summary and what the role involved. A role with nothing more to say is a plain row. ── */
-function ExpCard({ role, org, place, period, current, desc, points, index, prefix }) {
+function ExpCard({ role, org, place, period, current, desc, points, letter, index, prefix }) {
   const [open, setOpen] = useState(false);
   const id = (prefix || 'exp') + '-' + index;
-  const more = !!(desc || (points && points.length));
+  const more = !!(desc || letter || (points && points.length));
   const head = (
     <React.Fragment>
       <span>
@@ -84,7 +84,7 @@ function ExpCard({ role, org, place, period, current, desc, points, index, prefi
       </span>
       <span style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
         <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', letterSpacing: '0.3px' }}>{period}</span>
-        {current && <span className="badge badge-cf">Now</span>}
+        {current && <span className="badge badge-cf">Present</span>}
         {more && <span className="chev">{window.SahajIcons.chevron({ size: 16, strokeW: 2 })}</span>}
       </span>
     </React.Fragment>
@@ -102,6 +102,7 @@ function ExpCard({ role, org, place, period, current, desc, points, index, prefi
         <div id={id} hidden={!open} className="exp-more">
           {desc && <p className="exp-desc">{desc}</p>}
           {points && points.length > 0 && <ul className="exp-points">{points.map((t, i) => <li key={i}>{t}</li>)}</ul>}
+          {letter && <p className="exp-letter"><a className="link-pill" href={window.SahajData.requestMail('Request for experience letter: ' + org, 'Hello Sahaj,\n\nCould you please send me your experience letter from ' + org + '?\n\nThank you.')}>{window.SahajIcons.mail({ size: 14, strokeW: 2 })} Request the experience letter by mail</a></p>}
         </div>
       )}
     </div>
@@ -317,7 +318,7 @@ function About({ onNavigate }) {
               </div>
             </div>
             <div style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--line)' }}>
-              <p className="eyebrow" style={{ fontSize: '12.5px', color: 'var(--accent-2)', borderLeft: 'none', paddingLeft: 0, marginBottom: '6px' }}>{th.label} ({th.status.toLowerCase()})</p>
+              <p className="eyebrow" style={{ fontSize: '12.5px', color: 'var(--accent-2)', borderLeft: 'none', paddingLeft: 0, marginBottom: '6px' }}>{th.label} · {th.status}</p>
               <p style={{ fontFamily: serif, fontSize: '17px', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.4, marginBottom: '6px' }}>{th.title}</p>
               <p style={{ fontFamily: sans, fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7 }}>{th.question}</p>
               <p style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '6px' }}>Supervisors: {th.supervisors}</p>

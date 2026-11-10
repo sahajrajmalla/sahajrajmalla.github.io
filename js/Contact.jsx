@@ -56,10 +56,11 @@ function Contact() {
     { label:'LinkedIn',       url: d.personal.linkedin,           icon:'linkedin',     desc:'Connect professionally' },
     { label:'GitHub',         url: d.personal.github,             icon:'github',       desc:'Browse the code' },
     { label:'Google Scholar', url: d.personal.scholar,            icon:'scholar',      desc:'Academic publications' },
+    { label:'ORCID',          url: d.personal.orcid,              icon:'orcid',        desc:'0000-0001-5980-6066' },
     { label:'ResearchGate',   url: d.personal.researchgate,       icon:'researchgate', desc:'Research profile' },
+    { label:'Medium',         url: d.personal.medium,             icon:'medium',       desc:'Writing & tutorials' },
     { label:'X / Twitter',    url: d.personal.twitter,            icon:'x',            desc:'@sahajrajmalla' },
     { label:'Instagram',      url: d.personal.instagram,          icon:'instagram',    desc:'@sahajrajmalla' },
-    { label:'Medium',         url: d.personal.medium,             icon:'medium',       desc:'Writing & tutorials' },
   ];
 
   const openTo = [
@@ -142,7 +143,7 @@ function Contact() {
           <p style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'14px', color:'var(--ink-3)', marginTop:'8px' }}>Opens Gmail in a new tab.</p>
         </a>
         {/* ── Social links grid ── */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:'10px' }}>
+        <div style={{ display:'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)', gap:'10px' }}>
           {links.map(lk => <SocialLink key={lk.label} {...lk} />)}
         </div>
 

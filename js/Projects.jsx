@@ -6,16 +6,16 @@ function TypeBadge({ type }) {
   return <span className={'badge ' + cls}>{type}</span>;
 }
 
-// View (opens the PDF in a tab) and download (keeps the file name) for a report or a slide deck.
-function DocLinks({ file, label }) {
-  const href = 'assets/docs/' + file.name;
+// Reports are sent on request, not hosted for download: the button opens a mail to me with the subject filled in.
+function DocLinks({ title, kind }) {
+  const what = kind === 'Slides' ? 'slides' : 'report';
+  const href = window.SahajData.requestMail('Request for ' + what + ': ' + title, 'Hello Sahaj,\n\nCould you please send me the ' + what + ' "' + title + '"?\n\nThank you.');
   return (
     <div className="doc-links">
-      <a className="link-pill link-pill-purple" href={href} target="_blank" rel="noopener noreferrer">
-        {label || 'View report'} {window.SahajIcons.external({ size: 13, strokeW: 2 })}<span className="sr-only"> (PDF, opens in a new tab)</span>
+      <a className="link-pill link-pill-purple" href={href}>
+        {window.SahajIcons.mail ? window.SahajIcons.mail({ size: 14, strokeW: 2 }) : null} Request the {what} by mail
       </a>
-      <a className="link-pill" href={href} download={file.name}>{window.SahajIcons.download({ size: 14, strokeW: 2 })} Download</a>
-      <span className="doc-meta">PDF · {file.pages} pages · {file.size}</span>
+      <span className="doc-meta">Sent on request</span>
     </div>
   );
 }
@@ -39,7 +39,7 @@ function CourseCard({ doc, onNavigate }) {
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '14px' }}>
           {doc.tech.map(t => <span key={t} className="tag">{t}</span>)}
         </div>
-        <DocLinks file={doc.file} label={doc.kind === 'Slides' ? 'View slides' : 'View report'} />
+        <DocLinks title={doc.name} kind={doc.kind} />
         {doc.paper && (
           <p className="cw-more"><a href={'#research/paper-' + doc.paper} onClick={(e) => { e.preventDefault(); onNavigate('research/paper-' + doc.paper); }}>Read the preprint this report led to</a></p>
         )}
@@ -76,7 +76,7 @@ function Project({ project: p, gh }) {
           {p.paper && <a href={p.paper} target="_blank" rel="noopener noreferrer" className="link-pill link-pill-purple">Read paper {window.SahajIcons.external({ size: 13, strokeW: 2 })}</a>}
           {(p.links || []).map(l => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="link-pill">{l.label}</a>)}
         </div>
-        {p.report && <DocLinks file={p.report.file} label={p.report.label} />}
+        {p.report && <DocLinks title={p.name + ' project report'} kind="Report" />}
       </div>
     </article>
   );

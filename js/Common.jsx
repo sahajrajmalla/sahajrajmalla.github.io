@@ -435,8 +435,8 @@ function ImageViewer({ items, index, onClose, onIndex, label }) {
           </button>
         )}
         {item.href && (
-          <a className="lb-btn" href={item.href} target="_blank" rel="noopener noreferrer">
-            <span>{item.hrefLabel || 'Open'}</span>{window.SahajIcons.external({ size: 16, strokeW: 2 })}<span className="sr-only"> (opens in a new tab)</span>
+          <a className="lb-btn" href={item.href} {...(item.sameTab ? {} : { target: '_blank', rel: 'noopener noreferrer' })}>
+            <span>{item.hrefLabel || 'Open'}</span>{window.SahajIcons[item.sameTab ? 'mail' : 'external']({ size: 16, strokeW: 2 })}{!item.sameTab && <span className="sr-only"> (opens in a new tab)</span>}
           </a>
         )}
         <button ref={closeRef} type="button" className="lb-btn" onClick={onClose} aria-label="Close">
@@ -513,7 +513,7 @@ function DocThumb({ doc, width }) {
   if (!t) return null;
   const item = {
     src: t.base + '-1200.webp', w: 1200, h: Math.round(1200 * t.h / t.w), alt: t.alt, title: doc.name,
-    sub: doc.level, href: 'assets/docs/' + doc.file.name, hrefLabel: 'Open the PDF', zoomable: true,
+    sub: doc.level, href: window.SahajData.requestMail('Request for report: ' + doc.name, 'Hello Sahaj,\n\nCould you please send me the report "' + doc.name + '"?\n\nThank you.'), hrefLabel: 'Request the report by mail', sameTab: true, zoomable: true,
   };
   return (
     <React.Fragment>
@@ -553,7 +553,7 @@ function ProjectFigure({ media, sizes, title }) {
           <span className="fig-zoom" aria-hidden="true">{window.SahajIcons.expand({ size: 14, strokeW: 2.2 })}<span>Enlarge</span></span>
         </button>
       )}
-      <figcaption>{media.caption}</figcaption>
+      {media.caption && <figcaption>{media.caption}</figcaption>}
       {open && <ImageViewer items={[item]} index={0} onClose={() => setOpen(false)} label={media.caption} />}
     </figure>
   );

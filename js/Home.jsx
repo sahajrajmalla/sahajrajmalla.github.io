@@ -94,9 +94,9 @@ function Home({ onNavigate }) {
     { val: d.peerReviewed.length + d.preprints.length, lbl: 'Publications' },
     { val: q1.length, lbl: 'Q1 journal papers' },
     { val: d.awards.length, lbl: 'Awards' },
-    { val: d.stats.users, suf: '+', lbl: 'HamroNiwas users' },
-    { val: d.projects.filter(p => p.kind === 'library').length, lbl: 'Open-source libraries' },
     { val: d.stats.years, suf: '+', lbl: 'Years Experience' },
+    { val: d.projects.filter(p => p.kind === 'library').length, lbl: 'Open-source libraries' },
+    { val: d.stats.users, suf: '+', lbl: 'HamroNiwas users' },
   ];
   const [expHov, setExpHov] = useState(false);
   // defer the heavy backdrop simulation until after the hero content has painted,
