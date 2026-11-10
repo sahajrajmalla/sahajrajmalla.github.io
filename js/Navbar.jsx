@@ -182,7 +182,7 @@ function Navbar({ currentPage, onNavigate }) {
             padding: '6px 12px',
             borderRadius: '6px',
             textDecoration: 'none',
-            fontSize: '12px',
+            fontSize: '13px',
             fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
             fontWeight: 700,
           }}>CV</a>

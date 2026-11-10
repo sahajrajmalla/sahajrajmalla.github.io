@@ -1,14 +1,15 @@
 # Sahaj Raj Malla: personal site
 
-A static **React 18** site with a space and sea theme, an explorable mini-game,
-and structured data for search. There is no build step and no `npm install`:
-React and Babel load from a CDN (pinned versions, SRI hashes) and the app runs
-straight from the files in this folder.
+A static **React 18** site with a space and sea theme, an explorable mini-game, and structured data
+for search. GitHub Pages serves the files in this repository as they are. The sources in `js/` are compiled
+ahead of time into two small files, so a visitor downloads no compiler and the first load is about 250 KB
+(React 46 KB, the app 68 KB, both gzipped).
 
 **Live:** https://sahajrajmalla.com.np
 
 > **GitHub Pages serves `main` from the repository root, so any push or merge to
 > `main` is a deployment.** Work on a branch and merge only when the site is ready.
+> **Run `npm run build` before you commit a change to anything in `js/`**, or the site keeps serving the old code.
 
 ---
 
@@ -35,24 +36,27 @@ side rail on wide screens, a chip bar under the navbar on narrower ones).
 ## Files
 
 ```
-index.html          entry point: metadata, JSON-LD, theme tokens, shared CSS, script loader
-js/
-  data.js           ALL CONTENT (papers, projects, experience, awards, skills, gallery ...)
+index.html          entry point: metadata, JSON-LD, theme tokens, shared CSS, and the two script tags the build writes
+build.mjs           the build (esbuild): compiles js/*.jsx, minifies, names the output by content hash, edits index.html
+package.json        npm run build, npm run dev
+js/                 SOURCES (edit these)
+  data.js           ALL CONTENT (papers, projects, coursework reports, experience, awards, skills, gallery ...)
                     + shared hooks (useIsMobile, useViewportWidth, useTheme, Reveal)
-  Common.jsx        shared UI on window.SahajUI: error boundary, headings, badges, the image viewer,
-                    figures, animated charts, counted scroll lock, citation copy, GitHub stats, table of contents
-  Icons.jsx         SVG icon registry (window.SahajIcons)
-  Logo.jsx          the mountain-M logo
-  Navbar.jsx        top navigation, theme toggle, CV button
-  Backdrops.jsx     the night space and day sea canvases behind the home hero
+  Common.jsx        shared UI on window.SahajUI: error boundary, headings, badges, the image viewer, figures,
+                    animated charts, counted scroll lock, citation copy, GitHub stats, table of contents
+  Icons.jsx  Logo.jsx  Navbar.jsx  Backdrops.jsx  (the night space and day sea canvases behind the home hero)
   Home.jsx  About.jsx  Research.jsx  Projects.jsx  PhD.jsx  Contact.jsx
   Game.jsx          the game (pointer-based pad, counted scroll lock, dialog focus handling)
   App.jsx           router (page and section hashes), transitions, footer, game button
+assets/js/          BUILD OUTPUT (do not edit): app.<hash>.js and vendor.<hash>.js (React)
+vendor/             React 18.3.1 production builds, pinned (their SHA-384 matches the unpkg files the site used before)
 assets/
   cv.pdf            the CV (the navbar button). Keep the file name.
+  docs/             PDFs of the coursework reports (public copies: ID numbers, roll numbers, phones and e-mails hidden)
+  fonts/            Tiro Devanagari Hindi (woff2) and its SIL Open Font License
   papers/           first page of each paper (-240.webp and -480.webp for cards, -1600.webp for the viewer)
-  projects/         figures for the project case studies
-  life/             gallery photos (-640.webp tiles, -1600.webp for the lightbox)
+  projects/         figures for the project case studies; projects/docs/ has the report covers
+  life/             gallery photos (-640.webp tiles, -1600.webp for the viewer)
   github-stats.json dated snapshot of the public repo list (fallback only)
 CNAME  robots.txt  sitemap.xml  404.html  .nojekyll
 ```
@@ -71,6 +75,11 @@ the quotes. Facts come from the CV first, then the papers themselves.
 - **A project:** copy a block in `projects`. Use `repo` only for public repositories.
 - **The CV:** replace `assets/cv.pdf` (same name). Then check the changed items in
   `data.js` against it.
+- **A coursework report:** add the PDF to `assets/docs/` under its own name, copy a block in `coursework`
+  (`file` holds the name, page count and size), and render the cover as `assets/projects/docs/<id>-240.webp`,
+  `-480.webp` and `-1200.webp`. Before it goes in, hide ID numbers, roll numbers, phone numbers and e-mails.
+- **An experience entry:** `desc` is the CV line, `points` is what the role involved. Experience letters are not
+  published; they are shared on request.
 - **First page of a paper:** render it from the published PDF, never from a draft, uncropped and unedited
   (some journals, such as CC BY-NC-ND, allow only a verbatim copy):
   ```bash
@@ -90,28 +99,37 @@ the quotes. Facts come from the CV first, then the papers themselves.
 
 ## Run locally
 
-Serve the folder over HTTP (opening `index.html` as a file will not load the scripts):
-
 ```bash
+npm install            # once: installs esbuild
+npm run build          # compile js/ into assets/js/ and update index.html (do this after every edit to js/)
 python3 -m http.server 4599
 # open http://localhost:4599
 ```
+
+To see an edit without building each time, run `npm run dev` once: `index.html` then loads the sources through
+Babel in the browser (slower, and it needs a network connection for Babel). Run `npm run build` again before you
+commit, because the committed `index.html` must be the production one.
 
 ---
 
 ## Notes
 
-- **React 18.3.1 production builds** and Babel standalone 7.29.0, pinned, with SRI
-  hashes. Babel compiles the `.jsx` files in the browser, so it prints a console
-  notice about precompiling; this is the cost of having no build step.
-- **Script versions:** `index.html` loads each script with `?v=YYYYMMDD`. Change that value when you deploy, so
-  returning visitors (GitHub Pages caches files for 10 minutes) never run old scripts with a new page. While
-  testing locally, hard-reload (Cmd+Shift+R) if the browser still shows an older version.
+- **No runtime compiler.** `build.mjs` precompiles the JSX and wraps each file in its own function, so top-level
+  names in one file can never replace those in another; files talk through `window` only. Output names carry a hash
+  of their content, so a returning visitor never runs old scripts against a new page (GitHub Pages caches files for
+  10 minutes, and its headers cannot be changed).
+- **Nothing third-party on load.** React and the Devanagari font are served from this site. The only outside call is
+  the GitHub API on the Research and Projects pages (one request, kept 24 h in `localStorage`, with a saved copy
+  as the fallback). The Home page makes none.
+- **Fast first paint:** scripts are deferred, the hero photo and the Devanagari font are preloaded on the Home route,
+  every image is WebP with its size set and lazy except the hero, and PDFs and large page images load only when
+  opened.
 - **Backdrops** pause when the tab is hidden, cap the device pixel ratio, and never
   throw into React: a canvas that has no size yet simply waits for one.
-- **Script scope:** every `.jsx` file shares one global scope once Babel compiles it, so a
-  top-level function with the same name in two files silently replaces the first. Give shared
-  things unique names (the viewer is `ImageViewer`) and export them on `window.SahajUI`.
+- **Script scope:** in `--dev` mode (Babel in the browser) every `.jsx` file still shares one global scope, so a
+  top-level name used in two files silently replaces the first. The production build isolates each file, and
+  `build.mjs` warns about a name used in a file that does not declare it. Give shared things unique names (the
+  viewer is `ImageViewer`) and export them on `window.SahajUI`.
 - **Game input** uses Pointer Events (with capture) and reads the keyboard by direction, and
   everything is released on blur, tab hide and close. No touch handler calls `preventDefault`.
 - **Accessibility:** one `h1` per page, skip link, real buttons for every expandable

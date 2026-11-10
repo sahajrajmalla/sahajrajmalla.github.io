@@ -1,0 +1,13 @@
+{
+  "name": "sahajrajmalla-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site. The sources in js/ are compiled and minified into dist/ by build.mjs; GitHub Pages serves the result.",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --dev"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}
