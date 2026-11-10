@@ -38,8 +38,8 @@ function SocialPill({ label, url }) {
       style={{
         display: 'flex', alignItems: 'center', gap: '7px',
         color: h ? 'var(--ink)' : 'var(--ink-2)', textDecoration: 'none',
-        fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', fontWeight: 500,
-        padding: '7px 14px', borderRadius: '20px',
+        fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', fontWeight: 500,
+        padding: '8px 15px', borderRadius: '20px', minHeight: '38px',
         border: `1px solid ${h ? 'var(--accent-line)' : 'var(--pill-line)'}`,
         background: h ? 'var(--accent-soft)' : 'var(--surface)',
         transition: 'all 0.2s ease', letterSpacing: '0.3px',
@@ -52,18 +52,18 @@ function SocialPill({ label, url }) {
 
 /* ═══════════════════════════════════════════════════════ Q1 PAPER CARDS (from data) */
 function Q1Cards({ papers, mobile }) {
-  const allSole = papers.every(p => p.role === 'Sole author');
+  const journal = (p) => p.venue.replace(/ ?\(early access\)/, '').replace(/ \d+, \d+$/, '');
   return (
     <section aria-labelledby="q1-h" style={{ marginTop: mobile ? '40px' : '16px', textAlign: 'left', maxWidth: mobile ? '440px' : 'none', marginLeft: mobile ? 'auto' : 0, marginRight: mobile ? 'auto' : 0 }}>
-      <h2 id="q1-h" className="q1-heading">Scientific Reports, Q1{allSole ? ', sole author' : ''}</h2>
+      <h2 id="q1-h" className="q1-heading">Scientific Reports, Q1</h2>
       <ul className="q1-list">
         {papers.map(p => (
           <li key={p.id}>
             <a href={p.url} target="_blank" rel="noopener noreferrer" className="q1-card">
-              <UI.PaperThumb paper={p} width={56} />
+              <span className="q1-chip" aria-hidden="true">Q1</span>
               <span className="q1-body">
-                <span className="q1-meta">{p.venue.replace(/ \(early access\)/, '')} · {p.year}</span>
-                <span className="q1-title">{p.title}</span>
+                <span className="q1-meta">{journal(p)} · {p.year}</span>
+                <span className="q1-title">{p.title}<span className="sr-only"> (Q1 paper, opens in a new tab)</span></span>
               </span>
             </a>
           </li>
@@ -71,6 +71,16 @@ function Q1Cards({ papers, mobile }) {
       </ul>
     </section>
   );
+}
+
+/* ═══════════════════════════════════════════════════════ CTA BUTTON */
+function CtaButton({ primary, onClick, children }) {
+  const [h, setH] = useState(false);
+  const base = { cursor: 'pointer', padding: '13px 26px', minHeight: '48px', borderRadius: '8px', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', transform: h ? 'translateY(-2px)' : 'none', transition: 'all 0.2s ease' };
+  const style = primary
+    ? Object.assign(base, { background: h ? '#1d47d6' : 'var(--accent)', color: 'white', border: 'none', boxShadow: h ? '0 6px 20px rgba(34,85,232,0.38)' : '0 3px 12px rgba(34,85,232,0.24)' })
+    : Object.assign(base, { background: h ? 'var(--surface-3)' : 'var(--surface-2)', color: h ? 'var(--ink)' : 'var(--ink-2)', border: h ? '1px solid var(--accent-line)' : '1px solid var(--line-2)' });
+  return <button type="button" onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onFocus={() => setH(true)} onBlur={() => setH(false)} style={style}>{children}</button>;
 }
 
 /* ═══════════════════════════════════════════════════════ HOME */
@@ -89,7 +99,6 @@ function Home({ onNavigate }) {
     { val: d.projects.filter(p => p.kind === 'library').length, lbl: 'Open-source libraries' },
     { gh: 'repos', lbl: 'Public GitHub repositories' },
   ];
-  const [hov, setHov] = useState(null);
   const [expHov, setExpHov] = useState(false);
   // defer the heavy backdrop simulation until after the hero content has painted,
   // so first paint (and the loader hand-off) stays instant
@@ -138,7 +147,7 @@ function Home({ onNavigate }) {
 
         {/* Left / text */}
         <div style={{ flex: '1 1 400px', minWidth: 0, order: mobile ? 2 : 1 }}>
-          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '10px' : '11px', fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: '20px' }}>
+          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: mobile ? '12px' : '12.5px', fontWeight: 700, letterSpacing: mobile ? '1.8px' : '2.4px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: '20px' }}>
             Undergrad AI Researcher · Kathmandu University
           </p>
 
@@ -163,22 +172,19 @@ function Home({ onNavigate }) {
                 <div style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(28px,7vw,52px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>
                   {s.gh ? (gh ? gh[s.gh].toLocaleString('en-US') : '\u2013') : <React.Fragment><Counter target={s.val} delay={800 + i * 260} />{s.suf}</React.Fragment>}
                 </div>
-                <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', color: 'var(--ink-3)', marginTop: '5px', letterSpacing: '0.4px' }}>{s.lbl}</div>
+                <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '5px', letterSpacing: '0.3px' }}>{s.lbl}</div>
               </div>
             ))}
           </div>
 
           {/* CTAs */}
           <div id="home-ctas" style={{ display: 'flex', gap: '12px', marginBottom: '26px', flexWrap: 'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
-            <button onClick={() => onNavigate('phd')} onMouseEnter={() => setHov('res')} onMouseLeave={() => setHov(null)}
-              style={{ background: hov === 'res' ? '#1d47d6' : 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer', padding: '13px 28px', borderRadius: '8px', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', boxShadow: hov === 'res' ? '0 6px 20px rgba(34,85,232,0.38)' : '0 3px 12px rgba(34,85,232,0.24)', transform: hov === 'res' ? 'translateY(-2px)' : 'none', transition: 'all 0.2s ease' }}>
+            <CtaButton primary onClick={() => onNavigate('phd')}>
               My PhD Overview
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-            </button>
-            <button onClick={() => onNavigate('research')} onMouseEnter={() => setHov('abt')} onMouseLeave={() => setHov(null)}
-              style={{ background: hov === 'abt' ? 'var(--surface-3)' : 'var(--surface-2)', color: hov === 'abt' ? 'var(--ink)' : 'var(--ink-2)', border: hov === 'abt' ? '1px solid var(--accent-line)' : '1px solid var(--line-2)', cursor: 'pointer', padding: '13px 28px', borderRadius: '8px', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', fontWeight: 600, whiteSpace: 'nowrap', transform: hov === 'abt' ? 'translateY(-2px)' : 'none', transition: 'all 0.2s ease' }}>
-              View Research
-            </button>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </CtaButton>
+            <CtaButton onClick={() => onNavigate('about')}>About me</CtaButton>
+            <CtaButton onClick={() => onNavigate('research')}>View Research</CtaButton>
           </div>
 
           {/* Social pills */}
@@ -227,7 +233,7 @@ function Home({ onNavigate }) {
               ? <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5 L13.7 9 L20.3 10.3 L15.4 14.3 L16.8 21 L12 17.4 L7.2 21 L8.6 14.3 L3.7 10.3 L10.3 9 Z" /></svg>
               : (window.SahajIcons && window.SahajIcons.planet({ size: 20, color: 'currentColor', strokeW: 1.7 }))}
           </span>
-          <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', fontWeight: 700, letterSpacing: '1.6px', textTransform: 'uppercase', color: (!isLight && expHov) ? '#fff' : 'var(--ink)' }}>{isLight ? 'Set Sail' : 'Explore My World'}</span>
+          <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: (!isLight && expHov) ? '#fff' : 'var(--ink)' }}>{isLight ? 'Set Sail' : 'Explore My World'}</span>
           <span style={{ display: 'flex', color: expHov ? 'var(--ink-2)' : 'var(--ink-4)', transition: 'color 0.25s' }}>
             {window.SahajIcons && window.SahajIcons.arrowRight({ size: 15, color: 'currentColor', strokeW: 2.2 })}
           </span>
