@@ -583,14 +583,14 @@ h2[tabindex="-1"]:focus { outline: none; }
 /* gallery */
 .gallery-grid { column-count: 2; column-gap: 10px; }
 @media (min-width: 821px) { .gallery-grid { column-count: 3; column-gap: 14px; } }
+.exp-more { margin-top: 12px; max-width: 700px; }
+.exp-desc { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+.exp-points { margin: 10px 0 0 20px; display: grid; gap: 8px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: var(--ink-3); }
+.exp-points li::marker { color: var(--accent-2); }
 .show-all { margin-top: 20px; }
 
 /* skills and gallery tiles */
 .skill-chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; background: var(--surface-2); border: 1px solid var(--line-2); border-radius: 8px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 500; line-height: 1.3; color: var(--ink-2); }
-.filter-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink-3); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
-.filter-chip:hover { color: var(--ink); border-color: var(--accent-line); }
-.filter-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-.filter-count { font-size: 12.5px; opacity: 0.8; font-variant-numeric: tabular-nums; }
 .tool-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
 .tool-columns { column-width: 310px; column-gap: 16px; }
 .tool-columns > .tool-card { break-inside: avoid; margin-bottom: 16px; }
@@ -603,6 +603,14 @@ h2[tabindex="-1"]:focus { outline: none; }
 .next-link:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
 .next-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .next-kicker { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--accent-2); }
+.chip-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-more { margin-top: 8px; }
+.chip-list[hidden] { display: none; }
+.tool-more { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; min-height: 32px; cursor: pointer; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 600; color: var(--accent-2); }
+.tool-more:hover { text-decoration: underline; }
+.tool-more:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 4px; }
+.tool-more .chev { display: flex; transition: transform 0.2s ease; }
+.tool-more[aria-expanded="true"] .chev { transform: rotate(180deg); }
 .next-title { font-family: 'Times New Roman', Georgia, serif; font-size: clamp(26px, 3vw, 34px); font-weight: 700; color: var(--ink); line-height: 1.15; }
 .next-text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; color: var(--ink-3); line-height: 1.6; max-width: 560px; }
 .next-arrow { flex: 0 0 auto; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; transition: transform 0.2s ease; }

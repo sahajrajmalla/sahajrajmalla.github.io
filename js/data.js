@@ -435,18 +435,63 @@ window.SahajData = {
 
   // ── EXPERIENCE (CV) ────────────────────────────────────────────────────────
   experience: [
-    { role: "Founder", org: "HamroNiwas", place: "Banepa, Nepal", period: "Nov 2023 – Present", current: true, desc: "Built a rental and marketplace platform for Nepali students, connecting 4,500+ users and reducing search time by 90%." },
-    { role: "Data Engineer Consultant", org: "YoungInnovations Pvt. Ltd.", place: "Lalitpur, Nepal", period: "May 2025 – Jun 2025", desc: "Built ELT pipelines with Apache Spark for large-scale dataset processing; automated workflows with Apache Airflow." },
-    { role: "Data Scientist", org: "Naamche, Inc. (now reAlpha Nepal)", place: "Lalitpur, Nepal", period: "Sep 2021 – Jan 2023", desc: "Scraped and analyzed 1M+ real estate listings (Florida, Texas, California); produced investment-decision reports, speeding report computation roughly threefold." },
-    { role: "Data Engineer Trainee", org: "Devfinity Nepal", place: "Kathmandu, Nepal", period: "Mar 2021 – Sep 2021", desc: "Built a Django-based data factory processing 1M+ job records daily, deployed on Azure." },
+    { role: "Founder", org: "HamroNiwas", place: "Banepa, Nepal", period: "Nov 2023 – Present", current: true,
+      desc: "Built a rental and marketplace platform for Nepali students, connecting 4,500+ users and reducing search time by 90%.",
+      points: [
+        "Started it because finding a room or goods takes students too long.",
+        "Built the web platform: a Next.js and React front end and a Django REST backend with token authentication.",
+        "Added a separate Django service for chat and notifications.",
+      ] },
+    { role: "Data Engineer Consultant", org: "YoungInnovations Pvt. Ltd.", place: "Lalitpur, Nepal", period: "May 2025 – Jun 2025",
+      desc: "Built ELT pipelines with Apache Spark for large-scale dataset processing; automated workflows with Apache Airflow.",
+      points: [
+        "Worked on a large-scale healthcare data ingestion project that takes in high-volume records from several different sources.",
+        "Developed and optimized the ELT pipelines that ingest and transform that data, using Apache Spark.",
+        "Automated the workflows with Apache Airflow.",
+        "Integrated the data sources and checked data quality, on a tight timeline.",
+      ] },
+    { role: "Data Scientist", org: "Naamche, Inc. (now reAlpha Nepal)", place: "Lalitpur, Nepal", period: "Sep 2021 – Jan 2023",
+      desc: "Scraped and analyzed 1M+ real estate listings (Florida, Texas, California); produced investment-decision reports, speeding report computation roughly threefold.",
+      points: [
+        "Promoted from Junior Data Scientist to Level 1.",
+        "Managed the scraping infrastructure that collected the listings, and explored the scraped data to help the data scientists who used it downstream.",
+        "Built the transformation pipelines that cleaned and prepared the data for analysis.",
+        "Built Notion Extended, a Chrome extension that brought OpenAI GPT-3 into Notion.",
+        "Ran sentiment analysis and named entity recognition on customer reviews to find the themes and issues that kept coming up.",
+        "Worked on an image similarity project that flags similar photos.",
+      ] },
+    { role: "Data Engineer Trainee", org: "Devfinity Nepal", place: "Kathmandu, Nepal", period: "Mar 2021 – Sep 2021",
+      desc: "Built a Django-based data factory processing 1M+ job records daily, deployed on Azure.",
+      points: [] },
   ],
 
-  // ── TEACHING & VOLUNTEERING (CV) ───────────────────────────────────────────
+  // ── TEACHING & VOLUNTEERING (CV, with detail) ──────────────────────────────
   service: [
-    { role: "Teaching Assistant, Annual Nepal AI School", org: "NAAMII, Lalitpur, Nepal", period: "Dec 2024 – Jan 2025" },
+    { role: "Teaching Assistant, Annual Nepal AI School", org: "NAAMII, Lalitpur, Nepal", period: "Dec 2024 – Jan 2025",
+      desc: "Teaching assistant for the lab sessions of the 10-day Fifth Annual Nepal AI School (ANAIS 2024), organized by NAAMII.",
+      points: [
+        "Held at Premier International IB Continuum School in Lalitpur, from 27 December 2024 to 6 January 2025.",
+        "Lab 1: geometric deep learning and graph neural networks (symmetry and group theory, invariance and equivariance, message passing, PyTorch Geometric).",
+        "Lab 2: foundation models and self-supervised learning (contrastive learning, pre-training, a mini-GPT, fine-tuning large models).",
+        "Lab 3: parameter-efficient fine-tuning (soft prompt tuning, adapters, LoRA).",
+        "Lab 4: mixture-of-experts transformers (text generation on the TinyStories dataset).",
+      ] },
     { role: "Website Manager and Executive Member", org: "Kathmandu University Robotics Club, Dhulikhel, Nepal", period: "May 2023 – May 2024" },
-    { role: "Lead Quantum Computing Researcher", org: "OneQuantum, Munich, Germany", period: "Mar 2021 – Mar 2023", note: "Remote, volunteer role." },
-    { role: "Data Scientist and Software Developer", org: "Robotics Association of Nepal, Kathmandu, Nepal", period: "Mar 2021 – Mar 2022" },
+    { role: "Lead Quantum Computing Researcher", org: "OneQuantum, Munich, Germany", period: "Mar 2021 – Mar 2023", note: "Remote, volunteer role.",
+      desc: "Research lead for quantum computing projects at One Quantum Nepal, a not-for-profit initiative that works to make quantum technologies open to everyone.",
+      points: [
+        "Led the research on a project applying quantum computing to human trafficking: wrote the quantum algorithms in Python, documented progress in a structured report, and presented the results at weekly meetups.",
+        "In the Summer of Quantum project, led the coding of Grover's search algorithm in Python and ran it on a real IBM quantum computer through IBM Quantum Experience.",
+        "Later became technical lead on a project that applies quantum optimization algorithms, such as QAOA, to human trafficking in Nepal.",
+        "Gave two talks on quantum computing and coding to an audience of about 20 members, and helped other members with the basics of quantum physics and programming.",
+      ] },
+    { role: "Data Scientist and Software Developer", org: "Robotics Association of Nepal, Kathmandu, Nepal", period: "Mar 2021 – Mar 2022",
+      desc: "Worked as a data scientist and full-stack developer for the association.",
+      points: [
+        "Built machine learning models for object detection, and data pipelines to support robotics prototypes.",
+        "With the Mission Oxygen team during the COVID-19 pandemic, built a Django and React web platform that showed oxygen supply and ICU bed availability in real time.",
+        "Organized robotics and AI workshops for students.",
+      ] },
   ],
 
   // ── AWARDS (CV order) ──────────────────────────────────────────────────────
@@ -583,35 +628,44 @@ window.SahajData = {
   ],
 
   // ── TOOLBOX (About page) ───────────────────────────────────────────────────
-  // The CV has room for a short list. This is the long one: the CV groups first (kept as they are on the CV),
-  // then everything else I have used, found in my public repositories, my project folders and the older
-  // version of this site. `area` drives the filter on the page. Items with a brand colour render as a badge.
+  // `main` is shown; `more` opens on request. The CV's groups come first and keep their items; the older site's lists
+  // and what the public repositories and project folders show (dependency files, imports) fill the rest.
+  // Items with a brand colour render as a badge.
   skillGroups: [
-    // ── AI and ML ──
-    { label: "Agents and RL", area: "ai", color: "var(--purple)", skills: ["Policy training", "Policy evaluation", "Offline RL", { name: "Gymnasium" }, { name: "MuJoCo" }, "MCTS and ISMCTS", "DQN", "PPO", "Custom Gym environments"] },
-    { label: "ML frameworks", area: "ai", color: "var(--purple)", skills: [{ name: "PyTorch", brand: "#EE4C2C", abbr: "PT" }, { name: "PyTorch Lightning" }, { name: "TensorFlow", brand: "#FF6F00", abbr: "TF" }, { name: "Keras" }, { name: "JAX" }, { name: "Hugging Face Transformers", brand: "#FFD21E", abbr: "HF" }, { name: "scikit-learn", brand: "#F7931E", abbr: "SK" }, { name: "XGBoost" }, { name: "LightGBM" }, { name: "CatBoost" }, { name: "Optuna" }, { name: "SHAP" }, { name: "OpenCV" }, { name: "Weights & Biases" }, { name: "TensorBoard" }] },
-    { label: "Deep learning", area: "ai", color: "var(--purple)", skills: ["CNNs", "Residual networks", "Capsule networks", "Transformer fine-tuning (DistilBERT)", { name: "Kornia" }] },
-    { label: "LLM systems", area: "ai", color: "var(--purple)", skills: [{ name: "LangGraph", brand: "#1C3C3C", abbr: "LG" }, { name: "LangChain" }, "RAG", "LoRA fine-tuning", "Mixed-precision training", "BM25", { name: "Sentence-Transformers" }, "OpenAI API", "Anthropic API", { name: "Ollama" }, "Document extraction with LLMs"] },
-    { label: "Efficient ML", area: "ai", color: "var(--purple)", skills: ["Parameter-efficient model design", "Model quantization", "Inference profiling"] },
-    { label: "Quantum ML", area: "ai", color: "var(--purple)", skills: [{ name: "PennyLane", brand: "#2D7FF9", abbr: "PL" }, { name: "Qiskit", brand: "#6929C4", abbr: "QK" }, { name: "Qiskit Aer" }, { name: "Qiskit Machine Learning" }, "Variational quantum circuits", "Hybrid quantum-classical models"] },
-
-    // ── Data and science ──
-    { label: "Time series and statistics", area: "data", color: "var(--gold-ink)", skills: [{ name: "statsmodels" }, "ARIMA and ARDL", { name: "Prophet" }, { name: "StatsForecast" }, { name: "NeuralForecast" }, "Walk-forward validation", "Forecast combination", { name: "PyMC" }, { name: "ArviZ" }] },
-    { label: "Data engineering", area: "data", color: "var(--gold-ink)", skills: [{ name: "Apache Spark", brand: "#E25A1C", abbr: "Sp" }, { name: "Apache Airflow", brand: "#017CEE", abbr: "Af" }, "ELT pipelines", { name: "Delta Lake" }, { name: "Polars" }, "Parquet", "Web scraping", { name: "Beautiful Soup" }] },
-    { label: "Analysis and visualization", area: "data", color: "var(--gold-ink)", skills: [{ name: "NumPy", brand: "#013243", abbr: "Np" }, { name: "Pandas", brand: "#150458", abbr: "Pd" }, { name: "SciPy" }, { name: "Matplotlib" }, { name: "Seaborn" }, { name: "Plotly" }, { name: "Altair" }, { name: "Streamlit" }, { name: "Jupyter", brand: "#F37626", abbr: "Jp" }] },
-    { label: "Geospatial", area: "data", color: "var(--gold-ink)", skills: ["OpenStreetMap", { name: "H3" }, { name: "GeoPandas" }, { name: "Shapely" }, { name: "Rasterio" }, { name: "Folium" }, { name: "Leaflet" }, "DBSCAN", "A* search"] },
-    { label: "Applied mathematics", area: "data", color: "var(--accent-2)", skills: ["Numerical optimization", "Statistical modeling", "Graph algorithms", { name: "NetworkX" }, { name: "SymPy" }] },
-
-    // ── Software and web ──
-    { label: "Languages", area: "software", color: "var(--accent-2)", skills: [{ name: "Python", brand: "#3776AB", abbr: "Py" }, { name: "C++", brand: "#00599C", abbr: "C++" }, { name: "TypeScript", brand: "#3178C6", abbr: "TS" }, { name: "JavaScript", brand: "#F7DF1E", abbr: "JS" }, { name: "R", brand: "#276DC3", abbr: "R" }, { name: "C" }, { name: "SQL" }, "HTML and CSS"] },
-    { label: "Backend and APIs", area: "software", color: "var(--accent-2)", skills: [{ name: "FastAPI", brand: "#009688", abbr: "FA" }, { name: "Django", brand: "#092E20", abbr: "Dj" }, { name: "Django REST Framework" }, { name: "Django Channels" }, { name: "Pydantic" }, { name: "SQLAlchemy" }, { name: "Alembic" }, { name: "Celery" }, "REST APIs", "WebSockets", "Argon2 password hashing", "JWT", "CSRF protection"] },
-    { label: "Frontend", area: "software", color: "var(--accent-2)", skills: [{ name: "React", brand: "#61DAFB", abbr: "Re" }, { name: "Next.js", brand: "#111111", abbr: "Nx" }, { name: "Tailwind CSS" }, { name: "Radix UI" }, { name: "React Query" }, { name: "React Hook Form" }, { name: "Plotly.js" }] },
-
-    // ── Cloud and tooling ──
-    { label: "Cloud and deployment", area: "ops", color: "var(--ink-3)", skills: [{ name: "AWS", brand: "#FF9900", abbr: "AW" }, { name: "Azure", brand: "#0078D4", abbr: "Az" }, { name: "Linux", brand: "#FCC624", abbr: "Lx" }, { name: "Docker", brand: "#2496ED", abbr: "Dk" }, { name: "Docker Compose" }, { name: "IBM Cloud" }, { name: "Hugging Face Hub" }] },
-    { label: "Databases and search", area: "ops", color: "var(--gold-ink)", skills: [{ name: "PostgreSQL", brand: "#4169E1", abbr: "Pg" }, { name: "MongoDB", brand: "#47A248", abbr: "Mg" }, { name: "Redis", brand: "#DC382D", abbr: "Rd" }, { name: "SQLite" }, { name: "Elasticsearch" }, { name: "FAISS" }] },
-    { label: "Engineering practice", area: "ops", color: "var(--ink-3)", skills: [{ name: "Git", brand: "#F05032", abbr: "Gt" }, { name: "GitHub Actions" }, { name: "CodeQL" }, { name: "pre-commit" }, { name: "Ruff" }, { name: "mypy" }, { name: "pytest" }, { name: "Make" }, "PyPI packaging", { name: "MkDocs" }] },
-    { label: "Also explored", area: "ops", color: "var(--ink-3)", skills: ["Flutter", "Ethereum dApps", "RSA cryptography", "SystemVerilog hardware design", "DevOps pipelines"] },
+    { label: "Agents and RL", color: "var(--purple)",
+      main: ["Policy training", "Policy evaluation", "Offline RL", { name: "Gymnasium" }, { name: "MuJoCo" }],
+      more: ["MCTS and ISMCTS", "DQN", "PPO", "Custom Gym environments"] },
+    { label: "ML and deep learning", color: "var(--purple)",
+      main: [{ name: "PyTorch", brand: "#EE4C2C", abbr: "PT" }, { name: "TensorFlow", brand: "#FF6F00", abbr: "TF" }, { name: "JAX" }, { name: "Hugging Face Transformers", brand: "#FFD21E", abbr: "HF" }, { name: "scikit-learn", brand: "#F7931E", abbr: "SK" }],
+      more: [{ name: "Keras" }, { name: "PyTorch Lightning" }, { name: "XGBoost" }, { name: "LightGBM" }, { name: "CatBoost" }, { name: "Optuna" }, { name: "SHAP" }, { name: "OpenCV" }, { name: "Weights & Biases" }, "CNNs and residual networks", "Capsule networks"] },
+    { label: "LLM systems", color: "var(--purple)",
+      main: [{ name: "LangGraph", brand: "#1C3C3C", abbr: "LG" }, { name: "LangChain" }, "RAG", "LoRA fine-tuning", "Mixed-precision training"],
+      more: ["BM25", { name: "Sentence-Transformers" }, "OpenAI and Anthropic APIs", { name: "Ollama" }, "Document extraction with LLMs"] },
+    { label: "Efficient ML", color: "var(--purple)",
+      main: ["Parameter-efficient model design", "Model quantization", "Inference profiling"], more: [] },
+    { label: "Quantum ML", color: "var(--purple)",
+      main: [{ name: "PennyLane", brand: "#2D7FF9", abbr: "PL" }, { name: "Qiskit", brand: "#6929C4", abbr: "QK" }],
+      more: ["Variational quantum circuits", "Hybrid quantum-classical models"] },
+    { label: "Data and forecasting", color: "var(--gold-ink)",
+      main: [{ name: "Apache Spark", brand: "#E25A1C", abbr: "Sp" }, { name: "Apache Airflow", brand: "#017CEE", abbr: "Af" }, { name: "Pandas", brand: "#150458", abbr: "Pd" }, { name: "NumPy", brand: "#013243", abbr: "Np" }, { name: "statsmodels" }],
+      more: ["ELT pipelines", { name: "Polars" }, { name: "Delta Lake" }, "Parquet", { name: "SciPy" }, { name: "Matplotlib" }, { name: "Plotly" }, { name: "Streamlit" }, { name: "Jupyter", brand: "#F37626", abbr: "Jp" }, { name: "Prophet" }, { name: "StatsForecast" }, { name: "NeuralForecast" }, { name: "PyMC" }, "Walk-forward validation", "Forecast combination", "Web scraping"] },
+    { label: "Geospatial", color: "var(--gold-ink)",
+      main: ["OpenStreetMap", { name: "H3" }, { name: "GeoPandas" }],
+      more: [{ name: "Shapely" }, { name: "Rasterio" }, { name: "Folium" }, "DBSCAN", "A* search"] },
+    { label: "Applied mathematics", color: "var(--accent-2)",
+      main: ["Numerical optimization", "Statistical modeling", "Graph algorithms"],
+      more: [{ name: "NetworkX" }, { name: "SymPy" }] },
+    { label: "Languages", color: "var(--accent-2)",
+      main: [{ name: "Python", brand: "#3776AB", abbr: "Py" }, { name: "C++", brand: "#00599C", abbr: "C++" }, { name: "TypeScript", brand: "#3178C6", abbr: "TS" }, { name: "SQL" }],
+      more: [{ name: "JavaScript", brand: "#F7DF1E", abbr: "JS" }, { name: "R", brand: "#276DC3", abbr: "R" }, { name: "C" }, "HTML and CSS"] },
+    { label: "Web and APIs", color: "var(--accent-2)",
+      main: [{ name: "FastAPI", brand: "#009688", abbr: "FA" }, { name: "Django", brand: "#092E20", abbr: "Dj" }, { name: "React", brand: "#61DAFB", abbr: "Re" }, { name: "Next.js", brand: "#111111", abbr: "Nx" }, "REST APIs"],
+      more: [{ name: "Django REST Framework" }, { name: "Pydantic" }, { name: "SQLAlchemy" }, { name: "Alembic" }, { name: "Celery" }, "WebSockets", { name: "Tailwind CSS" }, "JWT and Argon2 password hashing"] },
+    { label: "Cloud, databases and tooling", color: "var(--ink-3)",
+      main: [{ name: "AWS", brand: "#FF9900", abbr: "AW" }, { name: "Azure", brand: "#0078D4", abbr: "Az" }, { name: "Linux", brand: "#FCC624", abbr: "Lx" }, { name: "Docker", brand: "#2496ED", abbr: "Dk" }, { name: "Git", brand: "#F05032", abbr: "Gt" }, { name: "PostgreSQL", brand: "#4169E1", abbr: "Pg" }, { name: "MongoDB", brand: "#47A248", abbr: "Mg" }, { name: "Redis", brand: "#DC382D", abbr: "Rd" }, { name: "FAISS" }],
+      more: [{ name: "Docker Compose" }, { name: "IBM Cloud" }, { name: "SQLite" }, { name: "Elasticsearch" }, { name: "GitHub Actions" }, { name: "pre-commit" }, { name: "Ruff" }, { name: "mypy" }, { name: "pytest" }, { name: "Make" }, "PyPI packaging"] },
+    { label: "Also explored", color: "var(--ink-3)",
+      main: ["Flutter", "Ethereum dApps", "RSA cryptography", "SystemVerilog hardware design"], more: [] },
   ],
 };
 

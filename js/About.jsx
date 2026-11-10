@@ -70,27 +70,40 @@ function PhotoCarousel({ slides, radius = 18 }) {
   );
 }
 
-/* ── Experience row: a real button reveals the description ── */
-function ExpCard({ role, org, place, period, current, desc, index }) {
+/* ── Experience row: a real button opens the summary and what the role involved. A role with nothing more to say is a plain row. ── */
+function ExpCard({ role, org, place, period, current, desc, points, index, prefix }) {
   const [open, setOpen] = useState(false);
-  const id = 'exp-' + index;
+  const id = (prefix || 'exp') + '-' + index;
+  const more = !!(desc || (points && points.length));
+  const head = (
+    <React.Fragment>
+      <span>
+        <span style={{ display: 'block', fontFamily: "'Times New Roman',Georgia,serif", fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>{role}</span>
+        <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: current ? 'var(--accent-2)' : 'var(--ink-3)', fontWeight: current ? 600 : 400 }}>{org}</span>
+        {place && <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{place}</span>}
+      </span>
+      <span style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+        <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', letterSpacing: '0.3px' }}>{period}</span>
+        {current && <span className="badge badge-cf">Now</span>}
+        {more && <span className="chev">{window.SahajIcons.chevron({ size: 16, strokeW: 2 })}</span>}
+      </span>
+    </React.Fragment>
+  );
   return (
     <div className="exp" data-current={!!current}>
       <h3 style={{ margin: 0 }}>
-        <button type="button" className="exp-toggle" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
-          <span>
-            <span style={{ display: 'block', fontFamily: "'Times New Roman',Georgia,serif", fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>{role}</span>
-            <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: current ? 'var(--accent-2)' : 'var(--ink-3)', fontWeight: current ? 600 : 400 }}>{org}</span>
-            <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{place}</span>
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', letterSpacing: '0.3px' }}>{period}</span>
-            {current && <span className="badge badge-cf">Now</span>}
-            <span className="chev">{window.SahajIcons.chevron({ size: 16, strokeW: 2 })}</span>
-          </span>
-        </button>
+        {more ? (
+          <button type="button" className="exp-toggle" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>{head}</button>
+        ) : (
+          <span className="exp-toggle" style={{ cursor: 'default' }}>{head}</span>
+        )}
       </h3>
-      <p id={id} hidden={!open} style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7, marginTop: '10px', maxWidth: '640px' }}>{desc}</p>
+      {more && (
+        <div id={id} hidden={!open} className="exp-more">
+          {desc && <p className="exp-desc">{desc}</p>}
+          {points && points.length > 0 && <ul className="exp-points">{points.map((t, i) => <li key={i}>{t}</li>)}</ul>}
+        </div>
+      )}
     </div>
   );
 }
@@ -175,38 +188,39 @@ function LifeGallery({ photos, mobile }) {
   );
 }
 
-/* ── Toolbox: every tool I have used, filtered by area. Spoken languages sit below, at a readable size. ── */
-const TOOL_AREAS = [
-  { id: 'all', label: 'All' },
-  { id: 'ai', label: 'AI and ML' },
-  { id: 'data', label: 'Data and science' },
-  { id: 'software', label: 'Software and web' },
-  { id: 'ops', label: 'Cloud and tooling' },
-];
+/* ── Toolbox: the main tools of each group are shown; "more" opens the rest. Spoken languages sit below, at a readable size. ── */
 function Toolbox() {
   const d = window.SahajData;
-  const [area, setArea] = useState('all');
-  const inArea = (a) => d.skillGroups.filter(g => a === 'all' || g.area === a);
-  const countIn = (a) => inArea(a).reduce((n, g) => n + g.skills.length, 0);
-  const groups = inArea(area);
+  const [open, setOpen] = useState({});
+  const expandable = d.skillGroups.filter(g => g.more.length);
+  const allOpen = expandable.every(g => open[g.label]);
+  const toggleAll = () => { const next = {}; if (!allOpen) expandable.forEach(g => { next[g.label] = true; }); setOpen(next); };
+  const toggle = (label) => setOpen(o => Object.assign({}, o, { [label]: !o[label] }));
   return (
     <React.Fragment>
-      <div role="group" aria-label="Show the toolbox for one area" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '22px' }}>
-        {TOOL_AREAS.map(a => (
-          <button key={a.id} type="button" className="filter-chip" aria-pressed={area === a.id} onClick={() => setArea(a.id)}>
-            {a.label}<span className="filter-count">{countIn(a.id)}</span>
-          </button>
-        ))}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '14px' }}>
+        <button type="button" className="mini-btn" onClick={toggleAll}>{allOpen ? 'Show the main tools only' : 'Show every tool'}</button>
       </div>
       <div className="tool-columns">
-        {groups.map(grp => (
-          <div key={grp.label} className="tool-card">
-            <h3 className="tool-card-h" style={{ color: grp.color }}>{grp.label}</h3>
-            <ul style={{ listStyle: 'none', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {grp.skills.map((sk, i) => <SkillChip key={i} item={sk} />)}
-            </ul>
-          </div>
-        ))}
+        {d.skillGroups.map((grp, gi) => {
+          const isOpen = !!open[grp.label];
+          const mid = 'tool-more-' + gi;
+          return (
+            <div key={grp.label} className="tool-card">
+              <h3 className="tool-card-h" style={{ color: grp.color }}>{grp.label}</h3>
+              <ul className="chip-list">{grp.main.map((sk, i) => <SkillChip key={i} item={sk} />)}</ul>
+              {grp.more.length > 0 && (
+                <React.Fragment>
+                  <ul id={mid} className="chip-list chip-more" hidden={!isOpen}>{grp.more.map((sk, i) => <SkillChip key={i} item={sk} />)}</ul>
+                  <button type="button" className="tool-more" aria-expanded={isOpen} aria-controls={mid} onClick={() => toggle(grp.label)}>
+                    <span className="chev">{window.SahajIcons.chevron({ size: 14, strokeW: 2.2 })}</span>
+                    {isOpen ? 'Show fewer' : 'Show ' + grp.more.length + ' more'}
+                  </button>
+                </React.Fragment>
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="tool-card">
         <h3 className="tool-card-h" style={{ color: 'var(--accent-2)' }}>Languages I speak</h3>
@@ -229,7 +243,6 @@ function About({ onNavigate }) {
   const padX = mobile ? '20px' : '48px';
   const edu = d.education;
   const th = edu.thesis;
-  const toolCount = d.skillGroups.reduce((n, g) => n + g.skills.length, 0);
   const pubCount = d.peerReviewed.length + d.preprints.length;
   const q1Count = d.peerReviewed.filter(p => p.tier === 'Q1').length;
 
@@ -284,20 +297,10 @@ function About({ onNavigate }) {
       <UI.TocLayout page="about" items={toc} onNavigate={onNavigate} maxWidth={1100}>
 
         {/* ── Experience ── */}
-        <UI.Section id="experience" title="Experience" aside="select a role for detail">
+        <UI.Section id="experience" title="Experience" aside="select a role to see what it involved">
           <div>{d.experience.map((e, i) => <ExpCard key={i} index={i} {...e} />)}</div>
           <h3 style={{ fontFamily: serif, fontSize: '20px', color: 'var(--ink)', margin: '8px 0 16px' }}>Teaching and volunteering</h3>
-          <ul style={{ listStyle: 'none', display: 'grid', gap: '10px' }}>
-            {d.service.map((s, i) => (
-              <li key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', padding: '12px 18px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '10px' }}>
-                <span>
-                  <span style={{ display: 'block', fontFamily: sans, fontSize: '15px', fontWeight: 600, color: 'var(--ink-2)' }}>{s.role}</span>
-                  <span style={{ display: 'block', fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{s.org}{s.note ? ` · ${s.note}` : ''}</span>
-                </span>
-                <span style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', whiteSpace: 'nowrap' }}>{s.period}</span>
-              </li>
-            ))}
-          </ul>
+          <div>{d.service.map((e, i) => <ExpCard key={i} index={i} prefix="svc" {...e} place={e.note} />)}</div>
         </UI.Section>
 
         {/* ── Education ── */}
@@ -349,7 +352,7 @@ function About({ onNavigate }) {
         </UI.Section>
 
         {/* ── Toolbox ── */}
-        <UI.Section id="toolbox" title="Technical toolbox" aside={`${toolCount} tools and methods in ${d.skillGroups.length} groups`}>
+        <UI.Section id="toolbox" title="Technical toolbox" aside="the main tools of each group, with the rest one select away">
           <Toolbox />
         </UI.Section>
 
