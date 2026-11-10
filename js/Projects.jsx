@@ -9,18 +9,18 @@ function TypeBadge({ type }) {
 function Project({ project: p, gh }) {
   return (
     <article id={p.id} data-toc-section className="project" aria-labelledby={p.id + '-h'}>
-      <UI.ProjectFigure media={p.media} />
+      <UI.ProjectFigure media={p.media} title={p.name} />
       <div style={{ minWidth: 0 }}>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '12px' }}>
           <span style={{ width: '38px', height: '38px', borderRadius: '10px', background: p.color + '1c', border: '1px solid ' + p.color + '55', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-2)' }}>
             {window.SahajIcons[p.icon] && window.SahajIcons[p.icon]({ size: 20, color: 'currentColor', strokeW: 1.7 })}
           </span>
           <TypeBadge type={p.type} />
-          <span className="aside" style={{ fontSize: '12px' }}>{p.period}</span>
+          <span className="aside" style={{ fontSize: '13px' }}>{p.period}</span>
         </div>
         <h3 id={p.id + '-h'} tabIndex={-1}>{p.name}</h3>
         <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-2)', lineHeight: 1.5, marginTop: '6px' }}>{p.tagline}</p>
-        {p.context && <p className="aside" style={{ fontSize: '12.5px', marginTop: '4px' }}>{p.context}</p>}
+        {p.context && <p className="aside" style={{ fontSize: '13.5px', marginTop: '4px' }}>{p.context}</p>}
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '14px' }}>
           {p.tech.map(t => <span key={t} className="tag">{t}</span>)}
         </div>
@@ -66,16 +66,16 @@ function Projects({ onNavigate }) {
       <div style={{ display: 'flex', gap: '12px 24px', marginBottom: '40px', padding: '18px 24px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
         {gh ? (
           <React.Fragment>
-            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>
-              <strong style={{ color: 'var(--ink)' }}>{gh.repos}</strong> public repositories{gh.forkRepos ? ` (${gh.forkRepos} are forks)` : ''}
+            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14.5px', color: 'var(--ink-3)' }}>
+              <strong style={{ color: 'var(--ink)' }}>{gh.repos}</strong> public repositories
             </span>
             <span aria-hidden="true" style={{ color: 'var(--ink-4)' }}>·</span>
-            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>
+            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14.5px', color: 'var(--ink-3)' }}>
               <strong style={{ color: 'var(--ink)' }}>{gh.stars}</strong> stars in total
             </span>
-            {langs && <React.Fragment><span aria-hidden="true" style={{ color: 'var(--ink-4)' }}>·</span><span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>{langs}</span></React.Fragment>}
+            {langs && <React.Fragment><span aria-hidden="true" style={{ color: 'var(--ink-4)' }}>·</span><span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14.5px', color: 'var(--ink-3)' }}>{langs}</span></React.Fragment>}
           </React.Fragment>
-        ) : <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', color: 'var(--ink-3)' }}>GitHub numbers are loading.</span>}
+        ) : <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14.5px', color: 'var(--ink-3)' }}>GitHub numbers are loading.</span>}
         <a href={d.personal.github} target="_blank" rel="noopener noreferrer" className="link-pill" style={{ marginLeft: mobile ? 0 : 'auto' }}>
           {window.SahajIcons.github({ size: 14, color: 'currentColor' })} View all on GitHub
         </a>
@@ -99,8 +99,8 @@ function Projects({ onNavigate }) {
         })}
 
         <div style={{ marginTop: '24px', padding: '24px 28px', background: 'var(--accent-box)', border: '1px solid var(--accent-line)', borderRadius: '12px' }}>
-          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', fontWeight: 600, color: 'var(--ink-2)', marginBottom: '4px' }}>Open to collaboration</p>
-          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', lineHeight: 1.7 }}>
+          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '16px', fontWeight: 600, color: 'var(--ink-2)', marginBottom: '4px' }}>Open to collaboration</p>
+          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7 }}>
             If a repository is useful to you, fork it or open an issue. I am glad to talk about research, startups, or whatever you are stuck on.
           </p>
         </div>

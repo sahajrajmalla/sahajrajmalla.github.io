@@ -33,31 +33,17 @@ function SocialLink({ label, url, icon, desc }) {
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{
           fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-          fontSize:'14px', fontWeight:600, color:'var(--ink)', marginBottom:'2px',
+          fontSize:'15.5px', fontWeight:600, color:'var(--ink)', marginBottom:'2px',
         }}>{label}</div>
         <div style={{
           fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-          fontSize:'12px', color:'var(--ink-4)',
+          fontSize:'13.5px', color:'var(--ink-3)',
         }}>{desc}</div>
       </div>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-4)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0 }}>
         <path d="M5 12h14M13 6l6 6-6 6"/>
       </svg>
     </a>
-  );
-}
-
-function CopyEmail({ email }) {
-  const [msg, setMsg] = useState('');
-  const t = useRef(null);
-  useEffect(() => () => clearTimeout(t.current), []);
-  return (
-    <React.Fragment>
-      <button type="button" className="mini-btn" onClick={() => UI.copyText(email).then(ok => { setMsg(ok ? 'Address copied' : 'Copy failed. Select the address above instead.'); clearTimeout(t.current); t.current = setTimeout(() => setMsg(''), 2600); })}>
-        {window.SahajIcons.copy({ size:14 })}Copy address
-      </button>
-      <span role="status" aria-live="polite" className="cite-msg">{msg}</span>
-    </React.Fragment>
   );
 }
 
@@ -117,12 +103,12 @@ function Contact() {
               <div key={o.tag} style={{
                 display:'flex', alignItems:'center', gap:'8px',
                 background:'var(--surface)', border:'1px solid var(--line-2)',
-                borderRadius:'20px', padding:'7px 16px',
+                borderRadius:'22px', padding:'9px 18px',
               }}>
                 <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'var(--gold)', flexShrink:0 }}></span>
                 <span style={{
                   fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-                  fontSize:'13px', color:'var(--ink-2)', fontWeight:500, whiteSpace:'nowrap',
+                  fontSize:'14.5px', color:'var(--ink-2)', fontWeight:500, whiteSpace:'nowrap',
                 }}>{o.tag}</span>
               </div>
             ))}
@@ -134,7 +120,7 @@ function Contact() {
           onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow=isLight?'0 12px 30px rgba(31,95,208,0.16)':'0 12px 30px rgba(34,85,232,0.28)';}}
           onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='none';}}
           style={{
-            display:'block', marginBottom:'32px',
+            display:'block', marginBottom:'40px',
             padding:'28px 32px',
             background: isLight
               ? 'linear-gradient(135deg, #fffef8 0%, #fff4dc 100%)'
@@ -145,7 +131,7 @@ function Contact() {
           }}>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'11px', fontWeight:700, letterSpacing:'2px',
+            fontSize:'12.5px', fontWeight:700, letterSpacing:'2px',
             textTransform:'uppercase', color: isLight ? 'var(--gold-ink)' : 'var(--accent-2)', marginBottom:'8px',
           }}>Best way to reach me</p>
           <p style={{
@@ -153,13 +139,8 @@ function Contact() {
             fontSize:'clamp(18px, 2.4vw, 28px)',
             fontWeight:700, color:'var(--ink)', letterSpacing:'-0.3px',
           }}>{d.personal.email}</p>
-          <p style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'12.5px', color:'var(--ink-3)', marginTop:'8px' }}>Opens Gmail in a new tab.</p>
+          <p style={{ fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize:'14px', color:'var(--ink-3)', marginTop:'8px' }}>Opens Gmail in a new tab.</p>
         </a>
-        <div style={{ display:'flex', gap:'10px', flexWrap:'wrap', alignItems:'center', margin:'-12px 0 32px' }}>
-          <CopyEmail email={d.personal.email} />
-          <a href={`mailto:${d.personal.email}`} className="mini-btn" style={{ textDecoration:'none' }}>Open in your mail app</a>
-        </div>
-
         {/* ── Social links grid ── */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:'10px' }}>
           {links.map(lk => <SocialLink key={lk.label} {...lk} />)}
@@ -173,7 +154,7 @@ function Contact() {
         }}>
           <p style={{
             fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-            fontSize:'13px', color:'var(--ink-4)',
+            fontSize:'14px', color:'var(--ink-3)',
           }}>
             Think like an Artist.
           </p>
@@ -182,9 +163,9 @@ function Contact() {
               display:'inline-flex', alignItems:'center', gap:'7px',
               color:'var(--accent-2)', textDecoration:'none',
               fontFamily:"'Helvetica Neue', Helvetica, Arial, sans-serif",
-              fontSize:'13px', fontWeight:600,
+              fontSize:'14px', fontWeight:600, minHeight:'40px',
               border:'1px solid var(--accent-line)',
-              borderRadius:'7px', padding:'8px 16px',
+              borderRadius:'8px', padding:'8px 18px',
               background:'var(--accent-chip)',
             }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
