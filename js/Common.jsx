@@ -21,6 +21,12 @@ const UI_SERIF = "'Times New Roman',Georgia,serif";
     chevron: ico(['path', { d: 'M6 9l6 6 6-6' }]),
     code: ico(['path', { d: 'M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14' }]),
     doc: ico(['path', { d: 'M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z' }], ['path', { d: 'M14 3v5h5M9 13h6M9 17h6' }]),
+    expand: ico(['path', { d: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5' }]),
+    zoomIn: ico(['circle', { cx: 11, cy: 11, r: 6.5 }], ['path', { d: 'M16 16l4.5 4.5M11 8.2v5.6M8.2 11h5.6' }]),
+    zoomOut: ico(['circle', { cx: 11, cy: 11, r: 6.5 }], ['path', { d: 'M16 16l4.5 4.5M8.2 11h5.6' }]),
+    replay: ico(['path', { d: 'M4 12a8 8 0 1 0 2.5-5.8' }], ['path', { d: 'M4 4v4.6h4.6' }]),
+    close: ico(['path', { d: 'M6 6l12 12M18 6L6 18' }]),
+    arrowLeft: ico(['path', { d: 'M19 12H5' }], ['path', { d: 'M11 6l-6 6 6 6' }]),
   };
   window.SahajIcons = Object.assign(window.SahajIcons || {}, extra);
 })();
@@ -51,11 +57,45 @@ function fmtNum(n, dp) {
   return Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
+/* ═══════════════════════════════════════════════════════ SCROLL LOCK
+   One counter for every overlay (the game, the image viewer). The first lock remembers the page's own
+   inline overflow, the last unlock puts it back exactly, and each unlock function works only once, so
+   overlays that open and close in any order can never leave the page unable to scroll.              */
+const ScrollLock = (function () {
+  let count = 0, saved = null;
+  function lock() {
+    if (count++ === 0) {
+      saved = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+    }
+    let released = false;
+    return function unlock() {
+      if (released) return;
+      released = true;
+      if (count > 0 && --count === 0) {
+        document.body.style.overflow = saved === null ? '' : saved;
+        saved = null;
+      }
+    };
+  }
+  return { lock: lock, held: function () { return count; } };
+})();
+function useScrollLock(active) {
+  useEffect(() => {
+    if (!active) return undefined;
+    const unlock = ScrollLock.lock();
+    return unlock;
+  }, [active]);
+}
+
 /* ═══════════════════════════════════════════════════════ ERROR BOUNDARY */
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { failed: false }; }
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch(err) { try { console.error('[sahaj] render error', err); } catch (e) { /* ignore */ } }
+  componentDidCatch(err) {
+    try { console.error('[sahaj] render error', err); } catch (e) { /* ignore */ }
+    if (this.props.onError) { try { this.props.onError(err); } catch (e) { /* ignore */ } }
+  }
   render() {
     if (this.state.failed) return this.props.fallback === undefined ? null : this.props.fallback;
     return this.props.children;
@@ -254,53 +294,303 @@ function Section({ id, title, color, aside, mb, children }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════ MEDIA */
-function PaperThumb({ paper, width, eager, caption }) {
-  const t = paper.thumb;
-  if (!t) return null;
-  const isCard = !!t.src;
-  const img = isCard
-    ? { src: t.src }
-    : { src: t.base + '-480.webp', srcSet: t.base + '-240.webp 240w, ' + t.base + '-480.webp 480w', sizes: width + 'px' };
-  return (
-    <figure className="paper-thumb" style={{ width: width + 'px' }}>
-      <div className="paper-thumb-frame">
-        <img {...img} width={t.w} height={t.h} alt={t.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+/* ═══════════════════════════════════════════════════════ IMAGE VIEWER (a lightbox)
+   One viewer for the paper first pages, the project figures and the photo gallery.
+   items: [{ src, w, h, alt, title, sub, note, href, hrefLabel, zoomable }]
+   Esc closes, arrows move between items, + and - zoom, a click on the picture toggles zoom,
+   focus is kept inside and handed back to the button that opened it, and the page behind
+   cannot scroll (see ScrollLock).                                                          */
+function ImageViewer({ items, index, onClose, onIndex, label }) {
+  const N = items.length;
+  const item = items[Math.min(index, N - 1)] || items[0];
+  const vw = window.useViewportWidth();
+  const [zoom, setZoom] = useState(false);
+  const [status, setStatus] = useState('loading');   // loading | ready | error
+  const boxRef = useRef(null);
+  const closeRef = useRef(null);
+  const stageRef = useRef(null);
+  const imgRef = useRef(null);
+  const drag = useRef(null);
+  const moved = useRef(false);
+  const swipe = useRef(null);
+  const opener = useRef(typeof document !== 'undefined' ? document.activeElement : null);
+  const zoomable = !!item.zoomable;
+  const zoomed = zoomable && zoom;
+  // Raster pictures zoom up to their real pixels; a drawing (vector) can zoom as far as the screen allows.
+  const zoomW = item.vector ? Math.max(1400, Math.round(vw * 1.7)) : Math.min(item.w || 1600, Math.max(900, Math.round(vw * 1.7)));
+  const go = (d) => { if (N > 1 && onIndex) onIndex((index + d + N) % N); };
+
+  useScrollLock(true);
+
+  // a new picture: back to "fit", scrolled to the top-left, and check whether the file is already cached
+  useEffect(() => {
+    setZoom(false);
+    const s = stageRef.current; if (s) { s.scrollTop = 0; s.scrollLeft = 0; }
+    const im = imgRef.current;
+    setStatus(im && im.complete && im.naturalWidth > 0 ? 'ready' : 'loading');
+  }, [index, item.src]);
+
+  // focus the close button, and give focus back to the opener when the viewer goes away
+  useEffect(() => {
+    if (closeRef.current) { try { closeRef.current.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
+    return () => {
+      const el = opener.current;
+      if (el && el.isConnected && el.focus) setTimeout(() => { try { el.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }, 0);
+    };
+  }, []);
+
+  // keep the zoomed picture reachable by keyboard: when zoom starts, the stage can take arrow keys
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); onClose(); return; }
+      if (e.key === 'Tab' && boxRef.current) {
+        const f = Array.prototype.slice.call(boxRef.current.querySelectorAll('button:not([disabled]), a[href], [tabindex="0"]'));
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1], a = document.activeElement;
+        if (e.shiftKey && (a === first || !boxRef.current.contains(a))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && (a === last || !boxRef.current.contains(a))) { e.preventDefault(); first.focus(); }
+        return;
+      }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!zoomed && N > 1 && e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      else if (!zoomed && N > 1 && e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      else if (zoomable && (e.key === '+' || e.key === '=')) { e.preventDefault(); setZoom(true); }
+      else if (zoomable && (e.key === '-' || e.key === '_')) { e.preventDefault(); setZoom(false); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
+  // mouse: drag to pan a zoomed picture. touch: the browser pans it, and a swipe moves between pictures.
+  const onDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    const s = stageRef.current; if (!s) return;
+    if (e.pointerType === 'touch') { swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId }; return; }
+    if (!zoomed) return;
+    moved.current = false;
+    drag.current = { x: e.clientX, y: e.clientY, sl: s.scrollLeft, st: s.scrollTop, id: e.pointerId };
+    try { s.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  };
+  const onMove = (e) => {
+    const d = drag.current; if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x, dy = e.clientY - d.y;
+    if (!moved.current && Math.abs(dx) + Math.abs(dy) > 5) moved.current = true;
+    if (moved.current && stageRef.current) { stageRef.current.scrollLeft = d.sl - dx; stageRef.current.scrollTop = d.st - dy; }
+  };
+  const onUp = (e) => {
+    const s = swipe.current;
+    if (s && s.id === e.pointerId) {
+      swipe.current = null;
+      const dx = e.clientX - s.x, dy = e.clientY - s.y;
+      if (!zoomed && N > 1 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+    }
+    const d = drag.current;
+    if (d && d.id === e.pointerId) {
+      drag.current = null;
+      try { stageRef.current.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    }
+  };
+  const onCancel = (e) => { if (swipe.current && swipe.current.id === e.pointerId) swipe.current = null; if (drag.current && drag.current.id === e.pointerId) drag.current = null; };
+  const onPictureClick = () => {
+    if (moved.current) { moved.current = false; return; }
+    if (zoomable) setZoom(z => !z);
+  };
+
+  const imgStyle = zoomed
+    ? { width: zoomW + 'px', maxWidth: 'none', height: 'auto' }
+    : { width: '100%', height: '100%', objectFit: 'contain' };
+
+  return ReactDOM.createPortal((
+    <div ref={boxRef} className="lb" role="dialog" aria-modal="true" aria-label={label || item.title || item.alt}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="lb-bar">
+        {zoomable && status !== 'error' && (
+          <button type="button" className="lb-btn" onClick={() => setZoom(z => !z)} aria-pressed={zoomed}>
+            {window.SahajIcons[zoomed ? 'zoomOut' : 'zoomIn']({ size: 18, strokeW: 2 })}
+            <span>{zoomed ? 'Fit to screen' : 'Zoom in'}</span>
+          </button>
+        )}
+        {item.href && (
+          <a className="lb-btn" href={item.href} target="_blank" rel="noopener noreferrer">
+            <span>{item.hrefLabel || 'Open'}</span>{window.SahajIcons.external({ size: 16, strokeW: 2 })}<span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        )}
+        <button ref={closeRef} type="button" className="lb-btn" onClick={onClose} aria-label="Close">
+          {window.SahajIcons.close({ size: 18, strokeW: 2.2 })}<span className="lb-close-t">Close</span>
+        </button>
       </div>
-      <figcaption className={caption ? 'paper-thumb-cap' : 'sr-only'}>{isCard ? 'Title card' : 'First page'}</figcaption>
-    </figure>
+
+      <div ref={stageRef} className={'lb-stage' + (zoomed ? ' lb-zoomed' : '')}
+        tabIndex={zoomed ? 0 : undefined} role={zoomed ? 'region' : undefined} aria-label={zoomed ? 'Zoomed picture. Scroll to read it.' : undefined}
+        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel}
+        onClick={(e) => { if (e.target === e.currentTarget && !zoomed) onClose(); }}>
+        {status !== 'error' && (
+          <img ref={imgRef} key={item.src} className="lb-img" src={item.src} width={item.w} height={item.h} alt={item.alt || item.title || ''}
+            draggable={false} decoding="async" style={Object.assign({ opacity: status === 'ready' ? 1 : 0, cursor: zoomable ? (zoomed ? 'zoom-out' : 'zoom-in') : 'default' }, imgStyle)}
+            onLoad={() => setStatus('ready')} onError={() => setStatus('error')} onClick={onPictureClick} />
+        )}
+        {status === 'loading' && <p className="lb-msg" role="status">Loading the picture…</p>}
+        {status === 'error' && (
+          <p className="lb-msg" role="alert">
+            The picture did not load.{item.href ? <React.Fragment> <a href={item.href} target="_blank" rel="noopener noreferrer">{item.hrefLabel || 'Open the source'}</a> instead.</React.Fragment> : ' Please try again.'}
+          </p>
+        )}
+      </div>
+
+      <div className="lb-foot">
+        {item.title && <p className="lb-cap">{item.title}</p>}
+        {(item.sub || N > 1) && <p className="lb-sub">{item.sub}{item.sub && N > 1 ? ' · ' : ''}{N > 1 ? (index + 1) + ' / ' + N : ''}</p>}
+        {item.note && <p className="lb-note">{item.note}</p>}
+        {zoomable && status === 'ready' && !zoomed && <p className="lb-hint">Select the picture or Zoom in to read the small print.</p>}
+      </div>
+
+      {N > 1 && (
+        <React.Fragment>
+          <button type="button" className="lb-nav lb-prev" onClick={() => go(-1)} aria-label="Previous picture">{window.SahajIcons.arrowLeft({ size: 20, strokeW: 2 })}</button>
+          <button type="button" className="lb-nav lb-next" onClick={() => go(1)} aria-label="Next picture">{window.SahajIcons.arrowRight({ size: 20, strokeW: 2 })}</button>
+        </React.Fragment>
+      )}
+    </div>
+  ), document.body);
+}
+
+/* ═══════════════════════════════════════════════════════ MEDIA */
+// First page of a paper, as a button that opens the viewer at a readable size.
+function PaperThumb({ paper, width, eager }) {
+  const t = paper.thumb;
+  const [open, setOpen] = useState(false);
+  if (!t) return null;
+  const big = t.base + '-1600.webp';
+  const bigH = Math.round(1600 * t.h / t.w);
+  const item = {
+    src: big, w: 1600, h: bigH, alt: t.alt, title: paper.title,
+    sub: paper.venue + ' · ' + paper.year, note: t.licence || null,
+    href: paper.url, hrefLabel: 'Read the paper', zoomable: true,
+  };
+  return (
+    <React.Fragment>
+      <button type="button" className="paper-thumb" style={{ width: width + 'px' }} onClick={() => setOpen(true)}
+        aria-label={'Enlarge the first page of ' + paper.title} aria-haspopup="dialog">
+        <span className="paper-thumb-frame">
+          <img src={t.base + '-480.webp'} srcSet={t.base + '-240.webp 240w, ' + t.base + '-480.webp 480w'} sizes={width + 'px'}
+            width={t.w} height={t.h} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" draggable={false} />
+        </span>
+        <span className="paper-thumb-zoom" aria-hidden="true">{window.SahajIcons.expand({ size: 14, strokeW: 2.2 })}</span>
+      </button>
+      {open && <ImageViewer items={[item]} index={0} onClose={() => setOpen(false)} label={'First page of ' + paper.title} />}
+    </React.Fragment>
   );
 }
 
-function ProjectFigure({ media, sizes }) {
+// A project figure; select it to see it larger. Logos stay as they are.
+function ProjectFigure({ media, sizes, title }) {
+  const [open, setOpen] = useState(false);
   if (!media) return null;
   const file = !!media.src;
   const img = file
     ? { src: media.src, width: media.w, height: media.h }
     : { src: media.base + '-640.webp', srcSet: media.base + '-640.webp ' + media.sm[0] + 'w, ' + media.base + '-1200.webp ' + media.lg[0] + 'w', sizes: sizes || '(max-width: 900px) 92vw, 440px', width: media.lg[0], height: media.lg[1] };
+  const logo = media.kind === 'logo';
+  const item = {
+    src: file ? media.src : media.base + '-1200.webp', w: file ? media.w : media.lg[0], h: file ? media.h : media.lg[1],
+    alt: media.alt, title: media.caption, sub: title || '', note: media.credit, zoomable: true, vector: file && /\.svg$/i.test(media.src),
+  };
   return (
     <figure className="fig">
-      <div className={'fig-frame' + (media.kind === 'logo' ? ' fig-logo' : '')}>
-        <img {...img} alt={media.alt} loading="lazy" decoding="async" />
-      </div>
+      {logo ? (
+        <div className="fig-frame fig-logo"><img {...img} alt={media.alt} loading="lazy" decoding="async" /></div>
+      ) : (
+        <button type="button" className="fig-frame fig-btn" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label={'Enlarge: ' + media.caption}>
+          <img {...img} alt={media.alt} loading="lazy" decoding="async" draggable={false} />
+          <span className="fig-zoom" aria-hidden="true">{window.SahajIcons.expand({ size: 14, strokeW: 2.2 })}<span>Enlarge</span></span>
+        </button>
+      )}
       <figcaption><span>{media.caption}</span> <span className="credit">{media.credit}</span></figcaption>
+      {open && <ImageViewer items={[item]} index={0} onClose={() => setOpen(false)} label={media.caption} />}
     </figure>
   );
 }
 
-/* ═══════════════════════════════════════════════════════ CHARTS (numbers printed in the papers only) */
+/* ═══════════════════════════════════════════════════════ CHARTS (numbers printed in the papers only)
+   The bars grow and the numbers count up once the chart scrolls into view. Without motion (reduced
+   motion, or no IntersectionObserver) the finished chart is drawn straight away. Replay runs it again. */
+function useChartAnim() {
+  const ref = useRef(null);
+  const canAnimate = typeof IntersectionObserver !== 'undefined' && !prefersReducedMotion();
+  const [anim, setAnim] = useState(canAnimate ? 'ready' : 'off');   // off | ready (waiting, bars empty) | play
+  useEffect(() => {
+    if (anim !== 'ready') return undefined;
+    const el = ref.current; if (!el) return undefined;
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) { setAnim('play'); io.disconnect(); }
+    }, { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [anim]);
+  const replay = () => { if (typeof IntersectionObserver !== 'undefined' && !prefersReducedMotion()) setAnim('ready'); };
+  return [ref, anim, replay, canAnimate];
+}
+
+function useCountUp(target, anim, delay) {
+  const [v, setV] = useState(anim === 'off' ? target : 0);
+  useEffect(() => {
+    if (anim === 'off') { setV(target); return undefined; }
+    if (anim === 'ready') { setV(0); return undefined; }
+    const ms = 1100;
+    let raf = 0, t0 = 0;
+    const step = (now) => {
+      if (!t0) t0 = now;
+      const p = Math.min(1, (now - t0) / ms);
+      setV(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) raf = requestAnimationFrame(step); else setV(target);
+    };
+    const start = setTimeout(() => { raf = requestAnimationFrame(step); }, delay || 0);
+    const safety = setTimeout(() => setV(target), (delay || 0) + ms + 700);   // a hidden tab pauses rAF
+    return () => { clearTimeout(start); clearTimeout(safety); cancelAnimationFrame(raf); };
+  }, [target, anim, delay]);
+  return v;
+}
+
+// The number sits in a box as wide as the finished number, so nothing shifts while it counts.
+function ChartValue({ value, dp, unit, anim, delay, srSuffix }) {
+  const v = useCountUp(value, anim, delay);
+  const final = fmtNum(value, dp) + (unit || '');
+  return (
+    <span className="chart-value">
+      <span className="chart-value-box" aria-hidden="true">
+        <span className="chart-value-ghost">{final}</span>
+        <span className="chart-value-live">{fmtNum(v, dp)}{unit || ''}</span>
+      </span>
+      <span className="sr-only">{final}{srSuffix ? ' ' + srSuffix : ''}</span>
+    </span>
+  );
+}
+
+function ReplayButton({ onClick, show }) {
+  if (!show) return null;
+  return (
+    <button type="button" className="chart-replay" onClick={onClick} aria-label="Replay the animation">
+      {window.SahajIcons.replay({ size: 14, strokeW: 2.2 })}<span>Replay</span>
+    </button>
+  );
+}
+
 function BarChart({ chart }) {
+  const [ref, anim, replay, canAnimate] = useChartAnim();
   const dp = chart.rows.reduce((m, r) => Math.max(m, (String(r.value).split('.')[1] || '').length), 0);
   return (
-    <figure className="chart" aria-labelledby={'chart-' + chart.id}>
-      <h3 id={'chart-' + chart.id} className="chart-title">{chart.title}</h3>
+    <figure className="chart" ref={ref} data-anim={anim} aria-labelledby={'chart-' + chart.id}>
+      <div className="chart-head">
+        <h3 id={'chart-' + chart.id} className="chart-title">{chart.title}</h3>
+        <ReplayButton onClick={replay} show={canAnimate && anim === 'play'} />
+      </div>
       <p className="chart-note">{chart.note}</p>
-      <ul className="chart-rows">
-        {chart.rows.map(r => (
-          <li key={r.label} className="chart-row">
+      <ul className="chart-rows" style={{ '--vw': (chart.rows.reduce((m, r) => Math.max(m, (fmtNum(r.value, r.dp !== undefined ? r.dp : dp) + (chart.unit || '')).length), 0) + 1) + 'ch' }}>
+        {chart.rows.map((r, i) => (
+          <li key={r.label} className="chart-row" style={{ '--i': i }}>
             <span className="chart-label">{r.label}</span>
-            <span className="chart-track" aria-hidden="true"><span className="chart-fill" style={{ width: Math.max(0.8, (r.value / chart.max) * 100) + '%' }} /></span>
-            <span className="chart-value">{fmtNum(r.value, r.dp !== undefined ? r.dp : dp)}{chart.unit}</span>
+            <span className="chart-track" aria-hidden="true"><span className="chart-fill" style={{ '--w': Math.max(0.8, (r.value / chart.max) * 100) + '%' }} /></span>
+            <ChartValue value={r.value} dp={r.dp !== undefined ? r.dp : dp} unit={chart.unit} anim={anim} delay={i * 110} />
             {r.extra && <span className="chart-extra">{r.extra}</span>}
           </li>
         ))}
@@ -311,17 +601,28 @@ function BarChart({ chart }) {
 }
 
 function PairChart({ chart }) {
+  const [ref, anim, replay, canAnimate] = useChartAnim();
+  const vw = chart.pairs.reduce((m, p) => Math.max(m, fmtNum(p.before, 2).length, fmtNum(p.after, 2).length), 0) + 1;
   return (
-    <figure className="chart" aria-labelledby={'chart-' + chart.id}>
-      <h3 id={'chart-' + chart.id} className="chart-title">{chart.title}</h3>
+    <figure className="chart" ref={ref} data-anim={anim} aria-labelledby={'chart-' + chart.id}>
+      <div className="chart-head">
+        <h3 id={'chart-' + chart.id} className="chart-title">{chart.title}</h3>
+        <ReplayButton onClick={replay} show={canAnimate && anim === 'play'} />
+      </div>
       <p className="chart-note">{chart.note}</p>
-      <ul className="chart-rows">
-        {chart.pairs.map(p => (
+      <ul className="chart-rows" style={{ '--vw': vw + 'ch' }}>
+        {chart.pairs.map((p, i) => (
           <li key={p.label} className="chart-pair">
             <span className="chart-label">{p.label}</span>
-            <span className="chart-pair-bars">
-              <span className="chart-bar-line"><span className="chart-track" aria-hidden="true"><span className="chart-fill chart-fill-muted" style={{ width: '100%' }} /></span><span className="chart-value">{fmtNum(p.before, 2)}<span className="chart-tag"> traditional</span></span></span>
-              <span className="chart-bar-line"><span className="chart-track" aria-hidden="true"><span className="chart-fill" style={{ width: (p.after / p.before) * 100 + '%' }} /></span><span className="chart-value">{fmtNum(p.after, 2)}<span className="chart-tag"> landmark-based</span></span></span>
+            <span className="chart-bar-line" style={{ '--i': i * 2 }}>
+              <span className="chart-tagcol" aria-hidden="true">traditional</span>
+              <span className="chart-track" aria-hidden="true"><span className="chart-fill chart-fill-muted" style={{ '--w': '100%' }} /></span>
+              <ChartValue value={p.before} dp={2} anim={anim} delay={i * 220} srSuffix="traditional" />
+            </span>
+            <span className="chart-bar-line" style={{ '--i': i * 2 + 1 }}>
+              <span className="chart-tagcol" aria-hidden="true">landmark-based</span>
+              <span className="chart-track" aria-hidden="true"><span className="chart-fill" style={{ '--w': (p.after / p.before) * 100 + '%' }} /></span>
+              <ChartValue value={p.after} dp={2} anim={anim} delay={i * 220 + 110} srSuffix="landmark-based" />
             </span>
           </li>
         ))}
@@ -409,7 +710,7 @@ function TocLayout({ page, items, onNavigate, maxWidth, header, children }) {
 }
 
 window.SahajUI = {
-  ErrorBoundary, CrashNotice, TierBadge, PageHeader, Section, PaperThumb, ProjectFigure, BarChart, PairChart,
+  ErrorBoundary, CrashNotice, TierBadge, PageHeader, Section, PaperThumb, ProjectFigure, BarChart, PairChart, ImageViewer, ScrollLock, useScrollLock,
   CiteButtons, citationText, bibtex, copyText, useGithubStats, RepoStats, RepoLink, repoIsPublic,
   TocLayout, useScrollSpy, scrollToSection, jumpTo, prefersReducedMotion, mailHref, fmtNum,
 };
