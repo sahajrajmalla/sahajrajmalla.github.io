@@ -22,6 +22,7 @@ const UI_SERIF = "'Times New Roman',Georgia,serif";
     code: ico(['path', { d: 'M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14' }]),
     doc: ico(['path', { d: 'M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z' }], ['path', { d: 'M14 3v5h5M9 13h6M9 17h6' }]),
     expand: ico(['path', { d: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5' }]),
+    download: ico(['path', { d: 'M12 4v11' }], ['path', { d: 'M7 11l5 5 5-5' }], ['path', { d: 'M5 20h14' }]),
     zoomIn: ico(['circle', { cx: 11, cy: 11, r: 6.5 }], ['path', { d: 'M16 16l4.5 4.5M11 8.2v5.6M8.2 11h5.6' }]),
     zoomOut: ico(['circle', { cx: 11, cy: 11, r: 6.5 }], ['path', { d: 'M16 16l4.5 4.5M8.2 11h5.6' }]),
     replay: ico(['path', { d: 'M4 12a8 8 0 1 0 2.5-5.8' }], ['path', { d: 'M4 4v4.6h4.6' }]),
@@ -310,7 +311,6 @@ function ImageViewer({ items, index, onClose, onIndex, label }) {
   const closeRef = useRef(null);
   const stageRef = useRef(null);
   const imgRef = useRef(null);
-  const drag = useRef(null);
   const moved = useRef(false);
   const swipe = useRef(null);
   const opener = useRef(typeof document !== 'undefined' ? document.activeElement : null);
@@ -361,38 +361,62 @@ function ImageViewer({ items, index, onClose, onIndex, label }) {
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  // mouse: drag to pan a zoomed picture. touch: the browser pans it, and a swipe moves between pictures.
+  // Where the picture really is on screen. The image element fills the stage and the picture sits "contained" inside it,
+  // so a click on the dark space around the picture has to be told apart from a click on the picture.
+  const pictureRect = () => {
+    const im = imgRef.current; if (!im) return null;
+    const r = im.getBoundingClientRect();
+    if (zoomed) return r;
+    const nw = im.naturalWidth || item.w || r.width, nh = im.naturalHeight || item.h || r.height;
+    const k = Math.min(r.width / nw, r.height / nh), w = nw * k, h = nh * k;
+    const left = r.left + (r.width - w) / 2, top = r.top + (r.height - h) / 2;
+    return { left: left, top: top, right: left + w, bottom: top + h };
+  };
+  const overPicture = (x, y) => { const r = pictureRect(); return !!r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; };
+
+  // mouse: drag to pan a zoomed picture (window listeners, no pointer capture, so the click that follows still reaches the stage).
+  // touch: the browser pans it, and a swipe moves between pictures.
+  const suppress = useRef(0);                 // a click right after a drag is not a click
+  const stopDrag = useRef(null);
+  useEffect(() => () => { if (stopDrag.current) stopDrag.current(); }, []);
   const onDown = (e) => {
     if (e.button !== undefined && e.button !== 0) return;
     const s = stageRef.current; if (!s) return;
     if (e.pointerType === 'touch') { swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId }; return; }
     if (!zoomed) return;
     moved.current = false;
-    drag.current = { x: e.clientX, y: e.clientY, sl: s.scrollLeft, st: s.scrollTop, id: e.pointerId };
-    try { s.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    const start = { x: e.clientX, y: e.clientY, sl: s.scrollLeft, st: s.scrollTop };
+    const mv = (ev) => {
+      const dx = ev.clientX - start.x, dy = ev.clientY - start.y;
+      if (!moved.current && Math.abs(dx) + Math.abs(dy) > 5) moved.current = true;
+      if (moved.current) { s.scrollLeft = start.sl - dx; s.scrollTop = start.st - dy; }
+    };
+    const stop = () => {
+      window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', stop); window.removeEventListener('pointercancel', stop);
+      if (moved.current) suppress.current = performance.now() + 350;
+      moved.current = false; stopDrag.current = null;
+    };
+    window.addEventListener('pointermove', mv); window.addEventListener('pointerup', stop); window.addEventListener('pointercancel', stop);
+    stopDrag.current = stop;
   };
   const onMove = (e) => {
-    const d = drag.current; if (!d || d.id !== e.pointerId) return;
-    const dx = e.clientX - d.x, dy = e.clientY - d.y;
-    if (!moved.current && Math.abs(dx) + Math.abs(dy) > 5) moved.current = true;
-    if (moved.current && stageRef.current) { stageRef.current.scrollLeft = d.sl - dx; stageRef.current.scrollTop = d.st - dy; }
+    if (e.pointerType === 'touch' || !stageRef.current) return;
+    const over = overPicture(e.clientX, e.clientY);
+    stageRef.current.style.cursor = over ? (zoomable ? (zoomed ? 'zoom-out' : 'zoom-in') : 'default') : 'pointer';
   };
   const onUp = (e) => {
     const s = swipe.current;
     if (s && s.id === e.pointerId) {
       swipe.current = null;
       const dx = e.clientX - s.x, dy = e.clientY - s.y;
-      if (!zoomed && N > 1 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
-    }
-    const d = drag.current;
-    if (d && d.id === e.pointerId) {
-      drag.current = null;
-      try { stageRef.current.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+      if (!zoomed && N > 1 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { suppress.current = performance.now() + 350; go(dx < 0 ? 1 : -1); }
     }
   };
-  const onCancel = (e) => { if (swipe.current && swipe.current.id === e.pointerId) swipe.current = null; if (drag.current && drag.current.id === e.pointerId) drag.current = null; };
-  const onPictureClick = () => {
-    if (moved.current) { moved.current = false; return; }
+  const onCancel = (e) => { if (swipe.current && swipe.current.id === e.pointerId) swipe.current = null; };
+  // A click on the picture zooms in or back out; a click anywhere else on the dark space closes the viewer.
+  const onStageClick = (e) => {
+    if (performance.now() < suppress.current) return;
+    if (!overPicture(e.clientX, e.clientY)) { onClose(); return; }
     if (zoomable) setZoom(z => !z);
   };
 
@@ -422,12 +446,12 @@ function ImageViewer({ items, index, onClose, onIndex, label }) {
 
       <div ref={stageRef} className={'lb-stage' + (zoomed ? ' lb-zoomed' : '')}
         tabIndex={zoomed ? 0 : undefined} role={zoomed ? 'region' : undefined} aria-label={zoomed ? 'Zoomed picture. Scroll to read it.' : undefined}
-        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel}
-        onClick={(e) => { if (e.target === e.currentTarget && !zoomed) onClose(); }}>
+        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel} onClick={onStageClick}
+        style={{ cursor: zoomable ? (zoomed ? 'zoom-out' : 'zoom-in') : 'default' }}>
         {status !== 'error' && (
           <img ref={imgRef} key={item.src} className="lb-img" src={item.src} width={item.w} height={item.h} alt={item.alt || item.title || ''}
-            draggable={false} decoding="async" style={Object.assign({ opacity: status === 'ready' ? 1 : 0, cursor: zoomable ? (zoomed ? 'zoom-out' : 'zoom-in') : 'default' }, imgStyle)}
-            onLoad={() => setStatus('ready')} onError={() => setStatus('error')} onClick={onPictureClick} />
+            draggable={false} decoding="async" style={Object.assign({ opacity: status === 'ready' ? 1 : 0 }, imgStyle)}
+            onLoad={() => setStatus('ready')} onError={() => setStatus('error')} />
         )}
         {status === 'loading' && <p className="lb-msg" role="status">Loading the picture…</p>}
         {status === 'error' && (
@@ -482,6 +506,30 @@ function PaperThumb({ paper, width, eager }) {
   );
 }
 
+// A report's or a slide deck's first page, as a button that opens the viewer.
+function DocThumb({ doc, width }) {
+  const t = doc.thumb;
+  const [open, setOpen] = useState(false);
+  if (!t) return null;
+  const item = {
+    src: t.base + '-1200.webp', w: 1200, h: Math.round(1200 * t.h / t.w), alt: t.alt, title: doc.name,
+    sub: doc.level, href: 'assets/docs/' + doc.file.name, hrefLabel: 'Open the PDF', zoomable: true,
+  };
+  return (
+    <React.Fragment>
+      <button type="button" className="paper-thumb" style={{ width: width + 'px' }} onClick={() => setOpen(true)}
+        aria-label={'Enlarge the first page of ' + doc.name} aria-haspopup="dialog">
+        <span className="paper-thumb-frame" style={{ aspectRatio: t.w + ' / ' + t.h }}>
+          <img src={t.base + '-480.webp'} srcSet={t.base + '-240.webp 240w, ' + t.base + '-480.webp 480w'} sizes={width + 'px'}
+            width={t.w} height={t.h} alt="" loading="lazy" decoding="async" draggable={false} />
+        </span>
+        <span className="paper-thumb-zoom" aria-hidden="true">{window.SahajIcons.expand({ size: 14, strokeW: 2.2 })}</span>
+      </button>
+      {open && <ImageViewer items={[item]} index={0} onClose={() => setOpen(false)} label={'First page of ' + doc.name} />}
+    </React.Fragment>
+  );
+}
+
 // A project figure; select it to see it larger. Logos stay as they are.
 function ProjectFigure({ media, sizes, title }) {
   const [open, setOpen] = useState(false);
@@ -493,7 +541,7 @@ function ProjectFigure({ media, sizes, title }) {
   const logo = media.kind === 'logo';
   const item = {
     src: file ? media.src : media.base + '-1200.webp', w: file ? media.w : media.lg[0], h: file ? media.h : media.lg[1],
-    alt: media.alt, title: media.caption, sub: title || '', note: media.credit, zoomable: true, vector: file && /\.svg$/i.test(media.src),
+    alt: media.alt, title: media.caption, sub: title || '', zoomable: true, vector: file && /\.svg$/i.test(media.src),
   };
   return (
     <figure className="fig">
@@ -505,7 +553,7 @@ function ProjectFigure({ media, sizes, title }) {
           <span className="fig-zoom" aria-hidden="true">{window.SahajIcons.expand({ size: 14, strokeW: 2.2 })}<span>Enlarge</span></span>
         </button>
       )}
-      <figcaption><span>{media.caption}</span> <span className="credit">{media.credit}</span></figcaption>
+      <figcaption>{media.caption}</figcaption>
       {open && <ImageViewer items={[item]} index={0} onClose={() => setOpen(false)} label={media.caption} />}
     </figure>
   );
@@ -710,7 +758,7 @@ function TocLayout({ page, items, onNavigate, maxWidth, header, children }) {
 }
 
 window.SahajUI = {
-  ErrorBoundary, CrashNotice, TierBadge, PageHeader, Section, PaperThumb, ProjectFigure, BarChart, PairChart, ImageViewer, ScrollLock, useScrollLock,
+  ErrorBoundary, CrashNotice, TierBadge, PageHeader, Section, PaperThumb, DocThumb, ProjectFigure, BarChart, PairChart, ImageViewer, ScrollLock, useScrollLock,
   CiteButtons, citationText, bibtex, copyText, useGithubStats, RepoStats, RepoLink, repoIsPublic,
   TocLayout, useScrollSpy, scrollToSection, jumpTo, prefersReducedMotion, mailHref, fmtNum,
 };
