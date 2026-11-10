@@ -23,7 +23,8 @@ window.SahajData = {
   },
 
   // HamroNiwas user count as printed on the CV. Everything else that is a count is computed.
-  stats: { users: 4500 },
+  // 6+ years: the "Years Experience" figure from the first version of the site, kept as Sahaj asked on 2026-11-10 (first data job: Mar 2021)
+  stats: { users: 4500, years: 6 },
 
   researchInterestsLine: "Multimodal agent orchestration, reinforcement learning, and compute-efficient decision-making.",
 
@@ -32,6 +33,7 @@ window.SahajData = {
     {
       id: "dhumbal",
       title: "Heuristic optimization of AI agents for Dhumbal",
+      shortName: "Dhumbal AI",
       venue: "Scientific Reports 16, 33849",
       publisher: "Springer Nature",
       tier: "Q1",
@@ -54,6 +56,7 @@ window.SahajData = {
     },
     {
       id: "mallanet",
+      shortName: "MallaNet",
       title: "MallaNet residual branch merge convolutional neural network with homogeneous filter capsules for Devanagari character recognition",
       venue: "Scientific Reports 16, 1175",
       publisher: "Springer Nature",
@@ -77,6 +80,7 @@ window.SahajData = {
     },
     {
       id: "kalimati",
+      shortName: "Agricultural Commodity Price Index",
       title: "Combining rather than selecting multi-horizon forecasting of an agricultural commodity price index",
       venue: "Scientific Reports (early access)",
       publisher: "Springer Nature",
@@ -294,7 +298,7 @@ window.SahajData = {
     {
       id: "kalimati-gain",
       paper: "kalimati",
-      title: "Kalimati: gain from combining models over choosing one",
+      title: "Agricultural Commodity Price Index: gain from combining models over choosing one",
       note: "Improvement of the shrunk combination over the model that validation would have selected, at each of the four horizons in the order the abstract lists them.",
       unit: "%",
       max: 12,
@@ -537,7 +541,7 @@ window.SahajData = {
       title: "When to Call Whom: The Value of Diagnostic Feedback in Budgeted AI Orchestration",
       question: "With a fixed budget, when should an agent review a failed attempt before trying another method?",
       supervisors: "Dr. Samir Shrestha and Dr. Saraswati Acharya",
-      status: "In progress",
+      status: "Completed",
     },
   },
 

@@ -63,7 +63,7 @@ function Q1Cards({ papers, mobile }) {
               <span className="q1-chip" aria-hidden="true">Q1</span>
               <span className="q1-body">
                 <span className="q1-meta">{journal(p)} · {p.year}</span>
-                <span className="q1-title">{p.title}<span className="sr-only"> (Q1 paper, opens in a new tab)</span></span>
+                <span className="q1-title" title={p.title}>{p.shortName || p.title}<span className="sr-only">. Q1 paper: {p.title} (opens in a new tab)</span></span>
               </span>
             </a>
           </li>
@@ -89,7 +89,6 @@ function Home({ onNavigate }) {
   const mobile = window.useIsMobile(820);
   const theme = window.useTheme();
   const isLight = theme === 'light';
-  const gh = UI.useGithubStats();
   const q1 = d.peerReviewed.filter(p => p.tier === 'Q1');
   const stats = [
     { val: d.peerReviewed.length + d.preprints.length, lbl: 'Publications' },
@@ -97,7 +96,7 @@ function Home({ onNavigate }) {
     { val: d.awards.length, lbl: 'Awards' },
     { val: d.stats.users, suf: '+', lbl: 'HamroNiwas users' },
     { val: d.projects.filter(p => p.kind === 'library').length, lbl: 'Open-source libraries' },
-    { gh: 'repos', lbl: 'Public GitHub repositories' },
+    { val: d.stats.years, suf: '+', lbl: 'Years Experience' },
   ];
   const [expHov, setExpHov] = useState(false);
   // defer the heavy backdrop simulation until after the hero content has painted,
@@ -170,7 +169,7 @@ function Home({ onNavigate }) {
             {stats.map((s, i) => (
               <div key={i}>
                 <div style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(28px,7vw,52px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>
-                  {s.gh ? (gh ? gh[s.gh].toLocaleString('en-US') : '\u2013') : <React.Fragment><Counter target={s.val} delay={800 + i * 260} />{s.suf}</React.Fragment>}
+                  <Counter target={s.val} delay={800 + i * 260} />{s.suf}
                 </div>
                 <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '5px', letterSpacing: '0.3px' }}>{s.lbl}</div>
               </div>

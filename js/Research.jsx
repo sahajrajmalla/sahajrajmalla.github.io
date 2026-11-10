@@ -112,9 +112,9 @@ function Research({ onNavigate }) {
         <UI.Section id="thread" title="How the work fits together">
           <div className="prose">
             <p>I started with vision. MallaNet asks how small a model can be and still read a hard script well: 17.3 million parameters, against about 39 million for the best earlier result I compared with, trained on a Google Colab T4 GPU.</p>
-            <p>Forecasting taught me to distrust a tidy comparison. In the Kalimati study, the models that won on the test window ranked third to seventh on validation, so nobody could have picked them beforehand. Combining models worked better than choosing one.</p>
+            <p>Forecasting taught me to distrust a tidy comparison. In the Agricultural Commodity Price Index study, the models that won on the test window ranked third to seventh on validation, so nobody could have picked them beforehand. Combining models worked better than choosing one.</p>
             <p>Dhumbal put me in front of decisions under hidden information. A hand-written strategy won 88.9% of rounds, and my reinforcement learning agents did not beat a random player. The paper says their setup was too weak to count against reinforcement learning, so I read the result as a question: when is a cheap specialist enough, and how do you find out?</p>
-            <p>My thesis asks a version of that question for an agent with a budget. Touchstone, a router with a critic, is a related system I built earlier, and measuring what each of its parts costs is still open work.</p>
+            <p>My thesis asks a version of that question for an agent with a budget. Touchstone, a router with a critic, is a related system I built earlier.</p>
           </div>
           <aside style={{ marginTop: '24px', padding: '22px 26px', background: 'var(--accent-box)', border: '1px solid var(--accent-line)', borderLeft: '4px solid var(--accent)', borderRadius: '0 12px 12px 0', maxWidth: '760px' }} aria-label="Undergraduate thesis">
             <p className="eyebrow" style={{ color: 'var(--accent-2)', fontSize: '12.5px', borderLeft: 'none', paddingLeft: 0, marginBottom: '8px' }}>{th.label} ({th.status.toLowerCase()})</p>
