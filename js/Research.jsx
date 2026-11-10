@@ -20,12 +20,12 @@ function PaperCard({ paper, gh }) {
     <article className="card" data-open={open} id={id} style={{ scrollMarginTop: 'var(--toc-offset)' }}>
       {paper.highlight && <div className="card-top" />}
       <div className="card-head" style={{ position: 'relative', display: 'flex', gap: mobile ? '14px' : '20px', alignItems: 'flex-start' }}>
-        <UI.PaperThumb paper={paper} width={mobile ? 72 : 100} caption />
+        <UI.PaperThumb paper={paper} width={mobile ? 76 : 108} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '10px' }}>
             <UI.TierBadge tier={paper.tier} />
             <span className="tag">{paper.tag}</span>
-            <span className="aside" style={{ fontSize: '12px' }}>{paper.year}</span>
+            <span className="aside">{paper.year}</span>
           </div>
           <h3 className="card-title">
             <button type="button" className="card-toggle" aria-expanded={open} aria-controls={id + '-more'} onClick={() => setOpen(!open)}>
@@ -34,7 +34,7 @@ function PaperCard({ paper, gh }) {
             </button>
           </h3>
           <p className="card-meta" style={{ marginTop: '6px' }}>{paper.venue}</p>
-          <p className="card-meta">{paper.authors} · {paper.role}</p>
+          <p className="card-meta">{paper.authors}{paper.role ? ' · ' + paper.role : ''}</p>
           <p className="card-short">{paper.short}</p>
         </div>
       </div>
@@ -55,7 +55,7 @@ function PaperCard({ paper, gh }) {
           {(paper.links || []).map(l => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="link-pill">{l.label}</a>)}
         </div>
         <UI.CiteButtons paper={paper} />
-        <p className="credit-line">Image: {paper.thumb.credit}</p>
+        {paper.thumb.licence && <p className="credit-line">{paper.thumb.licence}</p>}
       </div>
     </article>
   );
@@ -92,13 +92,13 @@ function Research({ onNavigate }) {
       <UI.PageHeader
         eyebrow="Research"
         title="Published work."
-        lead={`${all.length} papers: ${d.peerReviewed.length} peer-reviewed, ${q1} of them single-author Q1 papers in Scientific Reports, and ${d.preprints.length} preprints. They cover vision, forecasting, game-playing agents and a few applied problems in Nepal. ${withCode} of the ${all.length} link to public code.`}
+        lead={`${all.length} papers: ${d.peerReviewed.length} peer-reviewed, ${q1} of them Q1 papers in Scientific Reports, and ${d.preprints.length} preprints. They cover vision, forecasting, game-playing agents and a few applied problems in Nepal. ${withCode} of the ${all.length} link to public code.`}
       />
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: '1px', marginBottom: '48px', background: 'var(--line)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--line)' }}>
         {stats.map((s, i) => (
           <div key={i} style={{ padding: '18px 20px', textAlign: 'center', background: 'var(--surface)' }}>
             <div style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(22px,2.8vw,36px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>{s.n}</div>
-            <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '11px', color: 'var(--ink-3)', marginTop: '6px', letterSpacing: '0.3px' }}>{s.l}</div>
+            <div style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12.5px', color: 'var(--ink-3)', marginTop: '6px', letterSpacing: '0.3px' }}>{s.l}</div>
           </div>
         ))}
       </div>
@@ -117,10 +117,10 @@ function Research({ onNavigate }) {
             <p>My thesis asks a version of that question for an agent with a budget. Touchstone, a router with a critic, is a related system I built earlier, and measuring what each of its parts costs is still open work.</p>
           </div>
           <aside style={{ marginTop: '24px', padding: '22px 26px', background: 'var(--accent-box)', border: '1px solid var(--accent-line)', borderLeft: '4px solid var(--accent)', borderRadius: '0 12px 12px 0', maxWidth: '760px' }} aria-label="Undergraduate thesis">
-            <p className="eyebrow" style={{ color: 'var(--accent-2)', fontSize: '11px', borderLeft: 'none', paddingLeft: 0, marginBottom: '8px' }}>{th.label} ({th.status.toLowerCase()})</p>
+            <p className="eyebrow" style={{ color: 'var(--accent-2)', fontSize: '12.5px', borderLeft: 'none', paddingLeft: 0, marginBottom: '8px' }}>{th.label} ({th.status.toLowerCase()})</p>
             <p style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: '19px', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.35, marginBottom: '8px' }}>{th.title}</p>
-            <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14px', color: 'var(--ink-3)', lineHeight: 1.7 }}>{th.question}</p>
-            <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12.5px', color: 'var(--ink-4)', marginTop: '8px' }}>Supervisors: {th.supervisors}</p>
+            <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7 }}>{th.question}</p>
+            <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '8px' }}>Supervisors: {th.supervisors}</p>
           </aside>
         </UI.Section>
 
@@ -133,7 +133,7 @@ function Research({ onNavigate }) {
         <div role="group" aria-label="Filter papers by topic" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
           {tags.map(t => (
             <button key={t} type="button" aria-pressed={tag === t} onClick={() => setTag(t)}
-              style={{ background: tag === t ? 'var(--accent)' : 'var(--surface)', border: tag === t ? '1px solid var(--accent)' : '1px solid var(--line-2)', borderRadius: '20px', padding: '8px 16px', minHeight: '36px', cursor: 'pointer', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13px', fontWeight: tag === t ? 600 : 400, color: tag === t ? 'white' : 'var(--ink-3)', transition: 'all 0.2s ease' }}>{t}</button>
+              style={{ background: tag === t ? 'var(--accent)' : 'var(--surface)', border: tag === t ? '1px solid var(--accent)' : '1px solid var(--line-2)', borderRadius: '20px', padding: '8px 16px', minHeight: '40px', cursor: 'pointer', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14px', fontWeight: tag === t ? 600 : 400, color: tag === t ? 'white' : 'var(--ink-3)', transition: 'all 0.2s ease' }}>{t}</button>
           ))}
         </div>
 
@@ -142,7 +142,7 @@ function Research({ onNavigate }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {peer.map(p => <PaperCard key={p.id} paper={p} gh={gh} />)}
             </div>
-            <p className="aside" style={{ marginTop: '14px', fontSize: '12px', lineHeight: 1.6, maxWidth: '640px' }}>
+            <p className="aside" style={{ marginTop: '14px', fontSize: '13.5px', lineHeight: 1.6, maxWidth: '660px' }}>
               Q1 means the top quartile of the journal's subject category in the 2025 SCImago Journal Rank (Scientific Reports: Multidisciplinary, SJR 0.893).
             </p>
           </UI.Section>
@@ -157,7 +157,7 @@ function Research({ onNavigate }) {
         )}
 
         <div style={{ padding: '18px 24px', background: 'var(--gold-box)', border: '1px solid var(--gold-box-line)', borderRadius: '12px' }}>
-          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14px', color: 'var(--gold-ink)', lineHeight: 1.6 }}>
+          <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--gold-ink)', lineHeight: 1.6 }}>
             The full list is on{' '}<a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-2)', fontWeight: 600, borderBottom: '1px solid var(--accent-2)', textDecoration: 'none' }}>Google Scholar</a>. Awards and talks are on the <a href="#about/awards" onClick={(e) => { e.preventDefault(); onNavigate('about/awards'); }} style={{ color: 'var(--accent-2)', fontWeight: 600, borderBottom: '1px solid var(--accent-2)', textDecoration: 'none' }}>About page</a>.
           </p>
         </div>
