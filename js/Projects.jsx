@@ -2,8 +2,50 @@
 const UI = window.SahajUI;
 
 function TypeBadge({ type }) {
-  const cls = { 'Open Source': 'badge-cf', 'Research': 'badge-q1', 'Startup': 'badge-jr' }[type] || 'badge-q1';
+  const cls = { 'Open Source': 'badge-cf', 'Research': 'badge-q1', 'Startup': 'badge-jr', 'Coursework': 'badge-pre' }[type] || 'badge-q1';
   return <span className={'badge ' + cls}>{type}</span>;
+}
+
+// View (opens the PDF in a tab) and download (keeps the file name) for a report or a slide deck.
+function DocLinks({ file, label }) {
+  const href = 'assets/docs/' + file.name;
+  return (
+    <div className="doc-links">
+      <a className="link-pill link-pill-purple" href={href} target="_blank" rel="noopener noreferrer">
+        {label || 'View report'} {window.SahajIcons.external({ size: 13, strokeW: 2 })}<span className="sr-only"> (PDF, opens in a new tab)</span>
+      </a>
+      <a className="link-pill" href={href} download={file.name}>{window.SahajIcons.download({ size: 14, strokeW: 2 })} Download</a>
+      <span className="doc-meta">PDF · {file.pages} pages · {file.size}</span>
+    </div>
+  );
+}
+
+// A coursework report: the cover opens larger, the text says what it is, what it showed and where it stops.
+function CourseCard({ doc, onNavigate }) {
+  const mobile = window.useIsMobile(820);
+  return (
+    <article id={doc.id} data-toc-section className="cw-card" aria-labelledby={doc.id + '-h'}>
+      <UI.DocThumb doc={doc} width={mobile ? 92 : 132} />
+      <div className="cw-body">
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '10px' }}>
+          <TypeBadge type="Coursework" />
+          <span className="aside">{doc.level}{doc.period && doc.level.indexOf(doc.period) < 0 ? ' · ' + doc.period : ''}</span>
+        </div>
+        <h3 id={doc.id + '-h'} tabIndex={-1} className="cw-title">{doc.name}</h3>
+        <p className="cw-tag">{doc.tagline}</p>
+        <div className="case"><h4>What it is</h4><p>{doc.summary}</p></div>
+        <div className="case"><h4>What it showed</h4><p>{doc.result}</p></div>
+        <div className="case"><h4>Where it stops</h4><p>{doc.limits}</p></div>
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '14px' }}>
+          {doc.tech.map(t => <span key={t} className="tag">{t}</span>)}
+        </div>
+        <DocLinks file={doc.file} label={doc.kind === 'Slides' ? 'View slides' : 'View report'} />
+        {doc.paper && (
+          <p className="cw-more"><a href={'#research/paper-' + doc.paper} onClick={(e) => { e.preventDefault(); onNavigate('research/paper-' + doc.paper); }}>Read the preprint this report led to</a></p>
+        )}
+      </div>
+    </article>
+  );
 }
 
 function Project({ project: p, gh }) {
@@ -34,6 +76,7 @@ function Project({ project: p, gh }) {
           {p.paper && <a href={p.paper} target="_blank" rel="noopener noreferrer" className="link-pill link-pill-purple">Read paper {window.SahajIcons.external({ size: 13, strokeW: 2 })}</a>}
           {(p.links || []).map(l => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="link-pill">{l.label}</a>)}
         </div>
+        {p.report && <DocLinks file={p.report.file} label={p.report.label} />}
       </div>
     </article>
   );
@@ -44,7 +87,7 @@ function Projects({ onNavigate }) {
   const mobile = window.useIsMobile(820);
   const gh = UI.useGithubStats();
 
-  const toc = d.projects.map(p => ({ id: p.id, label: p.name }));
+  const toc = d.projectGroups.map(g => (g.id === 'coursework' ? { id: 'grp-' + g.id, label: g.label, count: d.coursework.length } : { id: 'grp-' + g.id, label: g.label }));
 
   // top two languages among repositories that are not forks, computed from the GitHub list
   let langs = '';
@@ -88,11 +131,21 @@ function Projects({ onNavigate }) {
     <div style={{ minHeight: '100vh', paddingTop: '64px', background: 'var(--bg)' }}>
       <UI.TocLayout page="projects" items={toc} onNavigate={onNavigate} maxWidth={1100} header={header}>
         {d.projectGroups.map(g => {
+          const color = g.id === 'startup' ? 'var(--gold-ink)' : g.id === 'research' ? 'var(--purple)' : g.id === 'coursework' ? 'var(--ink-3)' : 'var(--accent-2)';
+          if (g.id === 'coursework') {
+            return (
+              <section key={g.id} id={'grp-' + g.id} data-toc-section aria-labelledby={'group-' + g.id} style={{ marginBottom: '28px' }}>
+                <h2 id={'group-' + g.id} className="eyebrow" style={{ color: color, marginBottom: '4px' }}>{g.label}</h2>
+                <p className="cw-intro">Reports and slides from my B.Sc. at Kathmandu University. Each one opens as a PDF you can read or download.</p>
+                <div className="cw-list">{d.coursework.map(c => <CourseCard key={c.id} doc={c} onNavigate={onNavigate} />)}</div>
+              </section>
+            );
+          }
           const items = d.projects.filter(p => p.group === g.id);
           if (!items.length) return null;
           return (
-            <section key={g.id} aria-labelledby={'group-' + g.id} style={{ marginBottom: '28px' }}>
-              <h2 id={'group-' + g.id} className="eyebrow" style={{ color: g.id === 'startup' ? 'var(--gold-ink)' : g.id === 'research' ? 'var(--purple)' : 'var(--accent-2)', marginBottom: '4px' }}>{g.label}</h2>
+            <section key={g.id} id={'grp-' + g.id} data-toc-section aria-labelledby={'group-' + g.id} style={{ marginBottom: '28px' }}>
+              <h2 id={'group-' + g.id} className="eyebrow" style={{ color: color, marginBottom: '4px' }}>{g.label}</h2>
               {items.map(p => <Project key={p.id} project={p} gh={gh} />)}
             </section>
           );

@@ -636,6 +636,19 @@ h2[tabindex="-1"]:focus { outline: none; }
 .glance-l { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: var(--ink-3); line-height: 1.45; }
 .phd-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 44px; }
 .ev-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-bottom: 14px; }
+/* projects: coursework reports and document links */
+.cw-intro { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: var(--ink-3); margin: 0 0 18px; max-width: 640px; }
+.cw-list { display: flex; flex-direction: column; gap: 18px; }
+.cw-card { display: flex; gap: 24px; align-items: flex-start; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.cw-body { min-width: 0; flex: 1; }
+.cw-title { font-family: 'Times New Roman', Georgia, serif; font-size: clamp(20px, 2.1vw, 24px); font-weight: 700; color: var(--ink); line-height: 1.25; margin: 0; }
+.cw-tag { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.5; color: var(--ink-2); margin-top: 6px; }
+.cw-more { margin-top: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14.5px; }
+.cw-more a { color: var(--accent-2); font-weight: 600; }
+.doc-links { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 16px; }
+.doc-meta { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: var(--ink-4); margin-left: 4px; }
+@media (max-width: 640px) { .cw-card { flex-direction: column; padding: 20px; gap: 16px; } }
+
 .ev-tab { all: unset; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 18px; cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--c); border-radius: 12px; transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease; -webkit-tap-highlight-color: transparent; }
 .ev-tab:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
 .ev-tab:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
