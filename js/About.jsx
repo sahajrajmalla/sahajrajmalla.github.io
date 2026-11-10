@@ -3,40 +3,46 @@
 const { useState, useEffect, useRef } = React;
 const UI = window.SahajUI;
 
-/* ── Swipeable photo carousel. Auto-advance only when motion is allowed; there is a pause button. ── */
+/* ── Swipeable photo carousel. It plays on its own (unless the visitor prefers reduced motion) and waits
+      while the pointer or keyboard focus is on it, a finger is down, or the tab is hidden. The dots and swiping always work. ── */
 function PhotoCarousel({ slides, radius = 18 }) {
   const [idx, setIdx] = useState(0);
   const [drag, setDrag] = useState(0);
-  const [playing, setPlaying] = useState(() => !UI.prefersReducedMotion());
   const startX = useRef(null);
-  const held = useRef(false);
+  const dragRef = useRef(0);       // the same distance as `drag`, but readable at once (state is batched)
+  const held = useRef(false);      // a finger or the mouse button is down on it
+  const hover = useRef(false);     // the pointer is over it, or focus is inside it
   const N = slides.length;
+  const motion = !UI.prefersReducedMotion();
 
   useEffect(() => {
-    if (!playing) return;
-    const t = setInterval(() => { if (!held.current) setIdx(i => (i + 1) % N); }, 4500);
+    if (!motion) return undefined;
+    const t = setInterval(() => { if (!held.current && !hover.current && !document.hidden) setIdx(i => (i + 1) % N); }, 4500);
     return () => clearInterval(t);
-  }, [N, playing]);
+  }, [N, motion]);
 
-  const start = (x) => { startX.current = x; held.current = true; };
-  const move  = (x) => { if (startX.current != null) setDrag(x - startX.current); };
-  const end   = () => {
-    if (Math.abs(drag) > 45) setIdx(i => (i + (drag < 0 ? 1 : -1) + N) % N);
-    setDrag(0); startX.current = null;
-    setTimeout(() => { held.current = false; }, 600);
+  const down = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    startX.current = e.clientX; dragRef.current = 0; held.current = true;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) { /* capture is optional */ }
   };
+  const move = (e) => { if (startX.current != null) { dragRef.current = e.clientX - startX.current; setDrag(dragRef.current); } };
+  const end = () => {
+    if (startX.current == null) return;
+    const d = dragRef.current;
+    if (Math.abs(d) > 45) setIdx(i => (i + (d < 0 ? 1 : -1) + N) % N);
+    dragRef.current = 0; setDrag(0); startX.current = null; held.current = false;
+  };
+  // the browser took the gesture over (a scroll, say): put the photo back and do not change slide
+  const cancel = () => { dragRef.current = 0; setDrag(0); startX.current = null; held.current = false; };
 
   return (
-    <div role="region" aria-roledescription="carousel" aria-label="Photos of Sahaj">
+    <div role="region" aria-roledescription="carousel" aria-label="Photos of Sahaj"
+      onMouseEnter={() => { hover.current = true; }} onMouseLeave={() => { hover.current = false; }}
+      onFocus={() => { hover.current = true; }} onBlur={() => { hover.current = false; }}>
       <div
         style={{ position: 'relative', borderRadius: `${radius}px`, overflow: 'hidden', aspectRatio: '3/4', boxShadow: 'var(--carousel-ring), var(--carousel-shadow)', cursor: 'grab', userSelect: 'none', touchAction: 'pan-y' }}
-        onTouchStart={e => start(e.touches[0].clientX)}
-        onTouchMove={e => move(e.touches[0].clientX)}
-        onTouchEnd={end}
-        onMouseDown={e => start(e.clientX)}
-        onMouseMove={e => { if (startX.current != null) move(e.clientX); }}
-        onMouseUp={end}
-        onMouseLeave={() => { if (startX.current != null) end(); }}
+        onPointerDown={down} onPointerMove={move} onPointerUp={end} onPointerCancel={cancel} onLostPointerCapture={end}
       >
         <div style={{ display: 'flex', width: `${N * 100}%`, height: '100%', transform: `translateX(calc(${-idx * (100 / N)}% + ${drag}px))`, transition: drag || UI.prefersReducedMotion() ? 'none' : 'transform 0.6s cubic-bezier(0.4,0,0.2,1)' }}>
           {slides.map((s, i) => (
@@ -45,23 +51,20 @@ function PhotoCarousel({ slides, radius = 18 }) {
                 style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: s.pos, display: 'block', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(4,9,26,0.82) 0%,transparent 50%)' }} />
               <div style={{ position: 'absolute', bottom: '46px', left: '20px', right: '20px' }}>
-                <p style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(15px,2vw,19px)', fontStyle: 'italic', color: '#f5f0e4', lineHeight: 1.35, textWrap: 'pretty' }}>{s.caption}</p>
-                {s.sub && <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: '#e0c56e', marginTop: '6px' }}>{s.sub}</p>}
+                <p style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: 'clamp(16px,2vw,20px)', fontStyle: 'italic', color: '#f5f0e4', lineHeight: 1.35, textWrap: 'pretty' }}>{s.caption}</p>
+                {s.sub && <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12px', letterSpacing: '1.5px', textTransform: 'uppercase', color: '#e0c56e', marginTop: '6px' }}>{s.sub}</p>}
               </div>
             </div>
           ))}
         </div>
         <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2px' }}>
           {slides.map((_, i) => (
-            <button key={i} type="button" onClick={() => setIdx(i)} aria-label={`Show photo ${i + 1} of ${N}`} aria-current={i === idx}
-              style={{ width: '30px', height: '30px', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
-              <span style={{ display: 'block', width: i === idx ? '22px' : '7px', height: '7px', borderRadius: '4px', background: i === idx ? 'var(--gold)' : 'rgba(255,255,255,0.55)', transition: 'all 0.3s ease' }} />
+            <button key={i} type="button" onClick={() => setIdx(i)} onPointerDown={(e) => e.stopPropagation()} aria-label={`Show photo ${i + 1} of ${N}`} aria-current={i === idx}
+              style={{ width: '32px', height: '32px', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+              <span style={{ display: 'block', width: i === idx ? '22px' : '7px', height: '7px', borderRadius: '4px', background: i === idx ? 'var(--gold)' : 'rgba(255,255,255,0.6)', transition: 'all 0.3s ease' }} />
             </button>
           ))}
         </div>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
-        <button type="button" className="mini-btn" onClick={() => setPlaying(p => !p)} aria-pressed={!playing}>{playing ? 'Pause' : 'Play'} slideshow</button>
       </div>
     </div>
   );
@@ -77,17 +80,17 @@ function ExpCard({ role, org, place, period, current, desc, index }) {
         <button type="button" className="exp-toggle" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
           <span>
             <span style={{ display: 'block', fontFamily: "'Times New Roman',Georgia,serif", fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>{role}</span>
-            <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14px', color: current ? 'var(--accent-2)' : 'var(--ink-3)', fontWeight: current ? 600 : 400 }}>{org}</span>
-            <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12.5px', color: 'var(--ink-4)', marginTop: '2px' }}>{place}</span>
+            <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: current ? 'var(--accent-2)' : 'var(--ink-3)', fontWeight: current ? 600 : 400 }}>{org}</span>
+            <span style={{ display: 'block', fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{place}</span>
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '12.5px', color: 'var(--ink-3)', letterSpacing: '0.3px' }}>{period}</span>
+            <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '13.5px', color: 'var(--ink-3)', letterSpacing: '0.3px' }}>{period}</span>
             {current && <span className="badge badge-cf">Now</span>}
             <span className="chev">{window.SahajIcons.chevron({ size: 16, strokeW: 2 })}</span>
           </span>
         </button>
       </h3>
-      <p id={id} hidden={!open} style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '14px', color: 'var(--ink-3)', lineHeight: 1.7, marginTop: '10px', maxWidth: '600px' }}>{desc}</p>
+      <p id={id} hidden={!open} style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7, marginTop: '10px', maxWidth: '640px' }}>{desc}</p>
     </div>
   );
 }
@@ -118,7 +121,7 @@ function DataTable({ caption, cols, rows }) {
         <thead>
           <tr style={{ background: 'var(--surface-2)' }}>
             {cols.map((c, i) => (
-              <th key={c} scope="col" style={{ textAlign: i === cols.length - 1 ? 'right' : 'left', padding: '12px 18px', fontSize: '11px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--ink-3)', borderBottom: '2px solid var(--accent-line)', whiteSpace: 'nowrap' }}>{c}</th>
+              <th key={c} scope="col" style={{ textAlign: i === cols.length - 1 ? 'right' : 'left', padding: '12px 18px', fontSize: '12.5px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--ink-3)', borderBottom: '2px solid var(--accent-line)', whiteSpace: 'nowrap' }}>{c}</th>
             ))}
           </tr>
         </thead>
@@ -126,7 +129,7 @@ function DataTable({ caption, cols, rows }) {
           {rows.map((r, i) => (
             <tr key={i} style={{ background: i % 2 ? 'var(--surface)' : 'transparent' }}>
               {r.map((cell, j) => (
-                <td key={j} style={{ padding: '13px 18px', fontSize: j === 0 ? '14px' : j === r.length - 1 ? '12.5px' : '13px', fontWeight: j === 0 ? 600 : 400, color: j === 0 ? 'var(--ink-2)' : j === r.length - 1 ? 'var(--ink-3)' : 'var(--ink-3)', textAlign: j === r.length - 1 ? 'right' : 'left', whiteSpace: j === r.length - 1 ? 'nowrap' : 'normal', borderBottom: i < rows.length - 1 ? '1px solid var(--line)' : 'none' }}>{cell}</td>
+                <td key={j} style={{ padding: '13px 18px', fontSize: j === 0 ? '15px' : j === r.length - 1 ? '13.5px' : '14px', fontWeight: j === 0 ? 600 : 400, color: j === 0 ? 'var(--ink-2)' : j === r.length - 1 ? 'var(--ink-3)' : 'var(--ink-3)', textAlign: j === r.length - 1 ? 'right' : 'left', whiteSpace: j === r.length - 1 ? 'nowrap' : 'normal', borderBottom: i < rows.length - 1 ? '1px solid var(--line)' : 'none' }}>{cell}</td>
               ))}
             </tr>
           ))}
@@ -136,71 +139,14 @@ function DataTable({ caption, cols, rows }) {
   );
 }
 
-/* ── Photo gallery: a short preview, then "Show all N photos"; the lightbox moves through all of them ── */
-function Lightbox({ photos, index, onClose, onIndex }) {
-  const photo = photos[index];
-  const N = photos.length;
-  const boxRef = useRef(null);
-  const closeRef = useRef(null);
-  const prev = () => onIndex((index - 1 + N) % N);
-  const next = () => onIndex((index + 1) % N);
-
-  useEffect(() => {
-    if (closeRef.current) closeRef.current.focus();
-    const before = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = before; };
-  }, []);
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      else if (e.key === 'ArrowRight') next();
-      else if (e.key === 'ArrowLeft') prev();
-      else if (e.key === 'Tab' && boxRef.current) {
-        const f = boxRef.current.querySelectorAll('button');
-        if (!f.length) return;
-        const first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  });
-
-  const navBtn = { position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.28)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 };
-  return ReactDOM.createPortal((
-    <div ref={boxRef} role="dialog" aria-modal="true" aria-label={`Photo ${index + 1} of ${N}: ${photo.caption}`} onClick={onClose}
-      style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(3,6,16,0.93)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', animation: 'fadeIn 0.22s ease' }}>
-      <button ref={closeRef} type="button" onClick={(e) => { e.stopPropagation(); onClose(); }} aria-label="Close"
-        style={{ position: 'absolute', top: '18px', right: '20px', width: '46px', height: '46px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.28)', color: '#fff', cursor: 'pointer', fontSize: '24px', lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
-      <button type="button" onClick={(e) => { e.stopPropagation(); prev(); }} aria-label="Previous photo" style={{ ...navBtn, left: '16px' }}>
-        <span style={{ display: 'flex', transform: 'rotate(180deg)' }}>{window.SahajIcons.arrowRight({ size: 20, color: '#fff', strokeW: 2 })}</span>
-      </button>
-      <button type="button" onClick={(e) => { e.stopPropagation(); next(); }} aria-label="Next photo" style={{ ...navBtn, right: '16px' }}>
-        {window.SahajIcons.arrowRight({ size: 20, color: '#fff', strokeW: 2 })}
-      </button>
-      <img src={photo.base + '-1600.webp'} width={photo.lg[0]} height={photo.lg[1]} alt={photo.caption} onClick={(e) => e.stopPropagation()} draggable={false} decoding="async"
-        style={{ maxWidth: 'min(92vw,1080px)', maxHeight: '78vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '10px', boxShadow: '0 30px 80px rgba(0,0,0,0.7)' }} />
-      <div style={{ marginTop: '18px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-        <p style={{ fontFamily: "'Times New Roman',Georgia,serif", fontSize: '18px', fontStyle: 'italic', color: '#f2eee2' }}>{photo.caption}</p>
-        <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '11px', letterSpacing: '1.6px', textTransform: 'uppercase', color: '#c9c2b2', marginTop: '7px' }}>{photo.sub} · {index + 1} / {N}</p>
-      </div>
-    </div>
-  ), document.body);
-}
-
+/* ── Photo gallery: a short preview, then "Show all N photos"; the shared viewer moves through all of them ── */
 function LifeGallery({ photos, mobile }) {
   const [open, setOpen] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  const opener = useRef(null);
   const N = photos.length;
   const previewN = mobile ? 4 : 6;
   const shown = expanded ? photos : photos.slice(0, previewN);
-
-  const openAt = (i) => { opener.current = document.activeElement; setOpen(i); };
-  const close = () => { setOpen(null); const el = opener.current; if (el && el.focus) setTimeout(() => el.focus(), 0); };
+  const items = photos.map(p => ({ src: p.base + '-1600.webp', w: p.lg[0], h: p.lg[1], alt: p.caption, title: p.caption, sub: p.sub }));
   const toggle = () => {
     if (expanded) { setExpanded(false); UI.scrollToSection('photos', { instant: true }); } else setExpanded(true);
   };
@@ -210,9 +156,9 @@ function LifeGallery({ photos, mobile }) {
       <ul id="gallery-grid" className="gallery-grid" style={{ listStyle: 'none' }}>
         {shown.map((p, i) => (
           <li key={p.base} style={{ breakInside: 'avoid', marginBottom: mobile ? '10px' : '14px' }}>
-            <button type="button" className="tile" onClick={() => openAt(i)}>
+            <button type="button" className="tile" onClick={() => setOpen(i)} aria-haspopup="dialog" aria-label={'Open photo: ' + p.caption + ', ' + p.sub}>
               <img src={p.base + '-640.webp'} srcSet={p.base + '-640.webp ' + p.sm[0] + 'w, ' + p.base + '-1600.webp ' + p.lg[0] + 'w'} sizes="(max-width: 820px) 46vw, 30vw"
-                width={p.sm[0]} height={p.sm[1]} alt={p.caption} loading="lazy" decoding="async" draggable={false} />
+                width={p.sm[0]} height={p.sm[1]} alt="" loading="lazy" decoding="async" draggable={false} />
               <span className="tile-shade" aria-hidden="true" />
               <span className="tile-cap" aria-hidden="true"><span className="tile-cap-t">{p.caption}</span><span className="tile-cap-s">{p.sub}</span></span>
             </button>
@@ -224,7 +170,55 @@ function LifeGallery({ photos, mobile }) {
           {expanded ? 'Show fewer photos' : `Show all ${N} photos`}
         </button>
       )}
-      {open !== null && <Lightbox photos={photos} index={open} onClose={close} onIndex={setOpen} />}
+      {open !== null && <UI.ImageViewer items={items} index={open} onClose={() => setOpen(null)} onIndex={setOpen} label="Photo gallery" />}
+    </React.Fragment>
+  );
+}
+
+/* ── Toolbox: every tool I have used, filtered by area. Spoken languages sit below, at a readable size. ── */
+const TOOL_AREAS = [
+  { id: 'all', label: 'All' },
+  { id: 'ai', label: 'AI and ML' },
+  { id: 'data', label: 'Data and science' },
+  { id: 'software', label: 'Software and web' },
+  { id: 'ops', label: 'Cloud and tooling' },
+];
+function Toolbox() {
+  const d = window.SahajData;
+  const [area, setArea] = useState('all');
+  const inArea = (a) => d.skillGroups.filter(g => a === 'all' || g.area === a);
+  const countIn = (a) => inArea(a).reduce((n, g) => n + g.skills.length, 0);
+  const groups = inArea(area);
+  return (
+    <React.Fragment>
+      <div role="group" aria-label="Show the toolbox for one area" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '22px' }}>
+        {TOOL_AREAS.map(a => (
+          <button key={a.id} type="button" className="filter-chip" aria-pressed={area === a.id} onClick={() => setArea(a.id)}>
+            {a.label}<span className="filter-count">{countIn(a.id)}</span>
+          </button>
+        ))}
+      </div>
+      <div className="tool-columns">
+        {groups.map(grp => (
+          <div key={grp.label} className="tool-card">
+            <h3 className="tool-card-h" style={{ color: grp.color }}>{grp.label}</h3>
+            <ul style={{ listStyle: 'none', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {grp.skills.map((sk, i) => <SkillChip key={i} item={sk} />)}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="tool-card">
+        <h3 className="tool-card-h" style={{ color: 'var(--accent-2)' }}>Languages I speak</h3>
+        <ul style={{ listStyle: 'none', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          {d.languages.map(l => (
+            <li key={l.name} className="lang-pill">
+              <span className="lang-name">{l.name}</span>
+              {l.note && <span className="lang-note">{l.note}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
     </React.Fragment>
   );
 }
@@ -235,6 +229,9 @@ function About({ onNavigate }) {
   const padX = mobile ? '20px' : '48px';
   const edu = d.education;
   const th = edu.thesis;
+  const toolCount = d.skillGroups.reduce((n, g) => n + g.skills.length, 0);
+  const pubCount = d.peerReviewed.length + d.preprints.length;
+  const q1Count = d.peerReviewed.filter(p => p.tier === 'Q1').length;
 
   const slides = [
     { base: 'assets/sahaj2', w: 640, h: 480, alt: 'Sahaj Raj Malla seated at a table', pos: 'center 18%', caption: 'Where the work happens.', sub: 'At my desk' },
@@ -274,7 +271,7 @@ function About({ onNavigate }) {
             </p>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '34px' }}>
               {['Self-taught', 'Omnivert', 'Researcher', 'Founder'].map(t => (
-                <span key={t} style={{ background: 'var(--accent-chip)', border: '1px solid var(--accent-line)', borderRadius: '20px', padding: '5px 14px', fontFamily: sans, fontSize: '13px', color: 'var(--ink-2)', whiteSpace: 'nowrap' }}>{t}</span>
+                <span key={t} style={{ background: 'var(--accent-chip)', border: '1px solid var(--accent-line)', borderRadius: '20px', padding: '5px 14px', fontFamily: sans, fontSize: '14px', color: 'var(--ink-2)', whiteSpace: 'nowrap' }}>{t}</span>
               ))}
             </div>
           </div>
@@ -294,10 +291,10 @@ function About({ onNavigate }) {
             {d.service.map((s, i) => (
               <li key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', padding: '12px 18px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '10px' }}>
                 <span>
-                  <span style={{ display: 'block', fontFamily: sans, fontSize: '14px', fontWeight: 600, color: 'var(--ink-2)' }}>{s.role}</span>
-                  <span style={{ display: 'block', fontFamily: sans, fontSize: '12.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{s.org}{s.note ? ` · ${s.note}` : ''}</span>
+                  <span style={{ display: 'block', fontFamily: sans, fontSize: '15px', fontWeight: 600, color: 'var(--ink-2)' }}>{s.role}</span>
+                  <span style={{ display: 'block', fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{s.org}{s.note ? ` · ${s.note}` : ''}</span>
                 </span>
-                <span style={{ fontFamily: sans, fontSize: '12.5px', color: 'var(--ink-3)', whiteSpace: 'nowrap' }}>{s.period}</span>
+                <span style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', whiteSpace: 'nowrap' }}>{s.period}</span>
               </li>
             ))}
           </ul>
@@ -312,15 +309,15 @@ function About({ onNavigate }) {
               </div>
               <div>
                 <h3 style={{ fontFamily: serif, fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>{edu.degree}</h3>
-                <p style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)' }}>{edu.university}, {edu.place} · {edu.period}</p>
-                <p style={{ fontFamily: sans, fontSize: '12.5px', color: 'var(--ink-4)', marginTop: '2px' }}>{edu.conferral}</p>
+                <p style={{ fontFamily: sans, fontSize: '14.5px', color: 'var(--ink-3)' }}>{edu.university}, {edu.place} · {edu.period}</p>
+                <p style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '2px' }}>{edu.conferral}</p>
               </div>
             </div>
             <div style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid var(--line)' }}>
-              <p className="eyebrow" style={{ fontSize: '11px', color: 'var(--accent-2)', borderLeft: 'none', paddingLeft: 0, marginBottom: '6px' }}>{th.label} ({th.status.toLowerCase()})</p>
+              <p className="eyebrow" style={{ fontSize: '12.5px', color: 'var(--accent-2)', borderLeft: 'none', paddingLeft: 0, marginBottom: '6px' }}>{th.label} ({th.status.toLowerCase()})</p>
               <p style={{ fontFamily: serif, fontSize: '17px', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.4, marginBottom: '6px' }}>{th.title}</p>
-              <p style={{ fontFamily: sans, fontSize: '14px', color: 'var(--ink-3)', lineHeight: 1.7 }}>{th.question}</p>
-              <p style={{ fontFamily: sans, fontSize: '12.5px', color: 'var(--ink-4)', marginTop: '6px' }}>Supervisors: {th.supervisors}</p>
+              <p style={{ fontFamily: sans, fontSize: '15px', color: 'var(--ink-3)', lineHeight: 1.7 }}>{th.question}</p>
+              <p style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', marginTop: '6px' }}>Supervisors: {th.supervisors}</p>
             </div>
           </div>
         </UI.Section>
@@ -331,11 +328,11 @@ function About({ onNavigate }) {
             {d.awards.map((a, i) => (
               <li key={i} style={{ background: 'var(--gold-box)', border: '1px solid var(--gold-box-line)', borderRadius: '10px', padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
                 <div>
-                  <div style={{ fontFamily: sans, fontSize: '10.5px', fontWeight: 800, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'var(--gold-ink)', marginBottom: '3px' }}>{a.result}</div>
-                  <div style={{ fontFamily: sans, fontSize: '13.5px', fontWeight: 600, color: 'var(--ink-2)', marginBottom: '3px', lineHeight: 1.4 }}>{a.title}</div>
-                  <div style={{ fontFamily: sans, fontSize: '12px', color: 'var(--ink-3)', lineHeight: 1.4 }}>{a.org}</div>
+                  <div style={{ fontFamily: sans, fontSize: '12px', fontWeight: 800, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'var(--gold-ink)', marginBottom: '3px' }}>{a.result}</div>
+                  <div style={{ fontFamily: sans, fontSize: '14.5px', fontWeight: 600, color: 'var(--ink-2)', marginBottom: '3px', lineHeight: 1.4 }}>{a.title}</div>
+                  <div style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)', lineHeight: 1.4 }}>{a.org}</div>
                 </div>
-                <span style={{ fontFamily: sans, fontSize: '12px', color: 'var(--gold-ink)', fontWeight: 600, flexShrink: 0 }}>{a.year}</span>
+                <span style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--gold-ink)', fontWeight: 600, flexShrink: 0 }}>{a.year}</span>
               </li>
             ))}
           </ul>
@@ -352,18 +349,8 @@ function About({ onNavigate }) {
         </UI.Section>
 
         {/* ── Toolbox ── */}
-        <UI.Section id="toolbox" title="Technical toolbox" aside="grouped as on my CV">
-          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fill,minmax(300px,1fr))', gap: '16px' }}>
-            {d.skillGroups.map(grp => (
-              <div key={grp.label} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '12px', padding: '18px 20px' }}>
-                <h3 style={{ fontFamily: sans, fontSize: '11px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: grp.color, marginBottom: '12px' }}>{grp.label}</h3>
-                <ul style={{ listStyle: 'none', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {grp.skills.map((sk, i) => <SkillChip key={i} item={sk} />)}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontFamily: sans, fontSize: '14px', color: 'var(--ink-3)', marginTop: '20px' }}><strong style={{ color: 'var(--ink-2)', fontWeight: 600 }}>Languages:</strong> {d.languages}</p>
+        <UI.Section id="toolbox" title="Technical toolbox" aside={`${toolCount} tools and methods in ${d.skillGroups.length} groups`}>
+          <Toolbox />
         </UI.Section>
 
         {/* ── Press ── */}
@@ -373,12 +360,12 @@ function About({ onNavigate }) {
               <li key={i}>
                 <a href={p.url} target="_blank" rel="noopener noreferrer" className="row-link">
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontFamily: sans, fontSize: '14px', fontWeight: 600, color: 'var(--ink-2)', marginBottom: '3px', textWrap: 'pretty' }}>{p.title}</p>
-                    <p style={{ fontFamily: sans, fontSize: '12.5px', color: 'var(--ink-3)' }}>{p.outlet}{p.lang ? ` (${p.lang})` : ''}</p>
-                    {p.note && <p style={{ fontFamily: sans, fontSize: '12px', color: 'var(--ink-4)', marginTop: '4px' }}>{p.note}</p>}
+                    <p style={{ fontFamily: sans, fontSize: '15px', fontWeight: 600, color: 'var(--ink-2)', marginBottom: '3px', textWrap: 'pretty' }}>{p.title}</p>
+                    <p style={{ fontFamily: sans, fontSize: '13.5px', color: 'var(--ink-3)' }}>{p.outlet}{p.lang ? ` (${p.lang})` : ''}</p>
+                    {p.note && <p style={{ fontFamily: sans, fontSize: '13px', color: 'var(--ink-3)', marginTop: '4px' }}>{p.note}</p>}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', flexShrink: 0 }}>
-                    <span style={{ fontFamily: sans, fontSize: '12px', fontWeight: 600, color: 'var(--gold-ink)' }}>{p.date}</span>
+                    <span style={{ fontFamily: sans, fontSize: '13.5px', fontWeight: 600, color: 'var(--gold-ink)' }}>{p.date}</span>
                     {window.SahajIcons.external({ size: 13, color: 'var(--gold-ink)', strokeW: 2 })}
                   </div>
                 </a>
@@ -393,7 +380,7 @@ function About({ onNavigate }) {
             {d.interests.map(i => (
               <li key={i.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '12px', padding: '11px 18px' }}>
                 <span style={{ display: 'flex', color: 'var(--gold-ink)', flexShrink: 0 }}>{window.SahajIcons[i.icon] && window.SahajIcons[i.icon]({ size: 17, color: 'var(--gold-ink)', strokeW: 1.7 })}</span>
-                <span style={{ fontFamily: sans, fontSize: '14px', color: 'var(--ink-2)', fontWeight: 500 }}>{i.label}</span>
+                <span style={{ fontFamily: sans, fontSize: '15px', color: 'var(--ink-2)', fontWeight: 500 }}>{i.label}</span>
               </li>
             ))}
           </ul>
@@ -405,7 +392,7 @@ function About({ onNavigate }) {
             <p style={{ fontFamily: serif, fontSize: 'clamp(15px,1.8vw,19px)', fontStyle: 'italic', color: 'var(--ink-3)', lineHeight: 1.7, maxWidth: '620px', margin: '22px auto 0', textWrap: 'pretty' }}>
               You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions. Never consider yourself the cause of the results of your activities, and never be attached to inaction.
             </p>
-            <figcaption style={{ fontFamily: sans, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold-ink)', marginTop: '18px' }}>Krishna · Bhagavad Gita 2.47</figcaption>
+            <figcaption style={{ fontFamily: sans, fontSize: '12.5px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold-ink)', marginTop: '18px' }}>Krishna · Bhagavad Gita 2.47</figcaption>
           </figure>
         </UI.Section>
 
@@ -413,6 +400,18 @@ function About({ onNavigate }) {
         <UI.Section id="photos" title="A few moments" color="var(--gold-ink)" aside="select a photo to open it" mb="0">
           <LifeGallery photos={d.gallery} mobile={mobile} />
         </UI.Section>
+
+        {/* ── Next: the research ── */}
+        <nav aria-label="Next page" style={{ marginTop: '72px' }}>
+          <a href="#research" className="next-link" onClick={(e) => { e.preventDefault(); onNavigate('research'); }}>
+            <span className="next-body">
+              <span className="next-kicker">Next</span>
+              <span className="next-title">Research</span>
+              <span className="next-text">{pubCount} publications, {q1Count} of them Q1 papers in Scientific Reports. Open any first page and read the abstract.</span>
+            </span>
+            <span className="next-arrow" aria-hidden="true">{window.SahajIcons.arrowRight({ size: 22, strokeW: 2.2 })}</span>
+          </a>
+        </nav>
       </UI.TocLayout>
     </div>
   );

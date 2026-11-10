@@ -487,7 +487,12 @@ window.SahajData = {
   ],
 
   // ── LANGUAGES (CV) ─────────────────────────────────────────────────────────
-  languages: "English (IELTS overall 7.5), Nepali, Hindi, Newari",
+  languages: [
+    { name: "English", note: "IELTS Academic, overall 7.5" },
+    { name: "Nepali" },
+    { name: "Hindi" },
+    { name: "Newari" },
+  ],
 
   // ── RESEARCH INTERESTS (the CV line, split) ────────────────────────────────
   researchInterests: [
@@ -549,19 +554,36 @@ window.SahajData = {
     { base: "assets/life/sahaj12", sm: [640, 853], lg: [1200, 1600], caption: "World's highest swing, Kushma", sub: "Travels" },
   ],
 
-  // ── SKILLS (CV groups and items) ───────────────────────────────────────────
-  // Items with a brand colour render as a badge; plain strings render as a text chip.
+  // ── TOOLBOX (About page) ───────────────────────────────────────────────────
+  // The CV has room for a short list. This is the long one: the CV groups first (kept as they are on the CV),
+  // then everything else I have used, found in my public repositories, my project folders and the older
+  // version of this site. `area` drives the filter on the page. Items with a brand colour render as a badge.
   skillGroups: [
-    { label: "Agents and RL", color: "var(--purple)", skills: ["Policy training", "Policy evaluation", "Offline RL", { name: "Gymnasium" }, { name: "MuJoCo" }] },
-    { label: "ML frameworks", color: "var(--purple)", skills: [{ name: "PyTorch", brand: "#EE4C2C", abbr: "PT" }, { name: "JAX" }, { name: "Hugging Face Transformers", brand: "#FFD21E", abbr: "HF" }, { name: "scikit-learn", brand: "#F7931E", abbr: "SK" }] },
-    { label: "LLM systems", color: "var(--purple)", skills: [{ name: "LangGraph", brand: "#1C3C3C", abbr: "LG" }, "RAG", "LoRA fine-tuning", "Mixed-precision training"] },
-    { label: "Efficient ML", color: "var(--purple)", skills: ["Parameter-efficient model design", "Model quantization", "Inference profiling"] },
-    { label: "Software engineering", color: "var(--accent-2)", skills: [{ name: "Python", brand: "#3776AB", abbr: "Py" }, { name: "C++", brand: "#00599C", abbr: "C++" }, { name: "TypeScript", brand: "#3178C6", abbr: "TS" }, { name: "FastAPI", brand: "#009688", abbr: "FA" }, { name: "Django", brand: "#092E20", abbr: "Dj" }, { name: "Next.js", brand: "#111111", abbr: "Nx" }] },
-    { label: "Cloud and deployment", color: "var(--ink-3)", skills: [{ name: "AWS", brand: "#FF9900", abbr: "AW" }, { name: "Azure", brand: "#0078D4", abbr: "Az" }, { name: "Linux", brand: "#FCC624", abbr: "Lx" }, { name: "Docker", brand: "#2496ED", abbr: "Dk" }] },
-    { label: "Databases and search", color: "var(--gold-ink)", skills: [{ name: "PostgreSQL", brand: "#4169E1", abbr: "Pg" }, { name: "MongoDB", brand: "#47A248", abbr: "Mg" }, { name: "Redis", brand: "#DC382D", abbr: "Rd" }, { name: "FAISS" }] },
-    { label: "Data engineering", color: "var(--gold-ink)", skills: [{ name: "Apache Spark", brand: "#E25A1C", abbr: "Sp" }, { name: "Apache Airflow", brand: "#017CEE", abbr: "Af" }] },
-    { label: "Applied mathematics", color: "var(--accent-2)", skills: ["Numerical optimization", "Statistical modeling", "Graph algorithms"] },
-    { label: "Quantum ML", color: "var(--purple)", skills: [{ name: "PennyLane", brand: "#2D7FF9", abbr: "PL" }, { name: "Qiskit", brand: "#6929C4", abbr: "QK" }] },
+    // ── AI and ML ──
+    { label: "Agents and RL", area: "ai", color: "var(--purple)", skills: ["Policy training", "Policy evaluation", "Offline RL", { name: "Gymnasium" }, { name: "MuJoCo" }, "MCTS and ISMCTS", "DQN", "PPO", "Custom Gym environments"] },
+    { label: "ML frameworks", area: "ai", color: "var(--purple)", skills: [{ name: "PyTorch", brand: "#EE4C2C", abbr: "PT" }, { name: "PyTorch Lightning" }, { name: "TensorFlow", brand: "#FF6F00", abbr: "TF" }, { name: "Keras" }, { name: "JAX" }, { name: "Hugging Face Transformers", brand: "#FFD21E", abbr: "HF" }, { name: "scikit-learn", brand: "#F7931E", abbr: "SK" }, { name: "XGBoost" }, { name: "LightGBM" }, { name: "CatBoost" }, { name: "Optuna" }, { name: "SHAP" }, { name: "OpenCV" }, { name: "Weights & Biases" }, { name: "TensorBoard" }] },
+    { label: "Deep learning", area: "ai", color: "var(--purple)", skills: ["CNNs", "Residual networks", "Capsule networks", "Transformer fine-tuning (DistilBERT)", { name: "Kornia" }] },
+    { label: "LLM systems", area: "ai", color: "var(--purple)", skills: [{ name: "LangGraph", brand: "#1C3C3C", abbr: "LG" }, { name: "LangChain" }, "RAG", "LoRA fine-tuning", "Mixed-precision training", "BM25", { name: "Sentence-Transformers" }, "OpenAI API", "Anthropic API", { name: "Ollama" }, "Document extraction with LLMs"] },
+    { label: "Efficient ML", area: "ai", color: "var(--purple)", skills: ["Parameter-efficient model design", "Model quantization", "Inference profiling"] },
+    { label: "Quantum ML", area: "ai", color: "var(--purple)", skills: [{ name: "PennyLane", brand: "#2D7FF9", abbr: "PL" }, { name: "Qiskit", brand: "#6929C4", abbr: "QK" }, { name: "Qiskit Aer" }, { name: "Qiskit Machine Learning" }, "Variational quantum circuits", "Hybrid quantum-classical models"] },
+
+    // ── Data and science ──
+    { label: "Time series and statistics", area: "data", color: "var(--gold-ink)", skills: [{ name: "statsmodels" }, "ARIMA and ARDL", { name: "Prophet" }, { name: "StatsForecast" }, { name: "NeuralForecast" }, "Walk-forward validation", "Forecast combination", { name: "PyMC" }, { name: "ArviZ" }] },
+    { label: "Data engineering", area: "data", color: "var(--gold-ink)", skills: [{ name: "Apache Spark", brand: "#E25A1C", abbr: "Sp" }, { name: "Apache Airflow", brand: "#017CEE", abbr: "Af" }, "ELT pipelines", { name: "Delta Lake" }, { name: "Polars" }, "Parquet", "Web scraping", { name: "Beautiful Soup" }] },
+    { label: "Analysis and visualization", area: "data", color: "var(--gold-ink)", skills: [{ name: "NumPy", brand: "#013243", abbr: "Np" }, { name: "Pandas", brand: "#150458", abbr: "Pd" }, { name: "SciPy" }, { name: "Matplotlib" }, { name: "Seaborn" }, { name: "Plotly" }, { name: "Altair" }, { name: "Streamlit" }, { name: "Jupyter", brand: "#F37626", abbr: "Jp" }] },
+    { label: "Geospatial", area: "data", color: "var(--gold-ink)", skills: ["OpenStreetMap", { name: "H3" }, { name: "GeoPandas" }, { name: "Shapely" }, { name: "Rasterio" }, { name: "Folium" }, { name: "Leaflet" }, "DBSCAN", "A* search"] },
+    { label: "Applied mathematics", area: "data", color: "var(--accent-2)", skills: ["Numerical optimization", "Statistical modeling", "Graph algorithms", { name: "NetworkX" }, { name: "SymPy" }] },
+
+    // ── Software and web ──
+    { label: "Languages", area: "software", color: "var(--accent-2)", skills: [{ name: "Python", brand: "#3776AB", abbr: "Py" }, { name: "C++", brand: "#00599C", abbr: "C++" }, { name: "TypeScript", brand: "#3178C6", abbr: "TS" }, { name: "JavaScript", brand: "#F7DF1E", abbr: "JS" }, { name: "R", brand: "#276DC3", abbr: "R" }, { name: "C" }, { name: "SQL" }, "HTML and CSS"] },
+    { label: "Backend and APIs", area: "software", color: "var(--accent-2)", skills: [{ name: "FastAPI", brand: "#009688", abbr: "FA" }, { name: "Django", brand: "#092E20", abbr: "Dj" }, { name: "Django REST Framework" }, { name: "Django Channels" }, { name: "Pydantic" }, { name: "SQLAlchemy" }, { name: "Alembic" }, { name: "Celery" }, "REST APIs", "WebSockets", "Argon2 password hashing", "JWT", "CSRF protection"] },
+    { label: "Frontend", area: "software", color: "var(--accent-2)", skills: [{ name: "React", brand: "#61DAFB", abbr: "Re" }, { name: "Next.js", brand: "#111111", abbr: "Nx" }, { name: "Tailwind CSS" }, { name: "Radix UI" }, { name: "React Query" }, { name: "React Hook Form" }, { name: "Plotly.js" }] },
+
+    // ── Cloud and tooling ──
+    { label: "Cloud and deployment", area: "ops", color: "var(--ink-3)", skills: [{ name: "AWS", brand: "#FF9900", abbr: "AW" }, { name: "Azure", brand: "#0078D4", abbr: "Az" }, { name: "Linux", brand: "#FCC624", abbr: "Lx" }, { name: "Docker", brand: "#2496ED", abbr: "Dk" }, { name: "Docker Compose" }, { name: "IBM Cloud" }, { name: "Hugging Face Hub" }] },
+    { label: "Databases and search", area: "ops", color: "var(--gold-ink)", skills: [{ name: "PostgreSQL", brand: "#4169E1", abbr: "Pg" }, { name: "MongoDB", brand: "#47A248", abbr: "Mg" }, { name: "Redis", brand: "#DC382D", abbr: "Rd" }, { name: "SQLite" }, { name: "Elasticsearch" }, { name: "FAISS" }] },
+    { label: "Engineering practice", area: "ops", color: "var(--ink-3)", skills: [{ name: "Git", brand: "#F05032", abbr: "Gt" }, { name: "GitHub Actions" }, { name: "CodeQL" }, { name: "pre-commit" }, { name: "Ruff" }, { name: "mypy" }, { name: "pytest" }, { name: "Make" }, "PyPI packaging", { name: "MkDocs" }] },
+    { label: "Also explored", area: "ops", color: "var(--ink-3)", skills: ["Flutter", "Ethereum dApps", "RSA cryptography", "SystemVerilog hardware design", "DevOps pipelines"] },
   ],
 };
 
