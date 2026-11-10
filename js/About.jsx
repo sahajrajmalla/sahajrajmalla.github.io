@@ -102,7 +102,7 @@ function ExpCard({ role, org, place, period, current, desc, points, letter, inde
         <div id={id} hidden={!open} className="exp-more">
           {desc && <p className="exp-desc">{desc}</p>}
           {points && points.length > 0 && <ul className="exp-points">{points.map((t, i) => <li key={i}>{t}</li>)}</ul>}
-          {letter && <p className="exp-letter"><a className="link-pill" href={window.SahajData.requestMail('Request for experience letter: ' + org, 'Hello Sahaj,\n\nCould you please send me your experience letter from ' + org + '?\n\nThank you.')}>{window.SahajIcons.mail({ size: 14, strokeW: 2 })} Request the experience letter by mail</a></p>}
+          {letter && <p className="exp-letter"><a className="link-pill" target="_blank" rel="noopener noreferrer" href={window.SahajData.requestMail('Request for experience letter: ' + org)}>{window.SahajIcons.mail({ size: 14, strokeW: 2 })} Request the experience letter by mail</a></p>}
         </div>
       )}
     </div>

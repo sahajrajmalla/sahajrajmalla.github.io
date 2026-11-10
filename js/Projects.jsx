@@ -9,10 +9,10 @@ function TypeBadge({ type }) {
 // Reports are sent on request, not hosted for download: the button opens a mail to me with the subject filled in.
 function DocLinks({ title, kind }) {
   const what = kind === 'Slides' ? 'slides' : 'report';
-  const href = window.SahajData.requestMail('Request for ' + what + ': ' + title, 'Hello Sahaj,\n\nCould you please send me the ' + what + ' "' + title + '"?\n\nThank you.');
+  const href = window.SahajData.requestMail('Request for ' + what + ': ' + title);
   return (
     <div className="doc-links">
-      <a className="link-pill link-pill-purple" href={href}>
+      <a className="link-pill link-pill-purple" href={href} target="_blank" rel="noopener noreferrer">
         {window.SahajIcons.mail ? window.SahajIcons.mail({ size: 14, strokeW: 2 }) : null} Request the {what} by mail
       </a>
       <span className="doc-meta">Sent on request</span>

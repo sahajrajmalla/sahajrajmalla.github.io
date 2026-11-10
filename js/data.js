@@ -4,8 +4,8 @@
 // GitHub are not stored here; they are read from the GitHub API (see Common.jsx).
 window.SahajData = {
   // A mail to me with the subject and a short body filled in. Reports and letters are sent on request, never hosted for download.
-  requestMail: function (subject, body) {
-    return "mailto:mallasahajraj@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  requestMail: function (subject) {
+    return "https://mail.google.com/mail/?view=cm&fs=1&to=mallasahajraj@gmail.com&su=" + encodeURIComponent(subject);
   },
   personal: {
     name: "Sahaj Raj Malla",
@@ -540,7 +540,13 @@ window.SahajData = {
         "Lab 3: parameter-efficient fine-tuning (soft prompt tuning, adapters, LoRA).",
         "Lab 4: mixture-of-experts transformers (text generation on the TinyStories dataset).",
       ] },
-    { role: "Website Manager and Executive Member", org: "Kathmandu University Robotics Club, Dhulikhel, Nepal", period: "May 2023 – May 2024" },
+    { letter: true, role: "Website Manager and Executive Member", org: "Kathmandu University Robotics Club, Dhulikhel, Nepal", period: "May 2023 – May 2024",
+      desc: "Executive member of the university robotics club, and the person who ran its website.",
+      points: [
+        "Helped run the club's annual events, workshops and tutorials for fellow students.",
+        "Managed and maintained the club website.",
+        "Built small automation projects with Arduino and ESP32 devices, such as an automatic vacuum cleaner, and other similar builds.",
+      ] },
     { letter: true, role: "Lead Quantum Computing Researcher", org: "OneQuantum, Munich, Germany", period: "Mar 2021 – Mar 2023", note: "Remote, volunteer role.",
       desc: "Research lead for quantum computing projects at One Quantum Nepal, a not-for-profit initiative that works to make quantum technologies open to everyone.",
       points: [
