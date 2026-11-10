@@ -25,6 +25,8 @@ function App() {
   const [fabHover,setFabHover]     = useState(false);
   const [fabHidden,setFabHidden]   = useState(false);
   const footerRef = useRef(null);
+  const fabRef = useRef(null);            // the floating button; focus returns to it when the game closes
+  const openerRef = useRef(null);         // whatever opened the game
   const mobile = window.useIsMobile(820);
   const theme = window.useTheme();
   const isLight = theme === 'light';
@@ -59,7 +61,7 @@ function App() {
   },[page]);
 
   const navigate = useCallback((target)=>{
-    if(target==='game'){setGameOpen(true);setTimeout(()=>{if(document.activeElement&&document.activeElement!==document.body)document.activeElement.blur();},0);return;}
+    if(target==='game'){openGame();return;}
     const parts = String(target).split('/');
     const p = parts[0], section = parts[1] || null;
     if(!PAGES.includes(p)) return;
@@ -83,9 +85,28 @@ function App() {
     },260);
   },[]);
 
+  // The game is a modal dialog. Opening remembers what opened it; closing hands focus back to it.
+  const openGame = useCallback(()=>{
+    const a = document.activeElement;
+    openerRef.current = a && a !== document.body ? a : null;
+    setGameOpen(true);
+  },[]);
+  const closeGame = useCallback(()=>{
+    setGameOpen(false);
+    const el = openerRef.current && openerRef.current.isConnected ? openerRef.current : fabRef.current;
+    openerRef.current = null;
+    setTimeout(()=>{ if(el && el.focus){ try{ el.focus({preventScroll:true}); }catch(e){} } },0);
+  },[]);
+  const goFromGame = useCallback((id)=>{
+    openerRef.current = null;
+    setGameOpen(false);
+    navigate(id);
+  },[navigate]);
+
   // back, forward, a pasted link, or a hash typed in the address bar
   useEffect(()=>{
     const onHash=()=>{
+      setGameOpen(false);   // any navigation (back, forward, a pasted link) ends the game
       const raw = hashPath();
       if(skipHash.current!==null && skipHash.current===raw){ skipHash.current=null; return; }
       const h = parseHash(); if(!h) return;
@@ -153,7 +174,9 @@ function App() {
 
       {/* ── Floating World FAB ── */}
       <button
-        onClick={()=>{setGameOpen(true);setTimeout(()=>{if(document.activeElement&&document.activeElement!==document.body)document.activeElement.blur();},0);}}
+        ref={fabRef}
+        type="button"
+        onClick={openGame}
         onMouseEnter={()=>setFabHover(true)}
         onMouseLeave={()=>setFabHover(false)}
         title={isLight ? 'Chart the voyage' : "Explore Sahaj's World"}
@@ -205,8 +228,8 @@ function App() {
 
       {/* Game overlay */}
       {gameOpen&&Game&&(
-        <UI.ErrorBoundary fallback={null}>
-          <Game onClose={()=>setGameOpen(false)} onNavigate={(id)=>{setGameOpen(false);navigate(id);}}/>
+        <UI.ErrorBoundary fallback={null} onError={()=>setGameOpen(false)}>
+          <Game onClose={closeGame} onNavigate={goFromGame}/>
         </UI.ErrorBoundary>
       )}
     </div>
