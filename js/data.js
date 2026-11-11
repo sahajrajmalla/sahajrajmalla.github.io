@@ -3,10 +3,17 @@
 // Anything a visitor reads here should trace to one of them. Numbers that come from
 // GitHub are not stored here; they are read from the GitHub API (see Common.jsx).
 window.SahajData = {
-  // A mail to me with the subject and a short body filled in. Reports and letters are sent on request, never hosted for download.
+  // A request mail to me, subject filled in, body left for the visitor. On a touch device it is a mailto link, which opens the
+  // installed mail app (the Gmail app when that is the default); a phone browser drops the details of a Gmail web link. On a
+  // computer it opens the Gmail compose window in a new tab. Returns the attributes for an <a>.
   requestMail: function (subject) {
-    return "https://mail.google.com/mail/?view=cm&fs=1&to=mallasahajraj@gmail.com&su=" + encodeURIComponent(subject);
+    var touch = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+    var to = window.SahajData.personal.email, su = encodeURIComponent(subject);
+    return touch
+      ? { href: "mailto:" + to + "?subject=" + su }
+      : { href: "https://mail.google.com/mail/?view=cm&fs=1&to=" + to + "&su=" + su, target: "_blank", rel: "noopener noreferrer" };
   },
+
   personal: {
     name: "Sahaj Raj Malla",
     nameNepali: "सहज राज मल्ल",

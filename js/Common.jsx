@@ -435,7 +435,7 @@ function ImageViewer({ items, index, onClose, onIndex, label }) {
           </button>
         )}
         {item.href && (
-          <a className="lb-btn" href={item.href} target="_blank" rel="noopener noreferrer">
+          <a className="lb-btn" href={item.href} {...(/^mailto:/.test(item.href) ? {} : { target: '_blank', rel: 'noopener noreferrer' })}>
             <span>{item.hrefLabel || 'Open'}</span>{window.SahajIcons[item.mail ? 'mail' : 'external']({ size: 16, strokeW: 2 })}{<span className="sr-only"> (opens in a new tab)</span>}
           </a>
         )}
@@ -513,7 +513,7 @@ function DocThumb({ doc, width }) {
   if (!t) return null;
   const item = {
     src: t.base + '-1200.webp', w: 1200, h: Math.round(1200 * t.h / t.w), alt: t.alt, title: doc.name,
-    sub: doc.level, href: window.SahajData.requestMail('Request for report: ' + doc.name), hrefLabel: 'Request the report by mail', mail: true, zoomable: true,
+    sub: doc.level, href: window.SahajData.requestMail('Request for report: ' + doc.name).href, hrefLabel: 'Request the report by mail', mail: true, zoomable: true,
   };
   return (
     <React.Fragment>
