@@ -757,7 +757,24 @@ function TocLayout({ page, items, onNavigate, maxWidth, header, children }) {
   );
 }
 
+// The card at the foot of a page that leads to the next one. The order is Home, About, Research, Projects, Contact, with no way back.
+function NextPage({ to, title, text, onNavigate }) {
+  return (
+    <nav aria-label="Next page" style={{ marginTop: '72px' }}>
+      <a href={'#' + to} className="next-link" onClick={(e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return; e.preventDefault(); onNavigate(to); }}>
+        <span className="next-body">
+          <span className="next-kicker">Next</span>
+          <span className="next-title">{title}</span>
+          <span className="next-text">{text}</span>
+        </span>
+        <span className="next-arrow" aria-hidden="true">{window.SahajIcons.arrowRight({ size: 22, strokeW: 2.2 })}</span>
+      </a>
+    </nav>
+  );
+}
+
 window.SahajUI = {
+  NextPage,
   ErrorBoundary, CrashNotice, TierBadge, PageHeader, Section, PaperThumb, DocThumb, ProjectFigure, BarChart, PairChart, ImageViewer, ScrollLock, useScrollLock,
   CiteButtons, citationText, bibtex, copyText, useGithubStats, RepoStats, RepoLink, repoIsPublic,
   TocLayout, useScrollSpy, scrollToSection, jumpTo, prefersReducedMotion, mailHref, fmtNum,

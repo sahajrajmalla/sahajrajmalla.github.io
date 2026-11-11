@@ -406,16 +406,8 @@ function About({ onNavigate }) {
         </UI.Section>
 
         {/* ── Next: the research ── */}
-        <nav aria-label="Next page" style={{ marginTop: '72px' }}>
-          <a href="#research" className="next-link" onClick={(e) => { e.preventDefault(); onNavigate('research'); }}>
-            <span className="next-body">
-              <span className="next-kicker">Next</span>
-              <span className="next-title">Research</span>
-              <span className="next-text">{pubCount} publications, {q1Count} of them Q1 papers in Scientific Reports. Open any first page and read the abstract.</span>
-            </span>
-            <span className="next-arrow" aria-hidden="true">{window.SahajIcons.arrowRight({ size: 22, strokeW: 2.2 })}</span>
-          </a>
-        </nav>
+        <UI.NextPage to="research" title="Research" onNavigate={onNavigate}
+          text={pubCount + ' publications, ' + q1Count + ' of them Q1 papers in Scientific Reports. Open any first page and read the abstract.'} />
       </UI.TocLayout>
     </div>
   );

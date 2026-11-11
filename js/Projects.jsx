@@ -157,6 +157,9 @@ function Projects({ onNavigate }) {
             If a repository is useful to you, fork it or open an issue. I am glad to talk about research, startups, or whatever you are stuck on.
           </p>
         </div>
+
+        <UI.NextPage to="contact" title="Contact" onNavigate={onNavigate}
+          text="Write to me about research, a project above, or a report you would like to read." />
       </UI.TocLayout>
     </div>
   );

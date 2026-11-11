@@ -158,9 +158,12 @@ function Research({ onNavigate }) {
 
         <div style={{ padding: '18px 24px', background: 'var(--gold-box)', border: '1px solid var(--gold-box-line)', borderRadius: '12px' }}>
           <p style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: '15px', color: 'var(--gold-ink)', lineHeight: 1.6 }}>
-            The full list is on{' '}<a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-2)', fontWeight: 600, borderBottom: '1px solid var(--accent-2)', textDecoration: 'none' }}>Google Scholar</a>. Awards and talks are on the <a href="#about/awards" onClick={(e) => { e.preventDefault(); onNavigate('about/awards'); }} style={{ color: 'var(--accent-2)', fontWeight: 600, borderBottom: '1px solid var(--accent-2)', textDecoration: 'none' }}>About page</a>.
+            The full list is on{' '}<a href={d.personal.scholar} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-2)', fontWeight: 600, borderBottom: '1px solid var(--accent-2)', textDecoration: 'none' }}>Google Scholar</a>.
           </p>
         </div>
+
+        <UI.NextPage to="projects" title="Projects" onNavigate={onNavigate}
+          text="The systems, open-source tools and research code behind these papers, with what each one took on and where its checking stops." />
       </UI.TocLayout>
     </div>
   );
